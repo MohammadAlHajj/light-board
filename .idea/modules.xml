@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/LightBoard.iml" filepath="$PROJECT_DIR$/LightBoard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/LightBoard.iml" filepath="$PROJECT_DIR$/.idea/modules/LightBoard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/LightBoard_main.iml" filepath="$PROJECT_DIR$/.idea/modules/LightBoard_main.iml" group="LightBoard" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/LightBoard_test.iml" filepath="$PROJECT_DIR$/.idea/modules/LightBoard_test.iml" group="LightBoard" />
     </modules>
   </component>
 </project>

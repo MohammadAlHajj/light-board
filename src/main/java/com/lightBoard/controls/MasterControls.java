@@ -1,5 +1,4 @@
 package com.lightBoard.controls;
-import java.awt.Color;
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -7,8 +6,11 @@ import java.util.TimerTask;
 
 import com.lightBoard.controls.patterns.InfinityPattern;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
+
 /**
- * 
+ *
  */
 
 /**
@@ -17,69 +19,59 @@ import com.lightBoard.controls.patterns.InfinityPattern;
  */
 public class MasterControls
 {
-	private int repeatDelay = 2;
-	private int bufferSize = 300;
+	private int repeatDelay = 5;
+	private int maxBufferSize = 300;
 	private float brushSize = 5;
 	private double smoothness = 0.002;
 	private double timeInFunc;
 
-	private LinkedList<Point> buffer = new LinkedList<>();
-	
-	private DrawingPanel drawingPanel;
-	private Color backColor = new Color(0, 0, 0);
-	private Color PatternColor = new Color(204,204,204);
-	
+    private LinkedList<Point> buffer = new LinkedList<>();
+
+    private Canvas canvas;
+    private Color backColor = new Color(0, 0, 0, 1);
+	private Color patternColor = new Color(0.8, 0.8, 0.8, 1);
+
 	private Pattern pattern = new InfinityPattern();
-	
+
 	private Timer timer = new Timer();
 	private TimerTask timerTask = new TimerTask() {
 		@Override
 		public void run(){
-			drawingPanel.repaint();
-			timeInFunc += smoothness;
+			updateBuffer();
 		}
 	};
-	
-	public LinkedList<Point> getUpdatedBuffer(DrawingPanel drawingPanel)
-	{
-		buffer.addFirst(
-			pattern.getPointAt(
-				drawingPanel.getWidth(), 
-				drawingPanel.getHeight(), 
-				timeInFunc));
-		
-		return buffer;
-	}
-	
 
-	
-	public void startDrawing(DrawingPanel drawingPanel)
+
+    public LinkedList<Point> updateBuffer()
+    {
+        timeInFunc += smoothness;
+        buffer.addFirst(pattern.getPointAt((int) canvas.getWidth(), (int) canvas.getHeight(), timeInFunc));
+        if (buffer.size() > maxBufferSize)
+            buffer.removeLast();
+        return buffer;
+    }
+
+
+
+	public void startDrawing(Canvas canvas)
 	{
-		if (drawingPanel == null)
-			this.drawingPanel = drawingPanel;
-		
+        this.canvas = canvas;
 		timer.schedule(timerTask, 0, repeatDelay);
 	}
-	
 
 
-	public int getBufferSize() { return bufferSize; }
-	public void setBufferSize(int bufferSize) { this.bufferSize = bufferSize; }
+
+	public int getMaxBufferSize() { return maxBufferSize; }
+	public void setMaxBufferSize(int maxBufferSize) { this.maxBufferSize = maxBufferSize; }
 	public Color getBackColor() { return backColor; }
 	public void setBackColor(Color backColor) { this.backColor = backColor; }
-	public Color getPatternColor() { return PatternColor; }
-	public void setPatternColor(Color patternColor) { PatternColor = patternColor; }
+	public Color getPatternColor() { return patternColor; }
+	public void setPatternColor(Color patternColor) { this.patternColor = patternColor; }
 	public int getRepeatDelay() { return repeatDelay; }
 	public void setRepeatDelay(int repeatDelay) { this.repeatDelay = repeatDelay; }
 	public double getSmoothness() { return smoothness; }
 	public void setSmoothness(double smoothness) { this.smoothness = smoothness; }
 	public float getBrushSize() { return brushSize; }
 	public void setBrushSize(float brushSize) { this.brushSize = brushSize; }
-
-
-
-	
-
-
-	
+    public LinkedList<Point> getBuffer() { return buffer; }
 }

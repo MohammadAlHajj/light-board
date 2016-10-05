@@ -1,7 +1,5 @@
 package com.lightBoard.controls;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 
 import java.awt.GridBagLayout;
@@ -69,7 +67,7 @@ public class AppWindow {
         mControls = new MasterControls();
         initViews();
         initViewListeners();
-        mControls.startDrawing(drawingPanel);
+//        mControls.startDrawing(drawingPanel);
     }
 
 
@@ -173,7 +171,7 @@ public class AppWindow {
         panel.add(txtSmoothness, "8, 4, fill, fill");
 
         txtTailLength = new JTextField();
-        txtTailLength.setText(mControls.getBufferSize() + "");
+        txtTailLength.setText(mControls.getMaxBufferSize() + "");
         txtTailLength.setColumns(10);
         panel.add(txtTailLength, "8, 6, fill, fill");
 
@@ -200,7 +198,7 @@ public class AppWindow {
 
         ExecuteMe tailLengthExec = () -> {
             if (txtTailLength.getText().length() > 0)
-                mControls.setBufferSize(Integer.parseInt(txtTailLength.getText()));
+                mControls.setMaxBufferSize(Integer.parseInt(txtTailLength.getText()));
         };
 
         ExecuteMe tailWidthExec = () -> {
