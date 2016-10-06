@@ -64,7 +64,7 @@ public class AppWindow {
      * Create the application.
      */
     public AppWindow() {
-        mControls = new MasterControls();
+        mControls = MasterControls.INSTANCE;
         initViews();
         initViewListeners();
 //        mControls.startDrawing(drawingPanel);

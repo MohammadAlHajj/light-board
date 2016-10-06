@@ -1,63 +1,66 @@
 package com.lightBoard.ui;
 
-import com.lightBoard.controls.DrawingPanel;
 import com.lightBoard.controls.MasterControls;
-import com.lightBoard.controls.patterns.InfinityPattern;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.LinkedList;
 
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.beans.binding.DoubleBinding;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Main extends Application {
 
     private MasterControls mControls;
+    @FXML private Canvas canvas;
+    @FXML private GridPane controlsGrid;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        mControls = new MasterControls();
+        mControls = MasterControls.INSTANCE;
 
         primaryStage.setTitle("Hello World");
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
-        grid.setAlignment(Pos.CENTER);
+        Parent root = FXMLLoader.load(Main.class.getResource("/fxml/main.fxml"));
 
-        initViews(grid);
+        GridPane grid = (GridPane) root;
+        canvas = (Canvas)root.lookup("#canvas");
+        controlsGrid = (GridPane) root.lookup("#controlsGrid");
+        DoubleBinding heightBinding =
+                grid.heightProperty().subtract(
+                controlsGrid.getHeight() +
+                controlsGrid.getPadding().getTop() +
+                controlsGrid.getPadding().getBottom() +
+                grid.getPadding().getTop() +
+                grid.getPadding().getBottom()
+                );
+        canvas.widthProperty().bind(grid.widthProperty());
+        canvas.heightProperty().bind(heightBinding);
 
-        Scene scene = new Scene(grid, 1100, 850);
-//        scene.getStylesheets().add(Main.class.getResource("main.css").toExternalForm());
+        startAnimation();
 
+        Scene scene = new Scene(root, 1400, 850);
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void initViews(GridPane grid) {
-        Canvas canvas = new Canvas(1000, 800);
-        grid.add(canvas, 0, 0);
-        mControls.startDrawing(canvas);
 
-
-
+    private void startAnimation() {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -75,8 +78,7 @@ public class Main extends Application {
 
                 System.out.println(buffer.get(0));
                 // draw desired points
-                int index;
-                for (index = 0; index < buffer.size(); index++)
+                for (int index = 0; index < buffer.size(); index++)
                 {
                     alpha = ((buffer.size() - index) * 1.0 / buffer.size());
                     gc.setFill(new Color(red, green, blue, alpha));
@@ -86,11 +88,8 @@ public class Main extends Application {
                 }
             }
         };
+
+        mControls.startDrawing(canvas);
         timer.start();
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

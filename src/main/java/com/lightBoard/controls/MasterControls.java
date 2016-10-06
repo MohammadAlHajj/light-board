@@ -15,10 +15,12 @@ import javafx.scene.paint.Color;
 
 /**
  * @author Moham
- *
+ * Master Controls singleton
  */
-public class MasterControls
+public enum MasterControls
 {
+    INSTANCE;
+
 	private int repeatDelay = 5;
 	private int maxBufferSize = 300;
 	private float brushSize = 5;
@@ -40,6 +42,9 @@ public class MasterControls
 			updateBuffer();
 		}
 	};
+
+
+
 
 
     public LinkedList<Point> updateBuffer()
