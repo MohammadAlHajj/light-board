@@ -76,7 +76,6 @@ public class Main extends Application {
                 double blue = mControls.getPatternColor().getBlue();
                 double alpha = 1;
 
-                System.out.println(buffer.get(0));
                 // draw desired points
                 for (int index = 0; index < buffer.size(); index++)
                 {
@@ -84,7 +83,6 @@ public class Main extends Application {
                     gc.setFill(new Color(red, green, blue, alpha));
                     Point p = buffer.get(index);
                     gc.fillOval(p.x, p.y, 10, 10);
-//            System.out.println("Point at " + p.toString());
                 }
             }
         };

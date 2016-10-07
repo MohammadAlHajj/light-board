@@ -9,7 +9,7 @@ import java.awt.Point;
  * @author Moham
  *
  */
-public abstract class Pattern
+public interface Pattern
 {
-	public abstract Point getPointAt(int maxWidth, int maxHeight, double time);
+	Point getPointAt(int maxWidth, int maxHeight, double time);
 }

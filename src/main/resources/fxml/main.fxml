@@ -27,19 +27,54 @@
 
     <GridPane fx:id="controlsGrid"
         GridPane.rowIndex="1"
-        GridPane.columnIndex="0">
+        GridPane.columnIndex="0"
+        alignment="CENTER">
+
+        <!-- Patterns -->
+        <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
         <Text text="Patterns"
             GridPane.rowIndex="0"
             GridPane.columnIndex="0"/>
+
 
         <Button
             fx:id="infinityBtn"
             text="Infinity"
             onAction="#changePattern"
             GridPane.rowIndex="1"
-            GridPane.columnIndex="0"
-            />
+            GridPane.columnIndex="0" />
+
+        <Button
+            fx:id="horizontalBtn"
+            text="--"
+            onAction="#changePattern"
+            GridPane.rowIndex="1"
+            GridPane.columnIndex="1" />
+
+        <Button
+            fx:id="verticalBtn"
+            text="|"
+            onAction="#changePattern"
+            GridPane.rowIndex="1"
+            GridPane.columnIndex="2" />
+
+        <Button
+            fx:id="diagonalUpBtn"
+            text="/"
+            onAction="#changePattern"
+            GridPane.rowIndex="1"
+            GridPane.columnIndex="3" />
+
+        <Button
+            fx:id="diagonalDownBtn"
+            text="\\"
+            onAction="#changePattern"
+            GridPane.rowIndex="1"
+            GridPane.columnIndex="4" />
+
+        <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
 
     </GridPane>
 

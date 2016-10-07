@@ -15,7 +15,7 @@ import com.lightBoard.controls.Pattern;
  * @author Moham
  *
  */
-public class InfinityPattern extends Pattern
+public class InfinityPattern implements Pattern
 {
 	@Override
 	public Point getPointAt(int maxWidth, int maxHeight, double time)

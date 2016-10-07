@@ -79,4 +79,5 @@ public enum MasterControls
 	public float getBrushSize() { return brushSize; }
 	public void setBrushSize(float brushSize) { this.brushSize = brushSize; }
     public LinkedList<Point> getBuffer() { return buffer; }
+    public void setPattern(Pattern pattern) { this.pattern = pattern; }
 }
