@@ -41,13 +41,13 @@ public class Main extends Application {
         canvas = (Canvas)root.lookup("#canvas");
         controlsGrid = (GridPane) root.lookup("#controlsGrid");
         DoubleBinding heightBinding =
-                grid.heightProperty().subtract(
+            grid.heightProperty().subtract(
                 controlsGrid.getHeight() +
                 controlsGrid.getPadding().getTop() +
                 controlsGrid.getPadding().getBottom() +
                 grid.getPadding().getTop() +
-                grid.getPadding().getBottom()
-                );
+                grid.getPadding().getBottom() + 200
+            );
         canvas.widthProperty().bind(grid.widthProperty());
         canvas.heightProperty().bind(heightBinding);
 
