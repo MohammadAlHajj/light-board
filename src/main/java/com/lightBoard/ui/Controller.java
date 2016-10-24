@@ -9,11 +9,8 @@ import com.lightBoard.controls.patterns.VerticalPatterm;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,6 +29,8 @@ public class Controller implements Initializable
     @FXML private Button diagonalDownBtn;
 
     @FXML private TextField tailLengthTxt;
+    @FXML private TextField brushSizeTxt;
+    @FXML private TextField speedTxt;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -41,19 +40,58 @@ public class Controller implements Initializable
 
         mControls = MasterControls.INSTANCE;
 
-        tailLengthTxt.setTextFormatter(new TextFormatter<String>(getDoubleFilter()));
+        tailLengthTxt.setTextFormatter( new TextFormatter<String>(getTaleLengthFilter()));
+        brushSizeTxt.setTextFormatter(  new TextFormatter<String>(getBrushSizeFilter()));
+        speedTxt.setTextFormatter(      new TextFormatter<String>(getSpeedFilter()));
+
+        tailLengthTxt.setText(mControls.getMaxBufferSize() + "");
+        brushSizeTxt.setText( mControls.getBrushSize() + "");
+        speedTxt.setText(     mControls.getRepeatDelay() + "");
+
     }
 
-    public UnaryOperator getDoubleFilter()
-    {
-        return new UnaryOperator<TextFormatter.Change>() {
-            @Override
-            public TextFormatter.Change apply(TextFormatter.Change t) {
-                if (!t.getControlNewText().trim().matches("\\d+(.\\d*)?"))
-                    return null;
-                else return t;
+    private UnaryOperator<TextFormatter.Change> getTaleLengthFilter() {
+        return (t) -> {
+            if (!isInt(t.getControlNewText().trim()))
+                return null;
+            else {
+                mControls.setMaxBufferSize(Integer.parseInt(t.getControlNewText()));
+                return t;
             }
         };
+    }
+
+    private UnaryOperator<TextFormatter.Change> getBrushSizeFilter() {
+        return (t) -> {
+
+            if (!isDouble(t.getControlNewText().trim()))
+                return null;
+            else {
+                mControls.setBrushSize(Float.parseFloat(t.getControlNewText()));
+                return t;
+            }
+        };
+    }
+
+    private UnaryOperator<TextFormatter.Change> getSpeedFilter() {
+        return (t) -> {
+            if (!isInt(t.getControlNewText().trim()))
+                return null;
+            else {
+                mControls.setRepeatDelay(Integer.parseInt(t.getControlNewText()));
+                return t;
+            }
+        };
+    }
+
+    private boolean isDouble (String s){
+        assert s != null;
+        return s.matches("\\d+(.\\d*)?");
+    }
+
+    private boolean isInt (String s){
+        assert s != null;
+        return s.matches("\\d+");
     }
 
     @FXML
@@ -71,7 +109,4 @@ public class Controller implements Initializable
             mControls.setPattern(new DiagonalDownPattern());
         }
     }
-
-
-
 }

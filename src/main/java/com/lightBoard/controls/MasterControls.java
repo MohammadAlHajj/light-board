@@ -1,8 +1,8 @@
 package com.lightBoard.controls;
 import java.awt.Point;
 import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import com.lightBoard.controls.patterns.InfinityPattern;
 
@@ -21,7 +21,7 @@ public enum MasterControls
 {
     INSTANCE;
 
-	private int repeatDelay = 5;
+	private int repeatDelay = 5000;
 	private int maxBufferSize = 300;
 	private float brushSize = 5;
 	private double smoothness = 0.002;
@@ -35,37 +35,37 @@ public enum MasterControls
 
 	private Pattern pattern = new InfinityPattern();
 
-	private Timer timer = new Timer();
-	private TimerTask timerTask = new TimerTask() {
-		@Override
-		public void run(){
-			updateBuffer();
-		}
-	};
-
-
-
-
+	private ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
+    private Runnable repeatTask = new Runnable() {
+        @Override
+        public void run() {
+            try{
+                updateBuffer();
+            } finally {
+                service.schedule(this, repeatDelay, TimeUnit.MICROSECONDS);
+            }
+        }
+    };
 
     public LinkedList<Point> updateBuffer()
     {
         timeInFunc += smoothness;
         buffer.addFirst(pattern.getPointAt((int) canvas.getWidth(), (int) canvas.getHeight(), timeInFunc));
-        if (buffer.size() > maxBufferSize)
+        while (buffer.size() > maxBufferSize)
             buffer.removeLast();
         return buffer;
     }
 
 
 
-	public void startDrawing(Canvas canvas)
-	{
+	public void startDrawing(Canvas canvas) {
         this.canvas = canvas;
-		timer.schedule(timerTask, 0, repeatDelay);
+        service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
 	}
 
-
-
+    public void setRepeatDelay(int repeatDelay) {
+        this.repeatDelay = repeatDelay;
+    }
 	public int getMaxBufferSize() { return maxBufferSize; }
 	public void setMaxBufferSize(int maxBufferSize) { this.maxBufferSize = maxBufferSize; }
 	public Color getBackColor() { return backColor; }
@@ -73,7 +73,6 @@ public enum MasterControls
 	public Color getPatternColor() { return patternColor; }
 	public void setPatternColor(Color patternColor) { this.patternColor = patternColor; }
 	public int getRepeatDelay() { return repeatDelay; }
-	public void setRepeatDelay(int repeatDelay) { this.repeatDelay = repeatDelay; }
 	public double getSmoothness() { return smoothness; }
 	public void setSmoothness(double smoothness) { this.smoothness = smoothness; }
 	public float getBrushSize() { return brushSize; }

@@ -96,7 +96,7 @@
 			GridPane.rowIndex="0"
 			GridPane.columnIndex="4"/>
 
-		<Label text="Tail Length"
+		<Label text="Length"
 			GridPane.rowIndex="1"
 			GridPane.columnIndex="4"
 			maxWidth="Infinity"/>
@@ -106,20 +106,25 @@
 			GridPane.rowIndex="1"
 			GridPane.columnIndex="5"/>
 
-		<Label text="Brush Size"
+		<Label text="Width"
 			GridPane.rowIndex="2"
 			GridPane.columnIndex="4"
 			maxWidth="Infinity"/>
 
-		<Label text="Tail Length"
+        <TextField
+            fx:id="brushSizeTxt"
+            GridPane.rowIndex="2"
+            GridPane.columnIndex="5"/>
+
+		<Label text="Speed"
 			GridPane.rowIndex="3"
 			GridPane.columnIndex="4"
 			maxWidth="Infinity"/>
 
-		<Label text="Tail Length"
-			GridPane.rowIndex="4"
-			GridPane.columnIndex="4"
-			maxWidth="Infinity"/>
+        <TextField
+            fx:id="speedTxt"
+            GridPane.rowIndex="3"
+            GridPane.columnIndex="5"/>
 
 	</GridPane>
 

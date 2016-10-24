@@ -76,13 +76,17 @@ public class Main extends Application {
                 double blue = mControls.getPatternColor().getBlue();
                 double alpha = 1;
 
+                double brushSize = mControls.getBrushSize();
+
                 // draw desired points
                 for (int index = 0; index < buffer.size(); index++)
                 {
-                    alpha = ((buffer.size() - index) * 1.0 / buffer.size());
-                    gc.setFill(new Color(red, green, blue, alpha));
-                    Point p = buffer.get(index);
-                    gc.fillOval(p.x, p.y, 10, 10);
+                    try {
+                        alpha = ((buffer.size() - index) * 1.0 / buffer.size());
+                        gc.setFill(new Color(red, green, blue, alpha));
+                        Point p = buffer.get(index);
+                        gc.fillOval(p.x, p.y, brushSize, brushSize);
+                    } catch (Exception e){}
                 }
             }
         };
