@@ -1,0 +1,18 @@
+
+High priority:
+- produce executable
+- make speed a slider
+- make tail slider
+- add circular pattern
+
+Mid priority:
+- make canvas inlargable like youtube
+
+low priority
+- color controls
+- add pic to head of line
+
+LATER:
+- network control
+- mobile app control
+- adding per-client profile
