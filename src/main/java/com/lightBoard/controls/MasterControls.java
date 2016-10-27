@@ -42,7 +42,7 @@ public enum MasterControls
             try{
                 updateBuffer();
             } finally {
-                service.schedule(this, repeatDelay, TimeUnit.MICROSECONDS);
+                service.schedule(this, repeatDelay, TimeUnit.MILLISECONDS);
             }
         }
     };
