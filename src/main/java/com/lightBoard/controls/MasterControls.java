@@ -24,7 +24,7 @@ public enum MasterControls
 	private int repeatDelay = 5000;
 	private int maxBufferSize = 300;
 	private float brushSize = 5;
-	private double smoothness = 0.002;
+	private double smoothness = 0.01;
 	private double timeInFunc;
 
     private LinkedList<Point> buffer = new LinkedList<>();
