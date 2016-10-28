@@ -34,7 +34,7 @@ public class Main extends Application {
     {
         mControls = MasterControls.INSTANCE;
 
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Light Board");
         Parent root = FXMLLoader.load(Main.class.getResource("/fxml/main.fxml"));
 
         GridPane grid = (GridPane) root;
@@ -90,7 +90,6 @@ public class Main extends Application {
                 }
             }
         };
-
         mControls.startDrawing(canvas);
         timer.start();
     }

@@ -6,17 +6,22 @@ import com.lightBoard.controls.patterns.DiagonalUpPattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
 import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.patterns.VerticalPatterm;
+import com.lightBoard.ui.labelFormatters.TailLengthLabelFormatter;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.text.Text;
 
 public class Controller implements Initializable
 {
@@ -28,9 +33,13 @@ public class Controller implements Initializable
     @FXML private Button diagonalUpBtn;
     @FXML private Button diagonalDownBtn;
 
-    @FXML private TextField tailLengthTxt;
-    @FXML private TextField brushSizeTxt;
-    @FXML private TextField speedTxt;
+    @FXML private Text tailLengthTxt;
+    @FXML private Text brushSizeTxt;
+    @FXML private Text speedTxt;
+
+    @FXML private Slider speedSlider;
+    @FXML private Slider brushSizeSlider;
+    @FXML private Slider tailLengthSlider;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -40,19 +49,46 @@ public class Controller implements Initializable
 
         mControls = MasterControls.INSTANCE;
 
-        tailLengthTxt.setTextFormatter( new TextFormatter<String>(getTaleLengthFilter()));
-        brushSizeTxt.setTextFormatter(  new TextFormatter<String>(getBrushSizeFilter()));
-        speedTxt.setTextFormatter(      new TextFormatter<String>(getSpeedFilter()));
+//        tailLengthTxt.setTextFormatter( new TextFormatter<String>(getTaleLengthFilter()));
+//        brushSizeTxt.setTextFormatter(  new TextFormatter<String>(getBrushSizeFilter()));
+//        speedTxt.setTextFormatter(      new TextFormatter<String>(getSpeedFilter()));
 
-        tailLengthTxt.setText(mControls.getMaxBufferSize() + "");
-        brushSizeTxt.setText( mControls.getBrushSize() + "");
-        speedTxt.setText(     mControls.getRepeatDelay() + "");
+        tailLengthTxt.setText(      mControls.getMaxBufferSize() + "");
+        brushSizeTxt.setText(       mControls.getBrushSize() + "");
+        speedTxt.setText(           mControls.getRepeatDelay()/100 + "");
+
+//        tailLengthSlider.setMax(MasterControls.MAX_TAIL_LENGTH);
+        tailLengthSlider.setValue(mControls.getMaxBufferSize());
+        tailLengthSlider.setLabelFormatter(new TailLengthLabelFormatter(
+            "Short", "Long", tailLengthSlider.getMax()));
+        tailLengthSlider.valueProperty().addListener((ov, old_val, new_val)-> {
+            mControls.setMaxBufferSize(new_val.intValue());
+            tailLengthTxt.setText(new_val.intValue() + "");
+        });
+
+        brushSizeSlider.setValue(mControls.getBrushSize());
+        brushSizeSlider.setLabelFormatter(new TailLengthLabelFormatter(
+            "Thin", "Thick", brushSizeSlider.getMax()));
+        brushSizeSlider.valueProperty().addListener((ov, old_val, new_val)-> {
+            mControls.setBrushSize(new_val.intValue());
+            brushSizeTxt.setText(new_val.intValue() + "");
+        });
+
+        speedSlider.setValue(mControls.getRepeatDelay()/100.0 );
+        speedSlider.setLabelFormatter(new TailLengthLabelFormatter(
+            "Slow", "Fast", speedSlider.getMax()));
+        speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
+            int convertedSpeed = (int)(100 * (speedSlider.getMax() +1 - new_val.doubleValue()));
+            mControls.setRepeatDelay(convertedSpeed);
+            speedTxt.setText(Math.round(speedSlider.getValue()) +"");
+        });
 
     }
 
     private UnaryOperator<TextFormatter.Change> getTaleLengthFilter() {
         return (t) -> {
-            if (!isInt(t.getControlNewText().trim()))
+            System.out.println(t);
+            if (!isInt(t.getControlNewText().trim()) && t.isContentChange())
                 return null;
             else {
                 mControls.setMaxBufferSize(Integer.parseInt(t.getControlNewText()));
@@ -63,8 +99,8 @@ public class Controller implements Initializable
 
     private UnaryOperator<TextFormatter.Change> getBrushSizeFilter() {
         return (t) -> {
-
-            if (!isDouble(t.getControlNewText().trim()))
+            System.out.println(t);
+            if (!isDouble(t.getControlNewText().trim()) && t.isContentChange())
                 return null;
             else {
                 mControls.setBrushSize(Float.parseFloat(t.getControlNewText()));
@@ -75,7 +111,8 @@ public class Controller implements Initializable
 
     private UnaryOperator<TextFormatter.Change> getSpeedFilter() {
         return (t) -> {
-            if (!isInt(t.getControlNewText().trim()))
+            System.out.println(t);
+            if (!isInt(t.getControlNewText().trim()) && t.isContentChange())
                 return null;
             else {
                 mControls.setRepeatDelay(Integer.parseInt(t.getControlNewText()));

@@ -21,10 +21,11 @@ public enum MasterControls
 {
     INSTANCE;
 
-	private int repeatDelay = 5000;
+	private int repeatDelay = 200;
 	private int maxBufferSize = 300;
 	private float brushSize = 5;
-	private double smoothness = 0.01;
+	private double smoothness = 0.005;
+	private int pointsPerFrame = 2;
 	private double timeInFunc;
 
     private LinkedList<Point> buffer = new LinkedList<>();
@@ -42,15 +43,19 @@ public enum MasterControls
             try{
                 updateBuffer();
             } finally {
-                service.schedule(this, repeatDelay, TimeUnit.MILLISECONDS);
+                service.schedule(this, repeatDelay, TimeUnit.MICROSECONDS);
             }
         }
     };
 
     public LinkedList<Point> updateBuffer()
     {
-        timeInFunc += smoothness;
-        buffer.addFirst(pattern.getPointAt((int) canvas.getWidth(), (int) canvas.getHeight(), timeInFunc));
+	    for (int i = 0; i < pointsPerFrame; i++)
+	    {
+		    timeInFunc += smoothness;
+		    buffer.addFirst(
+			    pattern.getPointAt((int) canvas.getWidth(), (int) canvas.getHeight(), timeInFunc));
+	    }
         while (buffer.size() > maxBufferSize)
             buffer.removeLast();
         return buffer;

@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.cell.TextFieldListCell?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Slider?>
 <GridPane fx:controller="com.lightBoard.ui.Controller"
 	xmlns:fx="http://javafx.com/fxml"
 	alignment="center"
@@ -44,6 +45,8 @@
 			<ColumnConstraints minWidth="100" />
 			<ColumnConstraints/>
 			<ColumnConstraints/>
+			<ColumnConstraints minWidth="100" />
+			<ColumnConstraints minWidth="100" />
 			<ColumnConstraints minWidth="100" />
 			<ColumnConstraints minWidth="100" />
 		</columnConstraints>
@@ -101,30 +104,65 @@
 			GridPane.columnIndex="4"
 			maxWidth="Infinity"/>
 
-		<TextField
+		<Slider
+			fx:id="tailLengthSlider"
+			GridPane.rowIndex="1"
+			GridPane.columnIndex="5"
+			GridPane.columnSpan="2"
+			min="1"
+			max="1000"
+			majorTickUnit="1000"
+			showTickLabels="true"/>
+
+		<Text
 			fx:id="tailLengthTxt"
 			GridPane.rowIndex="1"
-			GridPane.columnIndex="5"/>
+			GridPane.columnIndex="7"/>
 
 		<Label text="Width"
 			GridPane.rowIndex="2"
 			GridPane.columnIndex="4"
 			maxWidth="Infinity"/>
 
-        <TextField
+		<Slider
+			fx:id="brushSizeSlider"
+			GridPane.rowIndex="2"
+			GridPane.columnIndex="5"
+			GridPane.columnSpan="2"
+			min="1"
+			max="50"
+			majorTickUnit="50"
+			showTickMarks="true"
+			snapToTicks="true"
+			showTickLabels="true"/>
+
+        <Text
             fx:id="brushSizeTxt"
             GridPane.rowIndex="2"
-            GridPane.columnIndex="5"/>
+            GridPane.columnIndex="7"/>
 
 		<Label text="Speed"
 			GridPane.rowIndex="3"
 			GridPane.columnIndex="4"
 			maxWidth="Infinity"/>
 
-        <TextField
+		<Slider
+			fx:id="speedSlider"
+			GridPane.rowIndex="3"
+			GridPane.columnIndex="5"
+			GridPane.columnSpan="2"
+			min="1"
+			max="100"
+			snapToTicks="true"
+			majorTickUnit="100"
+			minorTickCount="100"
+			showTickLabels="true"
+			showTickMarks="true"/>
+
+		<Text
             fx:id="speedTxt"
             GridPane.rowIndex="3"
-            GridPane.columnIndex="5"/>
+            GridPane.columnIndex="7"/>
 
 	</GridPane>
 
