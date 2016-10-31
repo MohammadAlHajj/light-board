@@ -21,7 +21,7 @@ public enum MasterControls
 {
     INSTANCE;
 
-	private int repeatDelay = 200;
+	private int repeatDelay = 5000;
 	private int maxBufferSize = 300;
 	private float brushSize = 5;
 	private double smoothness = 0.005;

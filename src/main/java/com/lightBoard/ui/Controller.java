@@ -57,9 +57,10 @@ public class Controller implements Initializable
 //        brushSizeTxt.setTextFormatter(  new TextFormatter<String>(getBrushSizeFilter()));
 //        speedTxt.setTextFormatter(      new TextFormatter<String>(getSpeedFilter()));
 
-        tailLengthTxt.setText(      mControls.getMaxBufferSize() + "");
-        brushSizeTxt.setText(       mControls.getBrushSize() + "");
-        speedTxt.setText(           mControls.getRepeatDelay()/100 + "");
+        tailLengthTxt.setText(mControls.getMaxBufferSize() + "");
+        brushSizeTxt.setText((int)mControls.getBrushSize() + "");
+        // max is 10000
+        speedTxt.setText((int)(speedSlider.getMax() +1 - mControls.getRepeatDelay()/100.0) + "");
 
 //        tailLengthSlider.setMax(MasterControls.MAX_TAIL_LENGTH);
         tailLengthSlider.setValue(mControls.getMaxBufferSize());
@@ -78,7 +79,7 @@ public class Controller implements Initializable
             brushSizeTxt.setText(new_val.intValue() + "");
         });
 
-        speedSlider.setValue(mControls.getRepeatDelay()/100.0 );
+        speedSlider.setValue(speedSlider.getMax() +1 - mControls.getRepeatDelay()/100.0 );
         speedSlider.setLabelFormatter(new TailLengthLabelFormatter(
             "Slow", "Fast", speedSlider.getMax()));
         speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
