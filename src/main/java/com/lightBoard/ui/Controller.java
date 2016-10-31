@@ -155,8 +155,13 @@ public class Controller implements Initializable
     }
 
     public void playPause(ActionEvent event) {
-        if (mControls.playPause())
+        if (mControls.playPause()) {
             playPauseBtn.setText("Pause");
-        else playPauseBtn.setText("Play");
+            playPauseBtn.setStyle("-fx-background-color: linear-gradient(#58ba67, #2d552f);");
+        }
+        else {
+            playPauseBtn.setText("Play");
+            playPauseBtn.setStyle("-fx-background-color: linear-gradient(#b45f5f, #572929);");
+        }
     }
 }
