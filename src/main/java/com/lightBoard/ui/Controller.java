@@ -1,6 +1,7 @@
 package com.lightBoard.ui;
 
 import com.lightBoard.controls.MasterControls;
+import com.lightBoard.controls.patterns.CircularPattern;
 import com.lightBoard.controls.patterns.DiagonalDownPattern;
 import com.lightBoard.controls.patterns.DiagonalUpPattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
@@ -32,6 +33,7 @@ public class Controller implements Initializable
     @FXML private Button verticalBtn;
     @FXML private Button diagonalUpBtn;
     @FXML private Button diagonalDownBtn;
+    @FXML private Button CircleBtn;
 
     @FXML private Text tailLengthTxt;
     @FXML private Text brushSizeTxt;
@@ -40,6 +42,8 @@ public class Controller implements Initializable
     @FXML private Slider speedSlider;
     @FXML private Slider brushSizeSlider;
     @FXML private Slider tailLengthSlider;
+
+    @FXML private Button playPauseBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -144,6 +148,14 @@ public class Controller implements Initializable
             mControls.setPattern(new DiagonalUpPattern());
         }else if (event.getSource().equals(diagonalDownBtn)) {
             mControls.setPattern(new DiagonalDownPattern());
+        }else if (event.getSource().equals(CircleBtn)){
+            mControls.setPattern(new CircularPattern());
         }
+    }
+
+    public void playPause(ActionEvent event) {
+        if (mControls.playPause())
+            playPauseBtn.setText("Pause");
+        else playPauseBtn.setText("Play");
     }
 }

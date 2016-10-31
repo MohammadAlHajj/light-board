@@ -49,6 +49,8 @@
 			<ColumnConstraints minWidth="100" />
 			<ColumnConstraints minWidth="100" />
 			<ColumnConstraints minWidth="100" />
+			<ColumnConstraints minWidth="100" />
+			<ColumnConstraints minWidth="100" />
 		</columnConstraints>
 		<!-- Patterns -->
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
@@ -56,14 +58,6 @@
 		<Text text="Patterns"
 			GridPane.rowIndex="0"
 			GridPane.columnIndex="0"/>
-
-
-		<Button text="Infinity"
-			fx:id="infinityBtn"
-			onAction="#changePattern"
-			GridPane.rowIndex="0"
-			GridPane.columnIndex="1"
-			maxWidth="Infinity"/>
 
 		<Button text="--"
 			fx:id="horizontalBtn"
@@ -93,9 +87,26 @@
 			GridPane.columnIndex="1"
 			maxWidth="Infinity"/>
 
+        <Button text="Infinity"
+            fx:id="infinityBtn"
+            onAction="#changePattern"
+            GridPane.rowIndex="3"
+            GridPane.columnIndex="0"
+            maxWidth="Infinity"/>
+
+        <Button text="O"
+            fx:id="CircleBtn"
+            onAction="#changePattern"
+            GridPane.rowIndex="3"
+            GridPane.columnIndex="1"
+            maxWidth="Infinity"/>
+
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
-		<Text text="Controls"
+        <!-- Controls -->
+        <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
+        <Text text="Controls"
 			GridPane.rowIndex="0"
 			GridPane.columnIndex="4"/>
 
@@ -164,6 +175,19 @@
             GridPane.rowIndex="3"
             GridPane.columnIndex="7"/>
 
-	</GridPane>
+        <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
+        <Button text="Pause"
+            fx:id="playPauseBtn"
+            id="playPauseBtn"
+            GridPane.rowIndex="1"
+            GridPane.columnIndex="8"
+            GridPane.rowSpan="3"
+            GridPane.columnSpan="2"
+            maxWidth="Infinity"
+            maxHeight="Infinity"
+            onAction="#playPause" />
+
+    </GridPane>
 
 </GridPane>

@@ -27,6 +27,7 @@ public enum MasterControls
 	private double smoothness = 0.005;
 	private int pointsPerFrame = 2;
 	private double timeInFunc;
+    private boolean playing = true;
 
     private LinkedList<Point> buffer = new LinkedList<>();
 
@@ -67,6 +68,20 @@ public enum MasterControls
         this.canvas = canvas;
         service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
 	}
+
+    /**
+     * @return true if playing after execution
+     */
+	public boolean playPause(){
+        if (playing){
+            smoothness = 0;
+            playing = false;
+        } else {
+            smoothness = 0.005;
+            playing = true;
+        }
+        return playing;
+    }
 
     public void setRepeatDelay(int repeatDelay) {
         this.repeatDelay = repeatDelay;
