@@ -1,8 +1,10 @@
-package com.lightBoard.ui;
+package com.lightBoard.view;
 
+import com.lightBoard.controls.Controller;
 import com.lightBoard.controls.MasterControls;
 
 import java.awt.Point;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javafx.animation.AnimationTimer;
@@ -15,7 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -24,6 +25,10 @@ public class Main extends Application {
     private MasterControls mControls;
     @FXML private Canvas canvas;
     @FXML private GridPane controlsGrid;
+    private Controller controller;
+    private Parent root;
+    private Scene scene;
+    private Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -32,10 +37,46 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        this.primaryStage = primaryStage;
         mControls = MasterControls.INSTANCE;
 
         primaryStage.setTitle("Light Board");
-        Parent root = FXMLLoader.load(Main.class.getResource("/fxml/main.fxml"));
+
+        setupStandardMode();
+
+        startAnimation();
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public void setupExtendedMode()throws IOException
+    {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main_extended.fxml"));
+        root = fxmlLoader.load();
+        controller = fxmlLoader.getController();
+        controller.setApp(this);
+
+        scene = new Scene(root, 1400, 850);
+
+        canvas = (Canvas)root.lookup("#canvas");
+        canvas.widthProperty().bind(scene.widthProperty());
+        canvas.heightProperty().bind(scene.heightProperty());
+
+        mControls.setCanvas(canvas);
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public void setupStandardMode() throws IOException
+    {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        root = fxmlLoader.load();
+        controller = fxmlLoader.getController();
+        controller.setApp(this);
+
+        scene = new Scene(root, 1400, 850);
 
         GridPane grid = (GridPane) root;
         canvas = (Canvas)root.lookup("#canvas");
@@ -43,22 +84,19 @@ public class Main extends Application {
         DoubleBinding heightBinding =
             grid.heightProperty().subtract(
                 controlsGrid.getHeight() +
-                controlsGrid.getPadding().getTop() +
-                controlsGrid.getPadding().getBottom() +
-                grid.getPadding().getTop() +
-                grid.getPadding().getBottom() + 200
+                    controlsGrid.getPadding().getTop() +
+                    controlsGrid.getPadding().getBottom() +
+                    grid.getPadding().getTop() +
+                    grid.getPadding().getBottom() + 200
             );
-        canvas.widthProperty().bind(grid.widthProperty());
+        canvas.widthProperty().bind(scene.widthProperty());
         canvas.heightProperty().bind(heightBinding);
 
-        startAnimation();
-
-        Scene scene = new Scene(root, 1400, 850);
+        mControls.setCanvas(canvas);
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
 
     private void startAnimation() {
         AnimationTimer timer = new AnimationTimer() {
@@ -90,7 +128,7 @@ public class Main extends Application {
                 }
             }
         };
-        mControls.startDrawing(canvas);
+        mControls.startDrawing();
         timer.start();
     }
 }

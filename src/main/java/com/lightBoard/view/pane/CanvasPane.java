@@ -1,4 +1,4 @@
-package com.lightBoard.ui.pane;
+package com.lightBoard.view.pane;
 
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;

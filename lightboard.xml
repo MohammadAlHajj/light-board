@@ -97,7 +97,7 @@
       <exclude name=""/>
     </fx:fileset>
     <fx:fileset id="all_" dir="${artifact.temp.output.}" includes="**/*.jar"/>
-    <fx:application id="_id" name="LightBoard" mainClass="com.lightBoard.ui.Main"/>
+    <fx:application id="_id" name="LightBoard" mainClass="com.lightBoard.view.Main"/>
     <fx:jar destfile="${artifact.temp.output.}/">
       <fx:application refid="_id"/>
       <fileset dir="${artifact.temp.output.}" excludes="**/*.jar"/>

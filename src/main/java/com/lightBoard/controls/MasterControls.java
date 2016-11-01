@@ -28,11 +28,12 @@ public enum MasterControls
 	private int pointsPerFrame = 2;
 	private double timeInFunc;
     private boolean playing = true;
+	private boolean extendedMode = false;
 
     private LinkedList<Point> buffer = new LinkedList<>();
 
     private Canvas canvas;
-    private Color backColor = new Color(0, 0, 0, 1);
+    private Color backColor = new Color(0.4, 0.4, 0.4, 1);
 	private Color patternColor = new Color(0.8, 0.8, 0.8, 1);
 
 	private Pattern pattern = new InfinityPattern();
@@ -62,10 +63,8 @@ public enum MasterControls
         return buffer;
     }
 
-
-
-	public void startDrawing(Canvas canvas) {
-        this.canvas = canvas;
+	public void startDrawing() {
+        assert canvas != null : "Can't start drawing before setting the canvas.";
         service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
 	}
 
@@ -99,4 +98,8 @@ public enum MasterControls
 	public void setBrushSize(float brushSize) { this.brushSize = brushSize; }
     public LinkedList<Point> getBuffer() { return buffer; }
     public void setPattern(Pattern pattern) { this.pattern = pattern; }
+	public boolean isExtendedMode() { return extendedMode; }
+	public void setExtendedMode(boolean extendedMode) { this.extendedMode = extendedMode; }
+	public Canvas getCanvas() { return canvas; }
+	public void setCanvas(Canvas canvas) { this.canvas = canvas; }
 }

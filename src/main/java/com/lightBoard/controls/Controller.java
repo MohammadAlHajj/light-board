@@ -1,4 +1,4 @@
-package com.lightBoard.ui;
+package com.lightBoard.controls;
 
 import com.lightBoard.controls.MasterControls;
 import com.lightBoard.controls.patterns.CircularPattern;
@@ -7,26 +7,32 @@ import com.lightBoard.controls.patterns.DiagonalUpPattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
 import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.patterns.VerticalPatterm;
-import com.lightBoard.ui.labelFormatters.TailLengthLabelFormatter;
+import com.lightBoard.view.Main;
+import com.lightBoard.view.labelFormatters.TailLengthLabelFormatter;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 public class Controller implements Initializable
 {
+    private Main application;
+
     private MasterControls mControls;
+
+    @FXML private GridPane rootGrid;
 
     @FXML private Button infinityBtn;
     @FXML private Button horizontalBtn;
@@ -163,5 +169,21 @@ public class Controller implements Initializable
             playPauseBtn.setText("Play");
             playPauseBtn.setStyle("-fx-background-color: linear-gradient(#b45f5f, #572929);");
         }
+    }
+
+    public void setUpRoot() throws IOException
+    {
+        if (mControls.isExtendedMode()){
+            mControls.setExtendedMode(false);
+            application.setupStandardMode();
+        }
+        else {
+            mControls.setExtendedMode(true);
+            application.setupExtendedMode();
+        }
+    }
+
+    public void setApp(Main app){
+        this.application = app;
     }
 }

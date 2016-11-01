@@ -1,6 +1,4 @@
-package com.lightBoard.ui.labelFormatters;
-
-import com.lightBoard.controls.MasterControls;
+package com.lightBoard.view.labelFormatters;
 
 import javafx.util.StringConverter;
 

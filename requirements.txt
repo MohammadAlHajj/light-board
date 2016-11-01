@@ -1,9 +1,9 @@
 
 High priority:
-- produce executable
-- make speed a slider
-- make tail slider
-- add circular pattern
+-- produce executable
+-- make speed a slider
+-- make tail slider
+-- add circular pattern
 
 Mid priority:
 - make canvas inlargable like youtube
