@@ -5,13 +5,6 @@ import java.awt.Point;
 import com.lightBoard.controls.Pattern;
 
 /**
- * 
- */
-
-
-
-
-/**
  * @author Moham
  *
  */

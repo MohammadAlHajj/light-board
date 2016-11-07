@@ -21,7 +21,8 @@
 	<BorderPane>
 
 		<left>
-			<VBox alignment="CENTER">
+			<VBox fx:id="leftBox"
+                alignment="CENTER">
 				<Text text="Patterns" />
 
 				<Button text="--"
@@ -63,7 +64,7 @@
 
 				<Button text="Pause"
 					fx:id="playPauseBtn"
-					onAction="#playPause" />
+					onAction="#togglePlayPause" />
 
 				<HBox
 					alignment="center"
@@ -117,7 +118,6 @@
 
 	<AnchorPane pickOnBounds="false">
 		<Button text="Min"
-			fx:id="fullScreenBtn"
 			AnchorPane.bottomAnchor="5"
 			AnchorPane.rightAnchor="5"
 			onAction="#setUpRoot" />

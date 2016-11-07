@@ -19,8 +19,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="light-board_main" target="1.8" />
-      <module name="light-board_test" target="1.8" />
+      <module name="LightBoard_main" target="1.8" />
+      <module name="LightBoard_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

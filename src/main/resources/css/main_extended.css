@@ -18,7 +18,11 @@
 }
 
 #bottomBox {
-	-fx-background-color: linear-gradient(from bottom to top, red, black));
+	-fx-background-color: linear-gradient(to bottom , rgba(0,0,0,0.1), rgba(0,0,0,1));
+}
+
+#leftBox {
+	-fx-background-color: linear-gradient(to left , rgba(0,0,0,0.1), rgba(0,0,0,1));
 }
 
 .button {
@@ -33,12 +37,22 @@
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
 
-#playPauseBtn{
+
+#playBtn{
 	-fx-text-fill: white;
-	-fx-font-size: 24;
+	-fx-font-size: 20;
     -fx-font-family: "Arial Narrow";
     -fx-font-weight: bold;
-    -fx-background-color: linear-gradient(	#58ba67, #2d552f);
+    -fx-background-color: linear-gradient(#58ba67, #2d552f);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+#pauseBtn{
+	-fx-text-fill: white;
+	-fx-font-size: 20;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(#b45f5f, #572929);
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 

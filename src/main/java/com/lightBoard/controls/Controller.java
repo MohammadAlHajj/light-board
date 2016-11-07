@@ -1,6 +1,5 @@
 package com.lightBoard.controls;
 
-import com.lightBoard.controls.MasterControls;
 import com.lightBoard.controls.patterns.CircularPattern;
 import com.lightBoard.controls.patterns.DiagonalDownPattern;
 import com.lightBoard.controls.patterns.DiagonalUpPattern;
@@ -15,11 +14,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextFormatter;
@@ -160,14 +157,21 @@ public class Controller implements Initializable
         }
     }
 
-    public void playPause(ActionEvent event) {
-        if (mControls.playPause()) {
+    public void togglePlayPause(ActionEvent event) {
+        mControls.togglePlayPause();
+        setupPlayPauseBtn();
+    }
+
+    public void setupPlayPauseBtn() {
+        if (mControls.isPlaying()) {
             playPauseBtn.setText("Pause");
-            playPauseBtn.setStyle("-fx-background-color: linear-gradient(#58ba67, #2d552f);");
+            playPauseBtn.setId("pauseBtn");
+//            playPauseBtn.setStyle("-fx-background-color: linear-gradient(#58ba67, #2d552f);");
         }
         else {
             playPauseBtn.setText("Play");
-            playPauseBtn.setStyle("-fx-background-color: linear-gradient(#b45f5f, #572929);");
+            playPauseBtn.setId("playBtn");
+//            playPauseBtn.setStyle("-fx-background-color: linear-gradient(#b45f5f, #572929);");
         }
     }
 
@@ -181,6 +185,7 @@ public class Controller implements Initializable
             mControls.setExtendedMode(true);
             application.setupExtendedMode();
         }
+        setupPlayPauseBtn();
     }
 
     public void setApp(Main app){

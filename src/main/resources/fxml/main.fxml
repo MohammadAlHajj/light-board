@@ -183,11 +183,11 @@
             GridPane.rowSpan="3"
             maxWidth="Infinity"
             maxHeight="Infinity"
-            onAction="#playPause" />
+            onAction="#togglePlayPause" />
 
 		<Button text="Max"
 			fx:id="fullScreenBtn"
-			id="playPauseBtn"
+			id="playBtn"
 			GridPane.rowIndex="2"
 			GridPane.columnIndex="9"
 			GridPane.rowSpan="2"

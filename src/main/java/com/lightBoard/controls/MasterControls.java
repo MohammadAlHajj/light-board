@@ -33,7 +33,7 @@ public enum MasterControls
     private LinkedList<Point> buffer = new LinkedList<>();
 
     private Canvas canvas;
-    private Color backColor = new Color(0.4, 0.4, 0.4, 1);
+    private Color backColor = new Color(0.0, 0.0, 0.0, 1);
 	private Color patternColor = new Color(0.8, 0.8, 0.8, 1);
 
 	private Pattern pattern = new InfinityPattern();
@@ -69,17 +69,23 @@ public enum MasterControls
 	}
 
     /**
-     * @return true if playing after execution
+     * @return true if playing after toggle
      */
-	public boolean playPause(){
+	public boolean togglePlayPause(){
         if (playing){
-            smoothness = 0;
-            playing = false;
+            pause();
         } else {
-            smoothness = 0.005;
-            playing = true;
+            play();
         }
         return playing;
+    }
+    public void play(){
+        smoothness = 0.005;
+        playing = true;
+    }
+    public void pause(){
+        smoothness = 0;
+        playing = false;
     }
 
     public void setRepeatDelay(int repeatDelay) {
@@ -102,4 +108,6 @@ public enum MasterControls
 	public void setExtendedMode(boolean extendedMode) { this.extendedMode = extendedMode; }
 	public Canvas getCanvas() { return canvas; }
 	public void setCanvas(Canvas canvas) { this.canvas = canvas; }
+    public boolean isPlaying() { return playing; }
+    public void setPlaying(boolean playing) { this.playing = playing; }
 }

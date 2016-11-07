@@ -64,6 +64,7 @@ public class Main extends Application {
         canvas.heightProperty().bind(scene.heightProperty());
 
         mControls.setCanvas(canvas);
+        controller.setupPlayPauseBtn();
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -93,6 +94,7 @@ public class Main extends Application {
         canvas.heightProperty().bind(heightBinding);
 
         mControls.setCanvas(canvas);
+        controller.setupPlayPauseBtn();
 
         primaryStage.setScene(scene);
         primaryStage.show();
