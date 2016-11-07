@@ -1,9 +1,8 @@
 
 High priority:
--- produce executable
--- make speed a slider
--- make tail slider
--- add circular pattern
+- make speed faster 50-3000
+- remove scaling from circle
+- set min size for play pause in fullscreen
 
 Mid priority:
 - make canvas inlargable like youtube
