@@ -187,7 +187,7 @@
 
 		<Button text="Max"
 			fx:id="fullScreenBtn"
-			id="playBtn"
+			id="pauseBtn"
 			GridPane.rowIndex="2"
 			GridPane.columnIndex="9"
 			GridPane.rowSpan="2"
