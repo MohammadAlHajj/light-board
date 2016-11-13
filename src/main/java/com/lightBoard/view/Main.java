@@ -12,12 +12,14 @@ import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -57,7 +59,17 @@ public class Main extends Application {
         controller = fxmlLoader.getController();
         controller.setApp(this);
 
-        scene = new Scene(root, 1400, 850);
+        primaryStage.setMaximized(true);
+
+//        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+//
+//        //set Stage boundaries to visible bounds of the main screen
+//        primaryStage.setX(primaryScreenBounds.getMinX());
+//        primaryStage.setY(primaryScreenBounds.getMinY());
+//        primaryStage.setWidth(primaryScreenBounds.getWidth());
+//        primaryStage.setHeight(primaryScreenBounds.getHeight());
+
+        scene = new Scene(root);
 
         canvas = (Canvas)root.lookup("#canvas");
         canvas.widthProperty().bind(scene.widthProperty());
@@ -76,6 +88,8 @@ public class Main extends Application {
         root = fxmlLoader.load();
         controller = fxmlLoader.getController();
         controller.setApp(this);
+
+        primaryStage.setMaximized(false);
 
         scene = new Scene(root, 1400, 850);
 
