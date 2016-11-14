@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <StackPane fx:controller="com.lightBoard.controls.Controller"
-	xmlns:fx="http://javafx.com/fxml">
+		   xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
 		<URL value="@../css/main_extended.css"/>
 	</stylesheets>
@@ -18,110 +18,114 @@
 
 	<Canvas fx:id="canvas"/>
 
-	<BorderPane>
+	<AnchorPane fx:id="controlsLayer"
+				pickOnBounds="false">
 
-		<left>
-			<VBox fx:id="leftBox"
-                alignment="CENTER">
-				<Text text="Patterns" />
+		<VBox fx:id="leftBox"
+			  alignment="CENTER"
+			  AnchorPane.leftAnchor="5"
+			  AnchorPane.bottomAnchor="5"
+			  AnchorPane.topAnchor="5">
 
-				<Button text="--"
+			<Text text="Patterns"/>
+
+			<Button text="--"
 					fx:id="horizontalBtn"
 					onAction="#changePattern"
-					maxWidth="Infinity" />
+					maxWidth="Infinity"/>
 
-				<Button text="|"
+			<Button text="|"
 					fx:id="verticalBtn"
 					onAction="#changePattern"
-					maxWidth="Infinity" />
+					maxWidth="Infinity"/>
 
-				<Button text="/"
+			<Button text="/"
 					fx:id="diagonalUpBtn"
 					onAction="#changePattern"
-					maxWidth="Infinity" />
+					maxWidth="Infinity"/>
 
-				<Button text="\\"
+			<Button text="\\"
 					fx:id="diagonalDownBtn"
 					onAction="#changePattern"
-					maxWidth="Infinity" />
+					maxWidth="Infinity"/>
 
-				<Button text="Infinity"
+			<Button text="Infinity"
 					fx:id="infinityBtn"
 					onAction="#changePattern"
-					maxWidth="Infinity" />
+					maxWidth="Infinity"/>
 
-				<Button text="O"
+			<Button text="O"
 					fx:id="CircleBtn"
 					onAction="#changePattern"
-					maxWidth="Infinity" />
-			</VBox>
-		</left>
+					maxWidth="Infinity"/>
+		</VBox>
 
-		<bottom>
-			<VBox fx:id="bottomBox"
+		<!---->
+
+		<VBox fx:id="bottomBox"
+			  alignment="center"
+			  spacing="10"
+			  AnchorPane.bottomAnchor="5"
+			  AnchorPane.leftAnchor="5"
+			  AnchorPane.rightAnchor="5">
+
+			<Button text="Pause"
+					fx:id="playPauseBtn"
+					onAction="#togglePlayPause"/>
+
+			<HBox
 				alignment="center"
 				spacing="10">
+				<!--<Text text="Controls"/>-->
 
-				<Button text="Pause"
-					fx:id="playPauseBtn"
-					onAction="#togglePlayPause" />
+				<Label text="Length"/>
 
-				<HBox
-					alignment="center"
-					spacing="10">
-					<!--<Text text="Controls"/>-->
+				<Slider
+					fx:id="tailLengthSlider"
+					min="1"
+					max="1000"
+					majorTickUnit="1000"
+					showTickLabels="true"/>
 
-					<Label text="Length" />
+				<Text fx:id="tailLengthTxt"/>
 
-					<Slider
-						fx:id="tailLengthSlider"
-						min="1"
-						max="1000"
-						majorTickUnit="1000"
-						showTickLabels="true"/>
+				<Label text="Width"/>
 
-					<Text fx:id="tailLengthTxt" />
+				<Slider
+					fx:id="brushSizeSlider"
+					min="1"
+					max="50"
+					majorTickUnit="50"
+					showTickMarks="true"
+					snapToTicks="true"
+					showTickLabels="true"/>
 
-					<Label text="Width" />
+				<Text
+					fx:id="brushSizeTxt"/>
 
-					<Slider
-						fx:id="brushSizeSlider"
-						min="1"
-						max="50"
-						majorTickUnit="50"
-						showTickMarks="true"
-						snapToTicks="true"
-						showTickLabels="true"/>
+				<Label text="Speed"/>
 
-					<Text
-						fx:id="brushSizeTxt" />
+				<Slider
+					fx:id="speedSlider"
+					min="1"
+					max="100"
+					snapToTicks="true"
+					majorTickUnit="100"
+					minorTickCount="100"
+					showTickLabels="true"
+					showTickMarks="true"/>
 
-					<Label text="Speed" />
+				<Text
+					fx:id="speedTxt"/>
+			</HBox>
 
-					<Slider
-						fx:id="speedSlider"
-						min="1"
-						max="100"
-						snapToTicks="true"
-						majorTickUnit="100"
-						minorTickCount="100"
-						showTickLabels="true"
-						showTickMarks="true"/>
+		</VBox>
 
-					<Text
-						fx:id="speedTxt" />
-				</HBox>
-			</VBox>
-		</bottom>
-
-	</BorderPane>
-
-	<AnchorPane pickOnBounds="false">
 		<Button text="Min"
-			AnchorPane.bottomAnchor="5"
-			AnchorPane.rightAnchor="5"
-			onAction="#setUpRoot" />
+				AnchorPane.bottomAnchor="5"
+				AnchorPane.rightAnchor="5"
+				onAction="#setUpRoot"/>
 	</AnchorPane>
-		
+
 </StackPane>
 

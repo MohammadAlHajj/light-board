@@ -9,17 +9,24 @@ import com.lightBoard.controls.patterns.VerticalPatterm;
 import com.lightBoard.view.Main;
 import com.lightBoard.view.labelFormatters.TailLengthLabelFormatter;
 
+import java.beans.Visibility;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.UnaryOperator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
@@ -47,6 +54,12 @@ public class Controller implements Initializable
     @FXML private Slider tailLengthSlider;
 
     @FXML private Button playPauseBtn;
+
+    /**
+     * fullscreen mode only
+     */
+    @FXML private AnchorPane controlsLayer;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources)
@@ -90,43 +103,6 @@ public class Controller implements Initializable
             mControls.setRepeatDelay(convertedSpeed);
             speedTxt.setText(Math.round(speedSlider.getValue()) +"");
         });
-
-    }
-
-    private UnaryOperator<TextFormatter.Change> getTaleLengthFilter() {
-        return (t) -> {
-            System.out.println(t);
-            if (!isInt(t.getControlNewText().trim()) && t.isContentChange())
-                return null;
-            else {
-                mControls.setMaxBufferSize(Integer.parseInt(t.getControlNewText()));
-                return t;
-            }
-        };
-    }
-
-    private UnaryOperator<TextFormatter.Change> getBrushSizeFilter() {
-        return (t) -> {
-            System.out.println(t);
-            if (!isDouble(t.getControlNewText().trim()) && t.isContentChange())
-                return null;
-            else {
-                mControls.setBrushSize(Float.parseFloat(t.getControlNewText()));
-                return t;
-            }
-        };
-    }
-
-    private UnaryOperator<TextFormatter.Change> getSpeedFilter() {
-        return (t) -> {
-            System.out.println(t);
-            if (!isInt(t.getControlNewText().trim()) && t.isContentChange())
-                return null;
-            else {
-                mControls.setRepeatDelay(Integer.parseInt(t.getControlNewText()));
-                return t;
-            }
-        };
     }
 
     private boolean isDouble (String s){
@@ -186,6 +162,21 @@ public class Controller implements Initializable
             application.setupExtendedMode();
         }
         setupPlayPauseBtn();
+    }
+
+	private ScheduledExecutorService executer;
+	private ScheduledFuture<?> scheduledFuture;
+    public void setupMouseDetectionExtendedMode(Node root)
+    {
+		executer = Executors.newSingleThreadScheduledExecutor();
+		root.setOnMouseMoved(event -> {
+			controlsLayer.setVisible(true);
+
+			if (scheduledFuture != null && !scheduledFuture.isCancelled() && !scheduledFuture.isCancelled())
+				scheduledFuture.cancel(true);
+
+			scheduledFuture = executer.schedule(() -> controlsLayer.setVisible(false), 3000, TimeUnit.MILLISECONDS);
+        });
     }
 
     public void setApp(Main app){

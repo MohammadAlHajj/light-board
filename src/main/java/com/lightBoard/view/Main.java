@@ -77,6 +77,7 @@ public class Main extends Application {
 
         mControls.setCanvas(canvas);
         controller.setupPlayPauseBtn();
+		controller.setupMouseDetectionExtendedMode(root);
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -146,5 +147,5 @@ public class Main extends Application {
         };
         mControls.startDrawing();
         timer.start();
-    }
+	}
 }
