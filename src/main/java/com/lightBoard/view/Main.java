@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
@@ -59,8 +60,6 @@ public class Main extends Application {
         controller = fxmlLoader.getController();
         controller.setApp(this);
 
-        primaryStage.setMaximized(true);
-
 //        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 //
 //        //set Stage boundaries to visible bounds of the main screen
@@ -79,9 +78,11 @@ public class Main extends Application {
         controller.setupPlayPauseBtn();
 		controller.setupMouseDetectionExtendedMode(root);
 
-        primaryStage.setScene(scene);
+		primaryStage.setScene(scene);
         primaryStage.show();
-    }
+		primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+		primaryStage.setFullScreen(true);
+	}
 
     public void setupStandardMode() throws IOException
     {
