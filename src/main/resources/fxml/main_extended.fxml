@@ -71,7 +71,8 @@
 
 			<Button text="Pause"
 					fx:id="playPauseBtn"
-					onAction="#togglePlayPause"/>
+					onAction="#togglePlayPause"
+					minWidth="200"/>
 
 			<HBox
 				alignment="center"
