@@ -69,15 +69,6 @@ public class Controller implements Initializable
 
         mControls = MasterControls.INSTANCE;
 
-//        tailLengthTxt.setTextFormatter( new TextFormatter<String>(getTaleLengthFilter()));
-//        brushSizeTxt.setTextFormatter(  new TextFormatter<String>(getBrushSizeFilter()));
-//        speedTxt.setTextFormatter(      new TextFormatter<String>(getSpeedFilter()));
-
-        tailLengthTxt.setText(mControls.getMaxBufferSize() + "");
-        brushSizeTxt.setText((int)mControls.getBrushSize() + "");
-        // max is 10000
-        speedTxt.setText((int)(speedSlider.getMax() +1 - mControls.getRepeatDelay()/100.0) + "");
-
 //        tailLengthSlider.setMax(MasterControls.MAX_TAIL_LENGTH);
         tailLengthSlider.setValue(mControls.getMaxBufferSize());
         tailLengthSlider.setLabelFormatter(new TailLengthLabelFormatter(
@@ -95,14 +86,29 @@ public class Controller implements Initializable
             brushSizeTxt.setText(new_val.intValue() + "");
         });
 
-        speedSlider.setValue(speedSlider.getMax() +1 - mControls.getRepeatDelay()/100.0 );
+		int min = MasterControls.MIN_SPEED;
+		int max = MasterControls.MAX_SPEED;
+		int originalSliderValue = (int)(
+				(max - mControls.getRepeatDelay() - min)		// invert direction of max
+						* (speedSlider.getMax()/(max - min))				// scale to fit in slider
+		);
+        speedSlider.setValue(originalSliderValue);
         speedSlider.setLabelFormatter(new TailLengthLabelFormatter(
             "Slow", "Fast", speedSlider.getMax()));
         speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
-            int convertedSpeed = (int)(100 * (speedSlider.getMax() +1 - new_val.doubleValue()));
-            mControls.setRepeatDelay(convertedSpeed);
+//            int convertedSpeed = (int)(
+//					(max - mControls.getRepeatDelay() - min)		// invert direction of max
+//					* (speedSlider.getMax()/(max - min))				// scale to fit in slider
+//					);
+			double convertedSpeed = max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));
+			System.out.println(convertedSpeed);
+			mControls.setRepeatDelay((int)convertedSpeed);
             speedTxt.setText(Math.round(speedSlider.getValue()) +"");
         });
+
+		tailLengthTxt.setText(mControls.getMaxBufferSize() + "");
+		brushSizeTxt.setText((int)mControls.getBrushSize() + "");
+		speedTxt.setText((int) speedSlider.getValue() + "");
     }
 
     private boolean isDouble (String s){
