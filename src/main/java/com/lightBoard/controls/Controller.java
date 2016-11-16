@@ -89,17 +89,14 @@ public class Controller implements Initializable
 		int min = MasterControls.MIN_SPEED;
 		int max = MasterControls.MAX_SPEED;
 		int originalSliderValue = (int)(
-				(max - mControls.getRepeatDelay() - min)		// invert direction of max
-						* (speedSlider.getMax()/(max - min))				// scale to fit in slider
+			(max - mControls.getRepeatDelay()) * ((speedSlider.getMax()-1)/(max-min)) +1
+						// invert direction of max
+                				// scale to fit in slider
 		);
-        speedSlider.setValue(originalSliderValue);
+	    speedSlider.setValue(originalSliderValue);
         speedSlider.setLabelFormatter(new TailLengthLabelFormatter(
             "Slow", "Fast", speedSlider.getMax()));
         speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
-//            int convertedSpeed = (int)(
-//					(max - mControls.getRepeatDelay() - min)		// invert direction of max
-//					* (speedSlider.getMax()/(max - min))				// scale to fit in slider
-//					);
 			double convertedSpeed = max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));
 			System.out.println(convertedSpeed);
 			mControls.setRepeatDelay((int)convertedSpeed);

@@ -134,7 +134,9 @@ public class Main extends Application {
                         gc.setFill(new Color(red, green, blue, alpha));
                         Point p = buffer.get(index);
                         gc.fillOval(p.x, p.y, brushSize, brushSize);
-                    } catch (Exception e){}
+                    } catch (Exception e){
+                        System.out.println(e);
+                    }
                 }
             }
         };
