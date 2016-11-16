@@ -20,8 +20,6 @@ import javafx.scene.paint.Color;
 public enum MasterControls
 {
     INSTANCE;
-	public static final int MIN_SPEED = 50;
-	public static final int MAX_SPEED = 3000;
 
 	private int repeatDelay = 1000;
 	private int maxBufferSize = 300;

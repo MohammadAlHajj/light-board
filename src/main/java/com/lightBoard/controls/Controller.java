@@ -7,9 +7,8 @@ import com.lightBoard.controls.patterns.HorizontalPattern;
 import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.patterns.VerticalPatterm;
 import com.lightBoard.view.Main;
-import com.lightBoard.view.labelFormatters.TailLengthLabelFormatter;
+import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
-import java.beans.Visibility;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,7 +16,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.function.UnaryOperator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +23,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -71,7 +68,7 @@ public class Controller implements Initializable
 
 //        tailLengthSlider.setMax(MasterControls.MAX_TAIL_LENGTH);
         tailLengthSlider.setValue(mControls.getMaxBufferSize());
-        tailLengthSlider.setLabelFormatter(new TailLengthLabelFormatter(
+        tailLengthSlider.setLabelFormatter(new TwoValueLabelFormatter(
             "Short", "Long", tailLengthSlider.getMax()));
         tailLengthSlider.valueProperty().addListener((ov, old_val, new_val)-> {
             mControls.setMaxBufferSize(new_val.intValue());
@@ -79,22 +76,22 @@ public class Controller implements Initializable
         });
 
         brushSizeSlider.setValue(mControls.getBrushSize());
-        brushSizeSlider.setLabelFormatter(new TailLengthLabelFormatter(
+        brushSizeSlider.setLabelFormatter(new TwoValueLabelFormatter(
             "Thin", "Thick", brushSizeSlider.getMax()));
         brushSizeSlider.valueProperty().addListener((ov, old_val, new_val)-> {
             mControls.setBrushSize(new_val.intValue());
             brushSizeTxt.setText(new_val.intValue() + "");
         });
 
-		int min = MasterControls.MIN_SPEED;
-		int max = MasterControls.MAX_SPEED;
+		int min = Settings.MIN_SPEED_MICROS;
+		int max = Settings.MAX_SPEED_MICROS;
 		int originalSliderValue = (int)(
 			(max - mControls.getRepeatDelay()) * ((speedSlider.getMax()-1)/(max-min)) +1
 						// invert direction of max
                 				// scale to fit in slider
 		);
 	    speedSlider.setValue(originalSliderValue);
-        speedSlider.setLabelFormatter(new TailLengthLabelFormatter(
+        speedSlider.setLabelFormatter(new TwoValueLabelFormatter(
             "Slow", "Fast", speedSlider.getMax()));
         speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
 			double convertedSpeed = max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));

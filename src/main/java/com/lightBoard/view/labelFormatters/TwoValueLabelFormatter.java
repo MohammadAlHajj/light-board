@@ -5,13 +5,13 @@ import javafx.util.StringConverter;
 /**
  * Created by Moham on 10/28/2016.
  */
-public class TailLengthLabelFormatter extends StringConverter<Double>
+public class TwoValueLabelFormatter extends StringConverter<Double>
 {
 	private final String MIN;
 	private final String MAX;
 	private double maxValue;
 
-	public TailLengthLabelFormatter(String minValueString, String maxValueString, double maxValue)
+	public TwoValueLabelFormatter(String minValueString, String maxValueString, double maxValue)
 	{
 		MIN = minValueString;
 		MAX = maxValueString;
