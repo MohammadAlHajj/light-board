@@ -6,7 +6,7 @@ import com.lightBoard.controls.patterns.DiagonalUpPattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
 import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.patterns.VerticalPatterm;
-import com.lightBoard.view.Main;
+import com.lightBoard.view.MainScreen;
 import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class Controller implements Initializable
 	/**
 	 * application reference
 	 */
-    private Main application;
+    private MainScreen application;
 	/**
 	 * master Controls singleton reference
 	 */
@@ -54,10 +54,10 @@ public class Controller implements Initializable
 	 * pattern property control sliders and their display text
 	 */
 	@FXML private Slider speedSlider;
-	@FXML private Slider brushSizeSlider;
+	@FXML private Slider tailThicknessSlider;
 	@FXML private Slider tailLengthSlider;
     @FXML private Text tailLengthTxt;
-    @FXML private Text brushSizeTxt;
+    @FXML private Text tailThicknessTxt;
     @FXML private Text speedTxt;
 
 	/**
@@ -104,12 +104,12 @@ public class Controller implements Initializable
 		});
 
 		// get tail thickness and set slider accordingly
-		brushSizeSlider.setValue(mControls.getBrushSize());
-		brushSizeSlider.setLabelFormatter(new TwoValueLabelFormatter(
-			"Thin", "Thick", brushSizeSlider.getMax()));
-		brushSizeSlider.valueProperty().addListener((ov, old_val, new_val)-> {
+		 tailThicknessSlider.setValue(mControls.getBrushSize());
+		 tailThicknessSlider.setLabelFormatter(new TwoValueLabelFormatter(
+			"Thin", "Thick",  tailThicknessSlider.getMax()));
+		 tailThicknessSlider.valueProperty().addListener((ov, old_val, new_val)-> {
 			mControls.setBrushSize(new_val.intValue());
-			brushSizeTxt.setText(new_val.intValue() + "");
+			tailThicknessTxt.setText(new_val.intValue() + "");
 		});
 
 		// get speed and set slider accordingly
@@ -131,8 +131,9 @@ public class Controller implements Initializable
 			speedTxt.setText(Math.round(speedSlider.getValue()) +"");
 		});
 
-		tailLengthTxt.setText(mControls.getMaxBufferSize() + "");
-		brushSizeTxt.setText((int)mControls.getBrushSize() + "");
+		// update text displays
+		tailLengthTxt.setText((int)tailLengthSlider.getValue( )+ "");
+		tailThicknessTxt.setText((int) tailThicknessSlider.getValue() + "");
 		speedTxt.setText((int) speedSlider.getValue() + "");
 	}
 
@@ -241,7 +242,7 @@ public class Controller implements Initializable
 	 * gives this controller a copy of the app it is linked to
 	 * @param app the controlling app
 	 */
-	public void setApp(Main app){
+	public void setApp(MainScreen app){
         this.application = app;
     }
 }

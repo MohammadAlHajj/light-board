@@ -33,8 +33,8 @@ public enum MasterControls
     private LinkedList<Point> buffer = new LinkedList<>();
 
     private Canvas canvas;
-    private Color backColor = new Color(0.0, 0.0, 0.0, 1);
-	private Color patternColor = new Color(0.8, 0.8, 0.8, 1);
+    private Color patternColor = new Color(0.0, 0.0, 0.0, 1);
+	private Color backColor = new Color(0.8, 0.8, 0.8, 1);
 
 	private Pattern pattern = new InfinityPattern();
 

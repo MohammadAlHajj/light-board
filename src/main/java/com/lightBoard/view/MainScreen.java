@@ -12,7 +12,6 @@ import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -20,10 +19,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+/**
+ * this is the main screen of the application. all the logic branches from here
+ */
+public class MainScreen extends Application {
 
     private MasterControls mControls;
     @FXML private Canvas canvas;
@@ -37,6 +38,11 @@ public class Main extends Application {
         launch(args);
     }
 
+    /**
+     * starting point
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception
     {
@@ -53,40 +59,54 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /**
+     * recreates the scene in fullScreen mode
+     * @throws IOException
+     */
     public void setupExtendedMode()throws IOException
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main_extended.fxml"));
+        // load the fxml and git the controller a reference of this class
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
+            "/fxml/mainScreen_extended.fxml"));
         root = fxmlLoader.load();
         controller = fxmlLoader.getController();
         controller.setApp(this);
 
         scene = new Scene(root);
 
+        // bind the size of the canvas to the size of the scene
         canvas = (Canvas)root.lookup("#canvas");
         canvas.widthProperty().bind(scene.widthProperty());
         canvas.heightProperty().bind(scene.heightProperty());
 
+        // set "canvas" as the used canvas in the master controls, and setup the play/pause button
+        // and the mouse move listener
         mControls.setCanvas(canvas);
         controller.setupPlayPauseBtn();
 		controller.setupMouseDetectionExtendedMode(root);
 
+        // restart the primary stage with the newly created scene and make it maximized
 		primaryStage.setScene(scene);
         primaryStage.show();
 		primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		primaryStage.setFullScreen(true);
 	}
 
+    /**
+     * recreates the scene in windowed mode
+     * @throws IOException
+     */
     public void setupStandardMode() throws IOException
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        // load the fxml and git the controller a reference of this class
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/mainScreen.fxml"));
         root = fxmlLoader.load();
         controller = fxmlLoader.getController();
         controller.setApp(this);
 
-        primaryStage.setMaximized(false);
-
         scene = new Scene(root, 1400, 850);
 
+        // bind the size of the canvas to the size of the scene - the height of the controls
         GridPane grid = (GridPane) root;
         canvas = (Canvas)root.lookup("#canvas");
         controlsGrid = (GridPane) root.lookup("#controlsGrid");
@@ -101,19 +121,27 @@ public class Main extends Application {
         canvas.widthProperty().bind(scene.widthProperty());
         canvas.heightProperty().bind(heightBinding);
 
+        // set "canvas" as the used canvas in the master controls, and setup the play/pause button
         mControls.setCanvas(canvas);
         controller.setupPlayPauseBtn();
 
+        // restart the primary stage with the newly created scene and make it maximized
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setMaximized(false);
     }
 
+    /**
+     * starts the drawing process on the canvas. This process will not stop until the program stops
+     */
     private void startAnimation() {
+        mControls.startDrawing();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 LinkedList<Point> buffer = mControls.getBuffer();
 
+                // clear the canvas using the background color
                 GraphicsContext gc = canvas.getGraphicsContext2D();
                 gc.setFill(mControls.getBackColor());
                 gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -125,6 +153,9 @@ public class Main extends Application {
                 double alpha = 1;
 
                 double brushSize = mControls.getBrushSize();
+                double halfBrushSize = mControls.getBrushSize()/2;
+
+                Point p;
 
                 // draw desired points
                 for (int index = 0; index < buffer.size(); index++)
@@ -132,15 +163,14 @@ public class Main extends Application {
                     try {
                         alpha = ((buffer.size() - index) * 1.0 / buffer.size());
                         gc.setFill(new Color(red, green, blue, alpha));
-                        Point p = buffer.get(index);
-                        gc.fillOval(p.x, p.y, brushSize, brushSize);
+                        p = buffer.get(index);
+                        gc.fillOval(p.x - halfBrushSize, p.y - halfBrushSize, brushSize, brushSize);
                     } catch (Exception e){
-                        System.out.println(e);
+                        e.printStackTrace();
                     }
                 }
             }
         };
-        mControls.startDrawing();
         timer.start();
 	}
 }

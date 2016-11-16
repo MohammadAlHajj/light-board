@@ -134,7 +134,7 @@
 			maxWidth="Infinity"/>
 
 		<Slider
-			fx:id="brushSizeSlider"
+			fx:id="tailThicknessSlider"
 			GridPane.rowIndex="2"
 			GridPane.columnIndex="5"
 			GridPane.columnSpan="2"
@@ -146,7 +146,7 @@
 			showTickLabels="true"/>
 
         <Text
-            fx:id="brushSizeTxt"
+            fx:id="tailThicknessTxt"
             GridPane.rowIndex="2"
             GridPane.columnIndex="7"/>
 
