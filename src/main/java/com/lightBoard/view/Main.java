@@ -93,10 +93,10 @@ public class Main extends Application {
         DoubleBinding heightBinding =
             grid.heightProperty().subtract(
                 controlsGrid.getHeight() +
-                    controlsGrid.getPadding().getTop() +
-                    controlsGrid.getPadding().getBottom() +
-                    grid.getPadding().getTop() +
-                    grid.getPadding().getBottom() + 200
+                controlsGrid.getPadding().getTop() +
+                controlsGrid.getPadding().getBottom() +
+                grid.getPadding().getTop() +
+                grid.getPadding().getBottom() + 200
             );
         canvas.widthProperty().bind(scene.widthProperty());
         canvas.heightProperty().bind(heightBinding);

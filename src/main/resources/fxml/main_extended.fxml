@@ -125,7 +125,7 @@
 		<Button text="Min"
 				AnchorPane.bottomAnchor="5"
 				AnchorPane.rightAnchor="5"
-				onAction="#setUpRoot"/>
+				onAction="#toggleFullscreen"/>
 	</AnchorPane>
 
 </StackPane>

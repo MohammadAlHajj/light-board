@@ -24,17 +24,25 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
+/**
+ * the controller linked to the main screen of the application
+ */
 public class Controller implements Initializable
 {
+	/**
+	 * application reference
+	 */
     private Main application;
-
+	/**
+	 * master Controls singleton reference
+	 */
     private MasterControls mControls;
 
-    @FXML private GridPane rootGrid;
-
+	/**
+	 * pattern control buttons
+	 */
     @FXML private Button infinityBtn;
     @FXML private Button horizontalBtn;
     @FXML private Button verticalBtn;
@@ -42,14 +50,19 @@ public class Controller implements Initializable
     @FXML private Button diagonalDownBtn;
     @FXML private Button CircleBtn;
 
+	/**
+	 * pattern property control sliders and their display text
+	 */
+	@FXML private Slider speedSlider;
+	@FXML private Slider brushSizeSlider;
+	@FXML private Slider tailLengthSlider;
     @FXML private Text tailLengthTxt;
     @FXML private Text brushSizeTxt;
     @FXML private Text speedTxt;
 
-    @FXML private Slider speedSlider;
-    @FXML private Slider brushSizeSlider;
-    @FXML private Slider tailLengthSlider;
-
+	/**
+	 * play/Pause Button
+	 */
     @FXML private Button playPauseBtn;
 
     /**
@@ -58,6 +71,11 @@ public class Controller implements Initializable
     @FXML private AnchorPane controlsLayer;
 
 
+	/**
+	 * called right after init automatically by javafx
+	 * @param location
+	 * @param resources
+	 */
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
@@ -66,46 +84,59 @@ public class Controller implements Initializable
 
         mControls = MasterControls.INSTANCE;
 
-//        tailLengthSlider.setMax(MasterControls.MAX_TAIL_LENGTH);
-        tailLengthSlider.setValue(mControls.getMaxBufferSize());
-        tailLengthSlider.setLabelFormatter(new TwoValueLabelFormatter(
-            "Short", "Long", tailLengthSlider.getMax()));
-        tailLengthSlider.valueProperty().addListener((ov, old_val, new_val)-> {
-            mControls.setMaxBufferSize(new_val.intValue());
-            tailLengthTxt.setText(new_val.intValue() + "");
-        });
+	    setupSlidersAndTextDisplay();
 
-        brushSizeSlider.setValue(mControls.getBrushSize());
-        brushSizeSlider.setLabelFormatter(new TwoValueLabelFormatter(
-            "Thin", "Thick", brushSizeSlider.getMax()));
-        brushSizeSlider.valueProperty().addListener((ov, old_val, new_val)-> {
-            mControls.setBrushSize(new_val.intValue());
-            brushSizeTxt.setText(new_val.intValue() + "");
-        });
 
-		int min = Settings.MIN_SPEED_MICROS;
-		int max = Settings.MAX_SPEED_MICROS;
+    }
+
+	/**
+	 * sets up the pattern property sliders and their text display according to the master controls
+	 */
+	private void setupSlidersAndTextDisplay()
+	{
+		// get tail length and set slider accordingly
+		tailLengthSlider.setValue(mControls.getMaxBufferSize());
+		tailLengthSlider.setLabelFormatter(new TwoValueLabelFormatter(
+			"Short", "Long", tailLengthSlider.getMax()));
+		tailLengthSlider.valueProperty().addListener((ov, old_val, new_val)-> {
+			mControls.setMaxBufferSize(new_val.intValue());
+			tailLengthTxt.setText(new_val.intValue() + "");
+		});
+
+		// get tail thickness and set slider accordingly
+		brushSizeSlider.setValue(mControls.getBrushSize());
+		brushSizeSlider.setLabelFormatter(new TwoValueLabelFormatter(
+			"Thin", "Thick", brushSizeSlider.getMax()));
+		brushSizeSlider.valueProperty().addListener((ov, old_val, new_val)-> {
+			mControls.setBrushSize(new_val.intValue());
+			brushSizeTxt.setText(new_val.intValue() + "");
+		});
+
+		// get speed and set slider accordingly
+		int min = Settings.getMinSpeedMicros();
+		int max = Settings.getMaxSpeedMicros();
 		int originalSliderValue = (int)(
 			(max - mControls.getRepeatDelay()) * ((speedSlider.getMax()-1)/(max-min)) +1
-						// invert direction of max
-                				// scale to fit in slider
+			// invert direction of max
+			// scale to fit in slider
 		);
-	    speedSlider.setValue(originalSliderValue);
-        speedSlider.setLabelFormatter(new TwoValueLabelFormatter(
-            "Slow", "Fast", speedSlider.getMax()));
-        speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
-			double convertedSpeed = max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));
+		speedSlider.setValue(originalSliderValue);
+		speedSlider.setLabelFormatter(new TwoValueLabelFormatter(
+			"Slow", "Fast", speedSlider.getMax()));
+		speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
+			double convertedSpeed =
+				max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));
 			System.out.println(convertedSpeed);
 			mControls.setRepeatDelay((int)convertedSpeed);
-            speedTxt.setText(Math.round(speedSlider.getValue()) +"");
-        });
+			speedTxt.setText(Math.round(speedSlider.getValue()) +"");
+		});
 
 		tailLengthTxt.setText(mControls.getMaxBufferSize() + "");
 		brushSizeTxt.setText((int)mControls.getBrushSize() + "");
 		speedTxt.setText((int) speedSlider.getValue() + "");
-    }
+	}
 
-    private boolean isDouble (String s){
+	private boolean isDouble (String s){
         assert s != null;
         return s.matches("\\d+(.\\d*)?");
     }
@@ -115,7 +146,11 @@ public class Controller implements Initializable
         return s.matches("\\d+");
     }
 
-    @FXML
+	/**
+	 * switches to the pattern requested by the user
+	 * @param event Event used to get the source of the call and pick the appropriate pattern
+	 */
+	@FXML
     public void changePattern(ActionEvent event)
     {
         if (event.getSource().equals(infinityBtn)) {
@@ -133,25 +168,39 @@ public class Controller implements Initializable
         }
     }
 
-    public void togglePlayPause(ActionEvent event) {
+	/**
+	 * called when the play/pause button is pressed
+	 * toggles the play status in the master control and asks for the appropriate changes
+	 */
+	@FXML
+	public void togglePlayPause() {
         mControls.togglePlayPause();
         setupPlayPauseBtn();
     }
 
-    public void setupPlayPauseBtn() {
+	/**
+	 * checks the play state in master controls and changes the text and style of
+	 * the button accordingly
+	 */
+	public void setupPlayPauseBtn() {
         if (mControls.isPlaying()) {
             playPauseBtn.setText("Pause");
             playPauseBtn.setId("pauseBtn");
-//            playPauseBtn.setStyle("-fx-background-color: linear-gradient(#58ba67, #2d552f);");
         }
         else {
             playPauseBtn.setText("Play");
             playPauseBtn.setId("playBtn");
-//            playPauseBtn.setStyle("-fx-background-color: linear-gradient(#b45f5f, #572929);");
         }
     }
 
-    public void setUpRoot() throws IOException
+	/**
+	 * called when the changeScreenMode button is pressed
+	 * changes screen state in master controls and asks for changes accordingly
+	 *
+	 * @throws IOException
+	 */
+	@FXML
+    public void toggleFullscreen() throws IOException
     {
         if (mControls.isExtendedMode()){
             mControls.setExtendedMode(false);
@@ -161,12 +210,20 @@ public class Controller implements Initializable
             mControls.setExtendedMode(true);
             application.setupExtendedMode();
         }
-        setupPlayPauseBtn();
+	    // TODO: 11/16/2016 remove this
+//        setupPlayPauseBtn();
     }
 
+
+	/**
+	 * sets up a listener for the mouse movement
+	 * once the listener is triggered, the controls layer will be shown with animation and
+	 * sceduled to disappear after x milliseconds
+	 * @param root the node that will listen to the mouse movement
+	 */
 	private ScheduledExecutorService executer;
 	private ScheduledFuture<?> scheduledFuture;
-    public void setupMouseDetectionExtendedMode(Node root)
+	public void setupMouseDetectionExtendedMode(Node root)
     {
 		executer = Executors.newSingleThreadScheduledExecutor();
 		root.setOnMouseMoved(event -> {
@@ -175,11 +232,16 @@ public class Controller implements Initializable
 			if (scheduledFuture != null && !scheduledFuture.isCancelled() && !scheduledFuture.isCancelled())
 				scheduledFuture.cancel(true);
 
-			scheduledFuture = executer.schedule(() -> controlsLayer.setVisible(false), 3000, TimeUnit.MILLISECONDS);
+			scheduledFuture = executer.schedule(() -> controlsLayer.setVisible(false),
+				Settings.getFadeDelayMillis(), TimeUnit.MILLISECONDS);
         });
     }
 
-    public void setApp(Main app){
+	/**
+	 * gives this controller a copy of the app it is linked to
+	 * @param app the controlling app
+	 */
+	public void setApp(Main app){
         this.application = app;
     }
 }

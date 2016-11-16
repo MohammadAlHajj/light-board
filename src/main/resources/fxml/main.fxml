@@ -193,7 +193,7 @@
 			GridPane.rowSpan="2"
 			maxWidth="Infinity"
 			maxHeight="Infinity"
-			onAction="#setUpRoot" />
+			onAction="#toggleFullscreen" />
 
 	</GridPane>
 
