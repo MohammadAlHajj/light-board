@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ColorPicker?>
 <GridPane fx:controller="com.lightBoard.controls.Controller"
 	xmlns:fx="http://javafx.com/fxml"
 	alignment="center"
@@ -43,13 +44,15 @@
 			<ColumnConstraints minWidth="100" />
 			<ColumnConstraints/>
 			<ColumnConstraints/>
-			<ColumnConstraints minWidth="100" />
-			<ColumnConstraints minWidth="100" />
-			<ColumnConstraints minWidth="100" />
-			<ColumnConstraints minWidth="100" />
+			<ColumnConstraints/>
+			<ColumnConstraints minWidth="150" />
+			<ColumnConstraints minWidth="50" />
+			<ColumnConstraints />
+			<ColumnConstraints />
 			<ColumnConstraints minWidth="150" />
 			<ColumnConstraints minWidth="75" />
 		</columnConstraints>
+
 		<!-- Patterns -->
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
@@ -174,12 +177,14 @@
             GridPane.columnIndex="7"/>
 
         <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+		<!-- Toggle Buttons -->
+		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
-        <Button text="Pause"
+		<Button text="Pause"
             fx:id="playPauseBtn"
             id="playPauseBtn"
             GridPane.rowIndex="1"
-            GridPane.columnIndex="8"
+            GridPane.columnIndex="9"
             GridPane.rowSpan="3"
             maxWidth="Infinity"
             maxHeight="Infinity"
@@ -189,11 +194,42 @@
 			fx:id="fullScreenBtn"
 			id="pauseBtn"
 			GridPane.rowIndex="2"
-			GridPane.columnIndex="9"
+			GridPane.columnIndex="10"
 			GridPane.rowSpan="2"
 			maxWidth="Infinity"
 			maxHeight="Infinity"
 			onAction="#toggleFullscreen" />
+
+		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+		<!-- Color Controls -->
+		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
+		<Text text="Color"
+			GridPane.rowIndex="0"
+			GridPane.columnIndex="12" />
+
+		<Label text="Foreground"
+			GridPane.rowIndex="1"
+			GridPane.columnIndex="12" />
+
+		<ColorPicker fx:id="foregroundCP"
+			GridPane.rowIndex="1"
+			GridPane.columnIndex="13"
+			maxWidth="Infinity"
+			onAction="#changeColor"/>
+
+		<Label text="Background"
+			GridPane.rowIndex="2"
+			GridPane.columnIndex="12" />
+
+		<ColorPicker fx:id="backgroundCP"
+			GridPane.rowIndex="2"
+			GridPane.columnIndex="13"
+			maxWidth="Infinity"
+			onAction="#changeColor"/>
+
+		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+
 
 	</GridPane>
 

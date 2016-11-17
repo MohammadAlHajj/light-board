@@ -8,6 +8,7 @@ import com.lightBoard.controls.patterns.InfinityPattern;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import sun.plugin2.util.ColorUtil;
 
 /**
  *
@@ -94,9 +95,7 @@ public enum MasterControls
 	public int getMaxBufferSize() { return maxBufferSize; }
 	public void setMaxBufferSize(int maxBufferSize) { this.maxBufferSize = maxBufferSize; }
 	public Color getBackColor() { return backColor; }
-	public void setBackColor(Color backColor) { this.backColor = backColor; }
 	public Color getPatternColor() { return patternColor; }
-	public void setPatternColor(Color patternColor) { this.patternColor = patternColor; }
 	public int getRepeatDelay() { return repeatDelay; }
 	public double getSmoothness() { return smoothness; }
 	public void setSmoothness(double smoothness) { this.smoothness = smoothness; }
@@ -110,4 +109,14 @@ public enum MasterControls
 	public void setCanvas(Canvas canvas) { this.canvas = canvas; }
     public boolean isPlaying() { return playing; }
     public void setPlaying(boolean playing) { this.playing = playing; }
+
+	public void setPatternColor(Color patternColor) {
+		this.patternColor = ColorHelper.getForgroundColor(backColor, patternColor);
+	}
+	public void setBackColor(Color backColor) {
+		this.backColor = backColor;
+		this.patternColor = ColorHelper.getForgroundColor(backColor, patternColor);
+	}
+
+
 }

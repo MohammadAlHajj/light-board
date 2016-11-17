@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -64,6 +65,12 @@ public class Controller implements Initializable
 	 * play/Pause Button
 	 */
     @FXML private Button playPauseBtn;
+
+	/**
+	 * Color Pickers for foreground and background
+	 */
+	@FXML private ColorPicker foregroundCP;
+	@FXML private ColorPicker backgroundCP;
 
     /**
      * fullscreen mode only
@@ -236,6 +243,14 @@ public class Controller implements Initializable
 			scheduledFuture = executer.schedule(() -> controlsLayer.setVisible(false),
 				Settings.getFadeDelayMillis(), TimeUnit.MILLISECONDS);
         });
+    }
+
+    public void changeColor(ActionEvent event)
+    {
+	    if (event.getSource().equals(foregroundCP))
+		    mControls.setPatternColor(foregroundCP.getValue());
+	    else if (event.getSource().equals(backgroundCP))
+		    mControls.setBackColor(backgroundCP.getValue());
     }
 
 	/**
