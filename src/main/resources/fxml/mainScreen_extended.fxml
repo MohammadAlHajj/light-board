@@ -9,8 +9,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
 <StackPane fx:controller="com.lightBoard.controls.Controller"
-		   xmlns:fx="http://javafx.com/fxml">
+	xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
 		<URL value="@../css/main_extended.css"/>
 	</stylesheets>
@@ -19,60 +20,64 @@
 	<Canvas fx:id="canvas"/>
 
 	<AnchorPane fx:id="controlsLayer"
-				pickOnBounds="false">
+		pickOnBounds="false">
 
 		<VBox fx:id="leftBox"
-			  alignment="CENTER"
-			  AnchorPane.leftAnchor="5"
-			  AnchorPane.bottomAnchor="5"
-			  AnchorPane.topAnchor="5">
+			alignment="CENTER"
+			AnchorPane.leftAnchor="0"
+			AnchorPane.bottomAnchor="0"
+			AnchorPane.topAnchor="0">
 
 			<Text text="Patterns"/>
 
 			<Button text="--"
-					fx:id="horizontalBtn"
-					onAction="#changePattern"
-					maxWidth="Infinity"/>
+				fx:id="horizontalBtn"
+				onAction="#changePattern"
+				maxWidth="Infinity"/>
 
 			<Button text="|"
-					fx:id="verticalBtn"
-					onAction="#changePattern"
-					maxWidth="Infinity"/>
+				fx:id="verticalBtn"
+				onAction="#changePattern"
+				maxWidth="Infinity"/>
 
 			<Button text="/"
-					fx:id="diagonalUpBtn"
-					onAction="#changePattern"
-					maxWidth="Infinity"/>
+				fx:id="diagonalUpBtn"
+				onAction="#changePattern"
+				maxWidth="Infinity"/>
 
 			<Button text="\\"
-					fx:id="diagonalDownBtn"
-					onAction="#changePattern"
-					maxWidth="Infinity"/>
+				fx:id="diagonalDownBtn"
+				onAction="#changePattern"
+				maxWidth="Infinity"/>
 
 			<Button text="Infinity"
-					fx:id="infinityBtn"
-					onAction="#changePattern"
-					maxWidth="Infinity"/>
+				fx:id="infinityBtn"
+				onAction="#changePattern"
+				maxWidth="Infinity"/>
 
 			<Button text="O"
-					fx:id="CircleBtn"
-					onAction="#changePattern"
-					maxWidth="Infinity"/>
+				fx:id="CircleBtn"
+				onAction="#changePattern"
+				maxWidth="Infinity"/>
 		</VBox>
 
 		<!---->
 
 		<VBox fx:id="bottomBox"
-			  alignment="center"
-			  spacing="10"
-			  AnchorPane.bottomAnchor="5"
-			  AnchorPane.leftAnchor="5"
-			  AnchorPane.rightAnchor="5">
+			alignment="center"
+			spacing="10"
+			AnchorPane.bottomAnchor="0"
+			AnchorPane.leftAnchor="0"
+			AnchorPane.rightAnchor="0">
+			<padding>
+				<Insets
+					top="20"/>
+			</padding>
 
 			<Button text="Pause"
-					fx:id="playPauseBtn"
-					onAction="#togglePlayPause"
-					minWidth="200"/>
+				fx:id="playPauseBtn"
+				onAction="#togglePlayPause"
+				minWidth="200"/>
 
 			<HBox
 				alignment="center"
@@ -123,9 +128,9 @@
 		</VBox>
 
 		<Button text="Min"
-				AnchorPane.bottomAnchor="5"
-				AnchorPane.rightAnchor="5"
-				onAction="#toggleFullscreen"/>
+			AnchorPane.bottomAnchor="5"
+			AnchorPane.rightAnchor="5"
+			onAction="#toggleFullscreen"/>
 	</AnchorPane>
 
 </StackPane>

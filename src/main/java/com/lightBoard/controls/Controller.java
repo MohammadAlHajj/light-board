@@ -16,21 +16,32 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 /**
  * the controller linked to the main screen of the application
  */
 public class Controller implements Initializable
 {
+
+
 	public interface IScreenModeSetup{
 		void setupStandardMode() throws IOException;
 		void setupExtendedMode() throws IOException;
@@ -79,6 +90,8 @@ public class Controller implements Initializable
      * fullscreen mode only
      */
     @FXML private AnchorPane controlsLayer;
+	@FXML public VBox bottomBox;
+	@FXML public VBox leftBox;
 
 
 	/**
@@ -232,21 +245,73 @@ public class Controller implements Initializable
 	 * sceduled to disappear after x milliseconds
 	 * @param root the node that will listen to the mouse movement
 	 */
-	private ScheduledExecutorService executer;
+	private ScheduledExecutorService executor;
 	private ScheduledFuture<?> scheduledFuture;
 	public void setupMouseDetectionExtendedMode(Node root)
     {
-		executer = Executors.newSingleThreadScheduledExecutor();
+		executor = Executors.newSingleThreadScheduledExecutor();
 		root.setOnMouseMoved(event -> {
-			controlsLayer.setVisible(true);
+			if (scheduledFuture != null && scheduledFuture.isDone())
+				animateControlsFadeIn();
 
-			if (scheduledFuture != null && !scheduledFuture.isCancelled() && !scheduledFuture.isCancelled())
+			if (scheduledFuture != null && !scheduledFuture.isCancelled() && !scheduledFuture.isDone())
 				scheduledFuture.cancel(true);
 
-			scheduledFuture = executer.schedule(() -> controlsLayer.setVisible(false),
+			scheduledFuture = executor.schedule(this::animateControlsFadeOut,
 				Settings.getFadeDelayMillis(), TimeUnit.MILLISECONDS);
         });
     }
+
+    public void animateControlsFadeIn(){
+	    Timeline fadeInTimeline = new Timeline();
+	    Duration duration = new Duration(Settings.getFadeLengthMillis());
+
+	    DoubleProperty angle = new SimpleDoubleProperty();
+	    KeyValue fadeControlsKV = new KeyValue(controlsLayer.opacityProperty(), 1);
+	    KeyValue rotateKV = new KeyValue(angle, -90);
+	    KeyFrame animationKF = new KeyFrame(duration, fadeControlsKV, rotateKV);
+
+	    Rotate bottomBoxRotate = new Rotate();
+	    bottomBoxRotate.angleProperty().bind(angle);
+	    bottomBoxRotate.setAxis(new Point3D(1, 0, 0));
+	    bottomBoxRotate.setPivotY(bottomBox.getLayoutX() + bottomBox.getHeight());
+	    bottomBox.getTransforms().add(bottomBoxRotate);
+
+	    Rotate leftBoxRotate = new Rotate();
+	    leftBoxRotate.angleProperty().bind(angle);
+	    leftBoxRotate.setAxis(new Point3D(0, 1, 0));
+	    leftBoxRotate.setPivotY(leftBox.getLayoutY());
+	    leftBox.getTransforms().add(leftBoxRotate);
+
+	    fadeInTimeline.getKeyFrames().addAll(animationKF);
+	    fadeInTimeline.play();
+    }
+
+    public void animateControlsFadeOut(){
+	    Timeline fadeOutTimeline = new Timeline();
+	    Duration duration = new Duration(Settings.getFadeLengthMillis());
+
+	    DoubleProperty angle = new SimpleDoubleProperty();
+	    KeyValue fadeControlsKV = new KeyValue(controlsLayer.opacityProperty(), 0);
+	    KeyValue rotateKV = new KeyValue(angle, 90);
+	    KeyFrame animationKF = new KeyFrame(duration, fadeControlsKV, rotateKV);
+
+	    Rotate bottomBoxRotate = new Rotate();
+	    bottomBoxRotate.angleProperty().bind(angle);
+	    bottomBoxRotate.setAxis(new Point3D(1, 0, 0));
+	    bottomBoxRotate.setPivotY(bottomBox.getLayoutX() + bottomBox.getHeight());
+	    bottomBox.getTransforms().add(bottomBoxRotate);
+
+	    Rotate leftBoxRotate = new Rotate();
+	    leftBoxRotate.angleProperty().bind(angle);
+	    leftBoxRotate.setAxis(new Point3D(0, 1, 0));
+	    leftBoxRotate.setPivotY(leftBox.getLayoutY());
+	    leftBox.getTransforms().add(leftBoxRotate);
+
+	    fadeOutTimeline.getKeyFrames().addAll(animationKF);
+	    fadeOutTimeline.play();
+    }
+
 
     public void changeColor(ActionEvent event)
     {
