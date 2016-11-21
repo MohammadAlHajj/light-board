@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -176,4 +177,12 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         };
         timer.start();
 	}
+
+	@Override
+	public void showCursor(boolean state){
+		if (state)  scene.setCursor(Cursor.DEFAULT);
+		else        scene.setCursor(Cursor.NONE);
+    }
+
+
 }

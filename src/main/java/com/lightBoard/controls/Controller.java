@@ -45,6 +45,7 @@ public class Controller implements Initializable
 	public interface IScreenModeSetup{
 		void setupStandardMode() throws IOException;
 		void setupExtendedMode() throws IOException;
+		void showCursor(boolean state);
 	}
 	/**
 	 * application reference
@@ -263,6 +264,8 @@ public class Controller implements Initializable
     }
 
     public void animateControlsFadeIn(){
+	    application.showCursor(true);
+
 	    Timeline fadeInTimeline = new Timeline();
 	    Duration duration = new Duration(Settings.getFadeLengthMillis());
 
@@ -310,6 +313,8 @@ public class Controller implements Initializable
 
 	    fadeOutTimeline.getKeyFrames().addAll(animationKF);
 	    fadeOutTimeline.play();
+
+	    application.showCursor(false);
     }
 
 
