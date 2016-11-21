@@ -1,11 +1,12 @@
 
 High priority:
-- make speed faster 50-3000
-- remove scaling from circle
-- set min size for play pause in fullscreen
+-- make speed faster 50-3000
+-- remove scaling from circle
+-- set min size for play pause in fullscreen
+- fix lag on color change
 
 Mid priority:
-- make canvas inlargable like youtube
+-- make canvas inlargable like youtube
 
 low priority
 - color controls

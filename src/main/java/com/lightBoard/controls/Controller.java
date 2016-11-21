@@ -6,7 +6,6 @@ import com.lightBoard.controls.patterns.DiagonalUpPattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
 import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.patterns.VerticalPatterm;
-import com.lightBoard.view.MainScreen;
 import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.IOException;
@@ -32,10 +31,14 @@ import javafx.scene.text.Text;
  */
 public class Controller implements Initializable
 {
+	public interface IScreenModeSetup{
+		void setupStandardMode() throws IOException;
+		void setupExtendedMode() throws IOException;
+	}
 	/**
 	 * application reference
 	 */
-    private MainScreen application;
+    private IScreenModeSetup application;
 	/**
 	 * master Controls singleton reference
 	 */
@@ -253,11 +256,13 @@ public class Controller implements Initializable
 		    mControls.setBackColor(backgroundCP.getValue());
     }
 
+
+
 	/**
 	 * gives this controller a copy of the app it is linked to
 	 * @param app the controlling app
 	 */
-	public void setApp(MainScreen app){
+	public void setApp(IScreenModeSetup app){
         this.application = app;
     }
 }

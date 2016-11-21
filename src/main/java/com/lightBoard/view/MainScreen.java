@@ -24,7 +24,8 @@ import javafx.stage.Stage;
 /**
  * this is the main screen of the application. all the logic branches from here
  */
-public class MainScreen extends Application {
+public class MainScreen extends Application implements Controller.IScreenModeSetup
+{
 
     private MasterControls mControls;
     @FXML private Canvas canvas;
@@ -63,6 +64,7 @@ public class MainScreen extends Application {
      * recreates the scene in fullScreen mode
      * @throws IOException
      */
+    @Override
     public void setupExtendedMode()throws IOException
     {
         // load the fxml and git the controller a reference of this class
@@ -96,6 +98,7 @@ public class MainScreen extends Application {
      * recreates the scene in windowed mode
      * @throws IOException
      */
+    @Override
     public void setupStandardMode() throws IOException
     {
         // load the fxml and git the controller a reference of this class
