@@ -4,6 +4,13 @@ High priority:
 -- remove scaling from circle
 -- set min size for play pause in fullscreen
 - fix lag on color change
+- fix mouse staying invisible 
+- add space and esc for 
+- make default horizontal
+- colors defaulting to white when exiting fullscreen
+- colors defaulting if previous color is acceptable (it should stay on previous)
+- add color override checkbox
+- make speed faster
 
 Mid priority:
 -- make canvas inlargable like youtube
