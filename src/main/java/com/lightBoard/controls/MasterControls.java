@@ -117,6 +117,4 @@ public enum MasterControls
 		this.backColor = backColor;
 		this.patternColor = ColorHelper.getForgroundColor(backColor, patternColor);
 	}
-
-
 }

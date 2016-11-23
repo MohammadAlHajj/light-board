@@ -93,6 +93,9 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         primaryStage.show();
 		primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		primaryStage.setFullScreen(true);
+
+        // guarantees that the cursor is shown when the screen mode is switched
+        showCursor(true);
 	}
 
     /**
@@ -133,6 +136,9 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setMaximized(false);
+
+        // guarantees that the cursor is shown when the screen mode is switched
+        showCursor(true);
     }
 
     /**
@@ -178,6 +184,10 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         timer.start();
 	}
 
+    /**
+     * shows or hides the cursor
+     * @param state this is the desired state (true to show cursor)
+     */
 	@Override
 	public void showCursor(boolean state){
 		if (state)  scene.setCursor(Cursor.DEFAULT);

@@ -235,8 +235,9 @@ public class Controller implements Initializable
             mControls.setExtendedMode(true);
             application.setupExtendedMode();
         }
-	    // TODO: 11/16/2016 remove this
-//        setupPlayPauseBtn();
+        // clears any possible scheduled fade of the mouse cursor
+	    if (scheduledFuture != null && !scheduledFuture.isCancelled())
+	        scheduledFuture.cancel(true);
     }
 
 
