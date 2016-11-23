@@ -245,6 +245,8 @@ public class Controller implements Initializable
             mControls.setExtendedMode(true);
             application.setupExtendedMode();
         }
+        // clears the residue of the pattern from the canvas
+        mControls.getBuffer().clear();
         // clears any possible scheduled fade of the mouse cursor
 	    if (scheduledFuture != null && !scheduledFuture.isCancelled())
 	        scheduledFuture.cancel(true);
@@ -344,8 +346,7 @@ public class Controller implements Initializable
 	    else if (event.getSource().equals(backgroundCP)) {
 		    mControls.setBackgroundColor(backgroundCP.getValue());
 	    }
-	    foregroundCP.setValue(mControls.getPatternColor());
-	    backgroundCP.setValue(mControls.getBackgroundColor());
+	    setupColorPickers();
     }
 
 

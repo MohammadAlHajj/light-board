@@ -117,6 +117,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         // bind the size of the canvas to the size of the scene - the height of the controls
         GridPane grid = (GridPane) root;
         canvas = controller.getCanvas();
+
         controlsGrid = controller.getControlsGrid();
         DoubleBinding heightBinding =
             grid.heightProperty().subtract(
