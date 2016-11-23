@@ -5,14 +5,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.lightBoard.controls.patterns.InfinityPattern;
+import com.lightBoard.controls.userProfiles.PatientProfile;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import sun.plugin2.util.ColorUtil;
-
-/**
- *
- */
 
 /**
  * @author Moham
@@ -21,6 +17,8 @@ import sun.plugin2.util.ColorUtil;
 public enum MasterControls
 {
     INSTANCE;
+
+	private PatientProfile patientProfile = PatientProfile.defaultProfile();
 
 	private int repeatDelay = 1000;
 	private int maxBufferSize = 300;
@@ -34,20 +32,16 @@ public enum MasterControls
     private LinkedList<Point> buffer = new LinkedList<>();
 
     private Canvas canvas;
-    private Color patternColor = ColorHelper.SOFT_WHITE;
-	private Color backColor = ColorHelper.SOFT_BLACK;
-
-	private Pattern pattern = new InfinityPattern();
+    private Color patternColor = patientProfile.getPatternColor();
+	private Color backgroundColor = patientProfile.getBackgroundColor();
+	private Pattern pattern = patientProfile.getDefaultPattern();
 
 	private ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
     private Runnable repeatTask = new Runnable() {
         @Override
         public void run() {
-            try{
-                updateBuffer();
-            } finally {
-                service.schedule(this, repeatDelay, TimeUnit.MICROSECONDS);
-            }
+            updateBuffer();
+            service.schedule(this, repeatDelay, TimeUnit.MICROSECONDS);
         }
     };
 
@@ -59,8 +53,10 @@ public enum MasterControls
 		    buffer.addFirst(
 			    pattern.getPointAt((int) canvas.getWidth(), (int) canvas.getHeight(), timeInFunc));
 	    }
+
         while (buffer.size() > maxBufferSize)
             buffer.removeLast();
+
         return buffer;
     }
 
@@ -94,7 +90,7 @@ public enum MasterControls
     }
 	public int getMaxBufferSize() { return maxBufferSize; }
 	public void setMaxBufferSize(int maxBufferSize) { this.maxBufferSize = maxBufferSize; }
-	public Color getBackColor() { return backColor; }
+	public Color getBackgroundColor() { return backgroundColor; }
 	public Color getPatternColor() { return patternColor; }
 	public int getRepeatDelay() { return repeatDelay; }
 	public double getSmoothness() { return smoothness; }
@@ -109,12 +105,15 @@ public enum MasterControls
 	public void setCanvas(Canvas canvas) { this.canvas = canvas; }
     public boolean isPlaying() { return playing; }
     public void setPlaying(boolean playing) { this.playing = playing; }
+	public PatientProfile getPatientProfile() {return patientProfile;}
+	public void setPatientProfile(PatientProfile patientProfile) {this.patientProfile = patientProfile;}
 
 	public void setPatternColor(Color patternColor) {
-		this.patternColor = ColorHelper.getForgroundColor(backColor, patternColor);
+		this.patternColor = ColorHelper.getForgroundColor(backgroundColor, patternColor);
 	}
-	public void setBackColor(Color backColor) {
-		this.backColor = backColor;
-		this.patternColor = ColorHelper.getForgroundColor(backColor, patternColor);
+
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+		this.patternColor = ColorHelper.getForgroundColor(backgroundColor, patternColor);
 	}
 }

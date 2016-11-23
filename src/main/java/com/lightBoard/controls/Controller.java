@@ -324,7 +324,7 @@ public class Controller implements Initializable
 	    if (event.getSource().equals(foregroundCP))
 		    mControls.setPatternColor(foregroundCP.getValue());
 	    else if (event.getSource().equals(backgroundCP))
-		    mControls.setBackColor(backgroundCP.getValue());
+		    mControls.setBackgroundColor(backgroundCP.getValue());
     }
 
 

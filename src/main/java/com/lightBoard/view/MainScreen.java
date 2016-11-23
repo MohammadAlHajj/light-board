@@ -153,7 +153,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 
                 // clear the canvas using the background color
                 GraphicsContext gc = canvas.getGraphicsContext2D();
-                gc.setFill(mControls.getBackColor());
+                gc.setFill(mControls.getBackgroundColor());
                 gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
                 // set Points color
