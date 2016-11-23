@@ -11,9 +11,10 @@ High priority:
 - add space and esc for 
 -- make default horizontal
 - colors defaulting to white when exiting fullscreen
-- colors defaulting if previous color is acceptable (it should stay on previous)
+-- colors defaulting if previous color is acceptable (it should stay on previous)
 - add color override checkbox
 - make speed faster
+- reset pattern on screen change
 
 Mid priority:
 -- make canvas inlargable like youtube

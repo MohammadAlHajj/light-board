@@ -26,10 +26,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -40,8 +42,6 @@ import javafx.util.Duration;
  */
 public class Controller implements Initializable
 {
-
-
 	public interface IScreenModeSetup{
 		void setupStandardMode() throws IOException;
 		void setupExtendedMode() throws IOException;
@@ -82,10 +82,20 @@ public class Controller implements Initializable
     @FXML private Button playPauseBtn;
 
 	/**
+	 * the canvas that the program draws the patterns on
+	 */
+	@FXML private Canvas canvas;
+
+	/**
 	 * Color Pickers for foreground and background
 	 */
 	@FXML private ColorPicker foregroundCP;
 	@FXML private ColorPicker backgroundCP;
+
+	/**
+	 * normal screen mode only
+	 */
+	@FXML private GridPane controlsGrid;
 
     /**
      * fullscreen mode only
@@ -264,7 +274,8 @@ public class Controller implements Initializable
         });
     }
 
-    public void animateControlsFadeIn(){
+    public void animateControlsFadeIn()
+    {
 	    application.showCursor(true);
 
 	    Timeline fadeInTimeline = new Timeline();
@@ -291,7 +302,8 @@ public class Controller implements Initializable
 	    fadeInTimeline.play();
     }
 
-    public void animateControlsFadeOut(){
+    public void animateControlsFadeOut()
+    {
 	    Timeline fadeOutTimeline = new Timeline();
 	    Duration duration = new Duration(Settings.getFadeLengthMillis());
 
@@ -318,13 +330,22 @@ public class Controller implements Initializable
 	    application.showCursor(false);
     }
 
+	public void setupColorPickers() {
+		foregroundCP.setValue(mControls.getPatternColor());
+		backgroundCP.setValue(mControls.getBackgroundColor());
+	}
+
 
     public void changeColor(ActionEvent event)
     {
-	    if (event.getSource().equals(foregroundCP))
+	    if (event.getSource().equals(foregroundCP)) {
 		    mControls.setPatternColor(foregroundCP.getValue());
-	    else if (event.getSource().equals(backgroundCP))
+	    }
+	    else if (event.getSource().equals(backgroundCP)) {
 		    mControls.setBackgroundColor(backgroundCP.getValue());
+	    }
+	    foregroundCP.setValue(mControls.getPatternColor());
+	    backgroundCP.setValue(mControls.getBackgroundColor());
     }
 
 
@@ -336,4 +357,7 @@ public class Controller implements Initializable
 	public void setApp(IScreenModeSetup app){
         this.application = app;
     }
+
+	public Canvas getCanvas() {return canvas;}
+	public GridPane getControlsGrid() {return controlsGrid;}
 }

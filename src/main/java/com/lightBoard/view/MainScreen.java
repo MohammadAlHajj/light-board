@@ -78,13 +78,14 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         scene = new Scene(root);
 
         // bind the size of the canvas to the size of the scene
-        canvas = (Canvas)root.lookup("#canvas");
+        canvas = controller.getCanvas();
         canvas.widthProperty().bind(scene.widthProperty());
         canvas.heightProperty().bind(scene.heightProperty());
 
         // set "canvas" as the used canvas in the master controls, and setup the play/pause button
         // and the mouse move listener
         mControls.setCanvas(canvas);
+
         controller.setupPlayPauseBtn();
 		controller.setupMouseDetectionExtendedMode(root);
 
@@ -115,8 +116,8 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 
         // bind the size of the canvas to the size of the scene - the height of the controls
         GridPane grid = (GridPane) root;
-        canvas = (Canvas)root.lookup("#canvas");
-        controlsGrid = (GridPane) root.lookup("#controlsGrid");
+        canvas = controller.getCanvas();
+        controlsGrid = controller.getControlsGrid();
         DoubleBinding heightBinding =
             grid.heightProperty().subtract(
                 controlsGrid.getHeight() +
@@ -130,7 +131,9 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 
         // set "canvas" as the used canvas in the master controls, and setup the play/pause button
         mControls.setCanvas(canvas);
+
         controller.setupPlayPauseBtn();
+        controller.setupColorPickers();
 
         // restart the primary stage with the newly created scene and make it maximized
         primaryStage.setScene(scene);
@@ -193,6 +196,4 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 		if (state)  scene.setCursor(Cursor.DEFAULT);
 		else        scene.setCursor(Cursor.NONE);
     }
-
-
 }
