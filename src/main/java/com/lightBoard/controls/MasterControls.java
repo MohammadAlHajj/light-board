@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.userProfiles.PatientProfile;
 
 import javafx.scene.canvas.Canvas;
@@ -109,11 +108,12 @@ public enum MasterControls
 	public void setPatientProfile(PatientProfile patientProfile) {this.patientProfile = patientProfile;}
 
 	public void setPatternColor(Color patternColor) {
-		this.patternColor = ColorHelper.getForgroundColor(backgroundColor, patternColor);
+		this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor,
+			this.patternColor);
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		this.patternColor = ColorHelper.getForgroundColor(backgroundColor, patternColor);
+		this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor);
 	}
 }

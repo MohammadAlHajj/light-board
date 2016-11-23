@@ -1,12 +1,15 @@
+-	: todo
+--	: done
+-*	: in progress
 
 High priority:
 -- make speed faster 50-3000
 -- remove scaling from circle
 -- set min size for play pause in fullscreen
 - fix lag on color change
-- fix mouse staying invisible 
+-- fix mouse staying invisible 
 - add space and esc for 
-- make default horizontal
+-- make default horizontal
 - colors defaulting to white when exiting fullscreen
 - colors defaulting if previous color is acceptable (it should stay on previous)
 - add color override checkbox
@@ -16,10 +19,10 @@ Mid priority:
 -- make canvas inlargable like youtube
 
 low priority
-- color controls
+-- color controls
 - add pic to head of line
 
 LATER:
 - network control
 - mobile app control
-- adding per-client profile
+-* adding per-client profile

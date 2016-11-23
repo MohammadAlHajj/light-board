@@ -4,6 +4,8 @@
 package com.lightBoard.controls;
 
 
+import com.sun.istack.internal.Nullable;
+
 import javafx.scene.paint.Color;
 
 /**
@@ -17,13 +19,16 @@ public class ColorHelper
 	public static final Color SOFT_BLACK = new Color(0.1,0.1,0.1, 1);
 
 	/**
-	 * // FIXME: 11/16/2016 test this method
-	 * returns an appropriate forground depending on the luminosities of the current forground
-	 * and background
-	 * @param backgroundColor
+	 * NOTE: accepted color means that it's luminosity difference to the background color is
+	 * more then half the color spectrum
+	 *
+	 * returns an accepted foreground color. this method takes the old foreground color
+	 * into consideration, {@link #getForegroundColor(Color, Color)} doesn't
+	 * @param backgroundColor accepted foreground color
 	 * @return
 	 */
-	public static Color getForgroundColor(Color backgroundColor, Color forgroundColor)
+	public static Color getForegroundColor(Color backgroundColor, Color newForegroundColor,
+		Color oldForegroundColor)
 	{
 		// get luminosities while taking human eye color weights into consideration
 		double backLuminosity = Math.sqrt(
@@ -31,16 +36,52 @@ public class ColorHelper
 			0.587*Math.pow(backgroundColor.getGreen(), 2) +
 			0.114*Math.pow(backgroundColor.getBlue(), 2));
 
-		double frontLuminosity = Math.sqrt(
-			0.299*Math.pow(forgroundColor.getRed(), 2) +
-			0.587*Math.pow(forgroundColor.getGreen(), 2) +
-			0.114*Math.pow(forgroundColor.getBlue(), 2));
+		double newFrontLuminosity = Math.sqrt(
+			0.299*Math.pow(newForegroundColor.getRed(), 2) +
+			0.587*Math.pow(newForegroundColor.getGreen(), 2) +
+			0.114*Math.pow(newForegroundColor.getBlue(), 2));
 
-		// if luminosity difference is more then half the color spectrum, then return the same
-		// forground color
-		if (Math.abs(frontLuminosity - backLuminosity) >= 0.5)
-			return forgroundColor;
-		// else return a default color with luminosity difference of half the color spectrum
+		double oldFrontLuminosity = Math.sqrt(
+			0.299*Math.pow(oldForegroundColor.getRed(), 2) +
+			0.587*Math.pow(oldForegroundColor.getGreen(), 2) +
+			0.114*Math.pow(oldForegroundColor.getBlue(), 2));
+
+		// NOTE: accepted color means that it's luminosity difference to the background color is
+		// more then half the color spectrum
+		// if new foreground color is accepted, return it
+		if (Math.abs(newFrontLuminosity - backLuminosity) >= 0.5)       return newForegroundColor;
+		//else if old foreground color is accepted, return it
+		else if (Math.abs(oldFrontLuminosity - backLuminosity) >= 0.5)  return oldForegroundColor;
+		// else return a default accepted color
+		else return backLuminosity > 0.5 ? ColorHelper.SOFT_BLACK : ColorHelper.SOFT_WHITE;
+	}
+
+	/**
+	 * NOTE: accepted color means that it's luminosity difference to the background color is
+	 * more then half the color spectrum
+	 *
+	 * returns an accepted foreground color. this method does not take the old foreground color
+	 * into consideration and returns a default directly if the passed foreground color is not
+	 * accepted. For consideration use {@link #getForegroundColor(Color, Color, Color)}
+	 * @param backgroundColor accepted foreground color
+	 * @return
+	 */
+	public static Color getForegroundColor(Color backgroundColor, Color foregroundColor)
+	{
+		// get luminosities while taking human eye color weights into consideration
+		double backLuminosity = Math.sqrt(
+			0.299*Math.pow(backgroundColor.getRed(), 2) +
+			0.587*Math.pow(backgroundColor.getGreen(), 2) +
+			0.114*Math.pow(backgroundColor.getBlue(), 2));
+
+		double newFrontLuminosity = Math.sqrt(
+			0.299*Math.pow(foregroundColor.getRed(), 2) +
+			0.587*Math.pow(foregroundColor.getGreen(), 2) +
+			0.114*Math.pow(foregroundColor.getBlue(), 2));
+
+		// if foreground color is accepted, return it
+		if (Math.abs(newFrontLuminosity - backLuminosity) >= 0.5)       return foregroundColor;
+		// else return a default accepted color
 		else return backLuminosity > 0.5 ? ColorHelper.SOFT_BLACK : ColorHelper.SOFT_WHITE;
 	}
 }
