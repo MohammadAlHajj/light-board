@@ -17,6 +17,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -135,6 +137,15 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 
         controller.setupPlayPauseBtn();
         controller.setupColorPickers();
+
+        // setup checkbox tooltip
+        CheckBox colorOverrideCB = controller.getColorOverrideCB();
+        Tooltip tooltip = new Tooltip(
+            "This program takes the sensitivity of \n" +
+            "the human eye to colors into consideration \n" +
+            "and changes the latter accordingly. Check \n" +
+            "this box to disable the feature.");
+        colorOverrideCB.setTooltip(tooltip);
 
         // restart the primary stage with the newly created scene and make it maximized
         primaryStage.setScene(scene);

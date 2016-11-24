@@ -28,6 +28,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
@@ -87,10 +88,11 @@ public class Controller implements Initializable
 	@FXML private Canvas canvas;
 
 	/**
-	 * Color Pickers for foreground and background
+	 * Color controls
 	 */
 	@FXML private ColorPicker foregroundCP;
 	@FXML private ColorPicker backgroundCP;
+	@FXML private CheckBox colorOverrideCB;
 
 	/**
 	 * normal screen mode only
@@ -252,6 +254,11 @@ public class Controller implements Initializable
 	        scheduledFuture.cancel(true);
     }
 
+	public void toggleColorOverride() {
+		mControls.setBypassColorCorrection(colorOverrideCB.isSelected());
+		changeColor();
+	}
+
 
 	/**
 	 * sets up a listener for the mouse movement
@@ -338,14 +345,10 @@ public class Controller implements Initializable
 	}
 
 
-    public void changeColor(ActionEvent event)
+    public void changeColor()
     {
-	    if (event.getSource().equals(foregroundCP)) {
-		    mControls.setPatternColor(foregroundCP.getValue());
-	    }
-	    else if (event.getSource().equals(backgroundCP)) {
-		    mControls.setBackgroundColor(backgroundCP.getValue());
-	    }
+	    mControls.setPatternColor(foregroundCP.getValue());
+	    mControls.setBackgroundColor(backgroundCP.getValue());
 	    setupColorPickers();
     }
 
@@ -361,4 +364,5 @@ public class Controller implements Initializable
 
 	public Canvas getCanvas() {return canvas;}
 	public GridPane getControlsGrid() {return controlsGrid;}
+	public CheckBox getColorOverrideCB() {return colorOverrideCB;}
 }

@@ -27,6 +27,7 @@ public enum MasterControls
 	private double timeInFunc;
     private boolean playing = true;
 	private boolean extendedMode = false;
+	private boolean bypassColorCorrection = false;
 
     private LinkedList<Point> buffer = new LinkedList<>();
 
@@ -106,14 +107,18 @@ public enum MasterControls
     public void setPlaying(boolean playing) { this.playing = playing; }
 	public PatientProfile getPatientProfile() {return patientProfile;}
 	public void setPatientProfile(PatientProfile patientProfile) {this.patientProfile = patientProfile;}
+	public boolean isBypassColorCorrection() {return bypassColorCorrection;}
+	public void setBypassColorCorrection(boolean bypassColorCorrection) {this.bypassColorCorrection = bypassColorCorrection;}
 
 	public void setPatternColor(Color patternColor) {
-		this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor,
+		if(bypassColorCorrection) this.patternColor = patternColor;
+		else this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor,
 			this.patternColor);
 	}
 
 	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
-		this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor);
+		if (!bypassColorCorrection)
+			this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor);
 	}
 }

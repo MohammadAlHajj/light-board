@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.CheckBox?>
 <GridPane fx:controller="com.lightBoard.controls.Controller"
 	xmlns:fx="http://javafx.com/fxml"
 	alignment="center"
@@ -227,6 +228,13 @@
 			GridPane.columnIndex="13"
 			maxWidth="Infinity"
 			onAction="#changeColor"/>
+
+		<CheckBox fx:id="colorOverrideCB"
+			text="Free Color Mode"
+			GridPane.rowIndex="3"
+			GridPane.columnIndex="12"
+			GridPane.columnSpan="2"
+			onAction="#toggleColorOverride"/>
 
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
