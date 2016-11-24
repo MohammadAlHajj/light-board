@@ -41,7 +41,12 @@ public enum MasterControls
         @Override
         public void run() {
             updateBuffer();
-            service.schedule(this, repeatDelay, TimeUnit.MICROSECONDS);
+	        pointsPerFrame = Math.max(1, 1000 / repeatDelay);
+//	        System.out.println(repeatDelay);
+//	        System.out.println(pointsPerFrame);
+//	        System.out.println(repeatDelay * pointsPerFrame);
+
+            service.schedule(this, repeatDelay * pointsPerFrame, TimeUnit.MICROSECONDS);
         }
     };
 

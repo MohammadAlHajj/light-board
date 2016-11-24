@@ -5,8 +5,8 @@ package com.lightBoard.controls;
  */
 public class Settings
 {
-	private static int minSpeedMicros = 50;
-	private static int maxSpeedMicros = 3000;
+	private static int minSpeedMicros = 150;
+	private static int maxSpeedMicros = 1000;
 	// FIXME: 11/16/2016 these are not used yet
 	private static int minTailLengthPixels = 0;
 	private static int maxTailLengthPixels = 0;

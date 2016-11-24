@@ -162,8 +162,12 @@ public class Controller implements Initializable
 		speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
 			double convertedSpeed =
 				max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));
-			System.out.println(convertedSpeed);
-			mControls.setRepeatDelay((int)convertedSpeed);
+			double b = 1/99.0 * (Math.log(Settings.getMinSpeedMicros()) - Math.log(Settings
+				.getMaxSpeedMicros()));
+			double a = 1000.0 / (Math.pow(Math.E, b));
+			double convertedExpSpeed = a * Math.pow(Math.E, b * new_val.doubleValue());
+			System.out.println(convertedExpSpeed);
+			mControls.setRepeatDelay((int)convertedExpSpeed);
 			speedTxt.setText(Math.round(speedSlider.getValue()) +"");
 		});
 

@@ -5,7 +5,7 @@
 High priority:
 - fix lag on color change
 - add space and esc - add keyboard shortcuts for controls
--* add color override checkbox (add tooltip and fix fonts)
+-- add color override checkbox (add tooltip and fix fonts)
 - make speed faster
 
 
