@@ -53,6 +53,6 @@
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
 
-#group{
-  -fx-background-color: rgba(1,1,1,0.2);
+#groupTitle{
+  -fx-background-color: rgba(0,0,0,0.2);
 }

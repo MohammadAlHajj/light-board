@@ -60,13 +60,18 @@
 			<ColumnConstraints />
 		</columnConstraints>
 
-
+		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 		<!-- Patterns -->
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
-		<Text text="Patterns"
+		<HBox id="groupTitle"
 			GridPane.rowIndex="0"
-			GridPane.columnIndex="0"/>
+			GridPane.columnIndex="0"
+			GridPane.columnSpan="2"
+			alignment="CENTER">
+			<Text text="Patterns"/>
+		</HBox>
+
 
 		<Button text="--"
 			fx:id="horizontalBtn"
@@ -111,13 +116,16 @@
             maxWidth="Infinity"/>
 
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-
         <!-- Controls -->
         <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
-        <Text text="Controls"
+		<HBox id="groupTitle"
 			GridPane.rowIndex="0"
-			GridPane.columnIndex="4"/>
+			GridPane.columnIndex="4"
+			GridPane.columnSpan="4"
+			alignment="CENTER">
+			<Text text="Pattern Controls"/>
+		</HBox>
 
 		<Label text="Length"
 			GridPane.rowIndex="1"
@@ -212,9 +220,13 @@
 		<!-- Color Controls -->
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
-		<Text text="Color"
+		<HBox id="groupTitle"
 			GridPane.rowIndex="0"
-			GridPane.columnIndex="12" />
+			GridPane.columnIndex="12"
+			GridPane.columnSpan="2"
+			alignment="CENTER">
+			<Text text="Color"/>
+		</HBox>
 
 		<Label text="Foreground"
 			GridPane.rowIndex="1"
@@ -247,10 +259,13 @@
 		<!-- pattern header image settings -->
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
-		<Text text="Leading Image"
+		<HBox id="groupTitle"
 			GridPane.rowIndex="0"
 			GridPane.columnIndex="15"
-			textAlignment="CENTER"/>
+			GridPane.columnSpan="2"
+			alignment="CENTER">
+			<Text text="Leading Image"/>
+		</HBox>
 
 		<ImageView fx:id="patternHeaderPreview"
 			GridPane.rowIndex="1"

@@ -61,7 +61,7 @@
 				maxWidth="Infinity"/>
 		</VBox>
 
-		<!---->
+		<!-- bottom box-->
 
 		<VBox fx:id="bottomBox"
 			alignment="center"
@@ -69,10 +69,6 @@
 			AnchorPane.bottomAnchor="0"
 			AnchorPane.leftAnchor="0"
 			AnchorPane.rightAnchor="0">
-			<padding>
-				<Insets
-					top="20"/>
-			</padding>
 
 			<Button text="Pause"
 				fx:id="playPauseBtn"
@@ -80,9 +76,13 @@
 				minWidth="200"/>
 
 			<HBox
+				id="bottomBoxControls"
 				alignment="center"
 				spacing="10">
-				<!--<Text text="Controls"/>-->
+				<padding>
+					<Insets
+						top="20"/>
+				</padding>
 
 				<Label text="Length"/>
 
