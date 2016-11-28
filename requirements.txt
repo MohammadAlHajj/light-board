@@ -5,8 +5,10 @@
 High priority:
 - fix lag on color change
 - add space and esc - add keyboard shortcuts for controls
--- add color override checkbox (add tooltip and fix fonts)
 - make speed faster
+- find a better way to play/pause
+- fix dimentions of buttons in image settings
+- add "no image" image
 
 
 Mid priority:

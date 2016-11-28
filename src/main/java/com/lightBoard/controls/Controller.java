@@ -8,6 +8,7 @@ import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.patterns.VerticalPatterm;
 import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,11 +32,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 /**
@@ -47,6 +52,7 @@ public class Controller implements Initializable
 		void setupStandardMode() throws IOException;
 		void setupExtendedMode() throws IOException;
 		void showCursor(boolean state);
+		Window getStage();
 	}
 	/**
 	 * application reference
@@ -103,9 +109,13 @@ public class Controller implements Initializable
      * fullscreen mode only
      */
     @FXML private AnchorPane controlsLayer;
-	@FXML public VBox bottomBox;
-	@FXML public VBox leftBox;
+	@FXML private VBox bottomBox;
+	@FXML private VBox leftBox;
 
+	/**
+	 * pattern image header controls
+	 */
+	@FXML private ImageView patternHeaderPreview;
 
 	/**
 	 * called right after init automatically by javafx
@@ -349,13 +359,41 @@ public class Controller implements Initializable
 	}
 
 
-    public void changeColor()
-    {
+    public void changeColor() {
 	    mControls.setPatternColor(foregroundCP.getValue());
 	    mControls.setBackgroundColor(backgroundCP.getValue());
 	    setupColorPickers();
     }
 
+	public void selectPatternHeaderImage() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Resource File");
+
+		FileChooser.ExtensionFilter filter =
+			new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.gif", "*.bmp");
+		fileChooser.getExtensionFilters().add(filter);
+
+		File imageFile = fileChooser.showOpenDialog(application.getStage());
+
+		if (imageFile != null && fileMatchesFilter(imageFile, filter)) {
+			Image image = new Image(imageFile.toURI().toString());
+			mControls.setPatternImage(image);
+			patternHeaderPreview.setImage(image);
+		}
+	}
+
+	private boolean fileMatchesFilter(File imageFile, FileChooser.ExtensionFilter filter) {
+		for (String s : filter.getExtensions())
+			if (imageFile.getName().endsWith(s.substring(1)))
+				return true;
+		return false;
+
+	}
+
+	public void clearPatternHeaderImage() {
+		mControls.setPatternImage(null);
+		patternHeaderPreview.setImage(null);
+	}
 
 
 	/**

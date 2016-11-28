@@ -19,10 +19,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 /**
  * this is the main screen of the application. all the logic branches from here
@@ -194,6 +196,15 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
                         e.printStackTrace();
                     }
                 }
+                Image i = mControls.getPatternImage();
+                if (i!= null) {
+                    gc.drawImage(
+                        i,
+                        buffer.get(0).x - mControls.getImageSize() / 2,
+                        buffer.get(0).y - mControls.getImageSize() / 2,
+                        mControls.getImageSize(),
+                        mControls.getImageSize());
+                }
             }
         };
         timer.start();
@@ -207,5 +218,10 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 	public void showCursor(boolean state){
 		if (state)  scene.setCursor(Cursor.DEFAULT);
 		else        scene.setCursor(Cursor.NONE);
+    }
+
+    @Override
+    public Window getStage(){
+	    return primaryStage;
     }
 }

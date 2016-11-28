@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import com.lightBoard.controls.userProfiles.PatientProfile;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 /**
@@ -28,6 +29,8 @@ public enum MasterControls
     private boolean playing = true;
 	private boolean extendedMode = false;
 	private boolean bypassColorCorrection = false;
+	private double imageSize = 100;
+	private Image patternImage = null;
 
     private LinkedList<Point> buffer = new LinkedList<>();
 
@@ -42,10 +45,6 @@ public enum MasterControls
         public void run() {
             updateBuffer();
 	        pointsPerFrame = Math.max(1, 1000 / repeatDelay);
-//	        System.out.println(repeatDelay);
-//	        System.out.println(pointsPerFrame);
-//	        System.out.println(repeatDelay * pointsPerFrame);
-
             service.schedule(this, repeatDelay * pointsPerFrame, TimeUnit.MICROSECONDS);
         }
     };
@@ -55,8 +54,16 @@ public enum MasterControls
 	    for (int i = 0; i < pointsPerFrame; i++)
 	    {
 		    timeInFunc += smoothness;
-		    buffer.addFirst(
-			    pattern.getPointAt((int) canvas.getWidth(), (int) canvas.getHeight(), timeInFunc));
+		    Point p;
+		    if (patternImage != null){
+		    	p = pattern.getPointAt((int) (canvas.getWidth() - imageSize),
+				    (int) (canvas.getHeight() - imageSize), timeInFunc);
+		    	p.x += imageSize/2;
+		    	p.y += imageSize/2;
+		    }
+		    else p = pattern.getPointAt((int)canvas.getWidth(), (int)canvas.getHeight(), timeInFunc);
+
+		    buffer.addFirst(p);
 	    }
 
         while (buffer.size() > maxBufferSize)
@@ -114,6 +121,10 @@ public enum MasterControls
 	public void setPatientProfile(PatientProfile patientProfile) {this.patientProfile = patientProfile;}
 	public boolean isBypassColorCorrection() {return bypassColorCorrection;}
 	public void setBypassColorCorrection(boolean bypassColorCorrection) {this.bypassColorCorrection = bypassColorCorrection;}
+	public double getImageSize() {return imageSize;}
+	public void setImageSize(double imageSize) {this.imageSize = imageSize;}
+	public Image getPatternImage() {return patternImage;}
+	public void setPatternImage(Image patternImage) {this.patternImage = patternImage;}
 
 	public void setPatternColor(Color patternColor) {
 		if(bypassColorCorrection) this.patternColor = patternColor;
