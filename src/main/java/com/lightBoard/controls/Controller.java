@@ -20,8 +20,12 @@ import java.util.concurrent.TimeUnit;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,6 +40,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -116,6 +121,7 @@ public class Controller implements Initializable
 	 * pattern image header controls
 	 */
 	@FXML private ImageView patternHeaderPreview;
+	@FXML private HBox patternHeaderPreviewHBox;
 
 	/**
 	 * called right after init automatically by javafx
@@ -132,7 +138,18 @@ public class Controller implements Initializable
 
 	    setupSlidersAndTextDisplay();
 
+	    patternHeaderPreview.imageProperty().bind(mControls.patternImageProperty());
 
+	    ReadOnlyDoubleProperty minSideSizeProperty;
+	    if (patternHeaderPreviewHBox.heightProperty().getValue() <
+		    patternHeaderPreviewHBox.widthProperty().getValue())
+	    {
+		    minSideSizeProperty = patternHeaderPreviewHBox.heightProperty();
+	    }
+	    else minSideSizeProperty = patternHeaderPreviewHBox.widthProperty();
+
+		patternHeaderPreview.fitHeightProperty().bind(minSideSizeProperty);
+		patternHeaderPreview.fitWidthProperty().bind(minSideSizeProperty);
     }
 
 	/**

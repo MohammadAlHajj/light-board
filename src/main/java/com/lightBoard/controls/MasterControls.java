@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.lightBoard.controls.userProfiles.PatientProfile;
 
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -31,8 +33,11 @@ public enum MasterControls
 	private boolean bypassColorCorrection = false;
 	private double imageSize = 100;
 	private Image patternImage = null;
+	private SimpleObjectProperty<Image> patternImageProperty =
+		new SimpleObjectProperty<>(patternImage);
 
-    private LinkedList<Point> buffer = new LinkedList<>();
+
+	private LinkedList<Point> buffer = new LinkedList<>();
 
     private Canvas canvas;
     private Color patternColor = patientProfile.getPatternColor();
@@ -124,7 +129,7 @@ public enum MasterControls
 	public double getImageSize() {return imageSize;}
 	public void setImageSize(double imageSize) {this.imageSize = imageSize;}
 	public Image getPatternImage() {return patternImage;}
-	public void setPatternImage(Image patternImage) {this.patternImage = patternImage;}
+	public Property<Image> patternImageProperty(){ return patternImageProperty;}
 
 	public void setPatternColor(Color patternColor) {
 		if(bypassColorCorrection) this.patternColor = patternColor;
@@ -137,4 +142,9 @@ public enum MasterControls
 		if (!bypassColorCorrection)
 			this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor);
 	}
+	public void setPatternImage(Image patternImage) {
+		this.patternImage = patternImage;
+		patternImageProperty.set(patternImage);
+	}
+
 }

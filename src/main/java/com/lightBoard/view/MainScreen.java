@@ -31,7 +31,6 @@ import javafx.stage.Window;
  */
 public class MainScreen extends Application implements Controller.IScreenModeSetup
 {
-
     private MasterControls mControls;
     @FXML private Canvas canvas;
     @FXML private GridPane controlsGrid;
