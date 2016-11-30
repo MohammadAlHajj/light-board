@@ -17,6 +17,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.stream.EventFilter;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -38,6 +40,8 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -138,18 +142,21 @@ public class Controller implements Initializable
 
 	    setupSlidersAndTextDisplay();
 
-	    patternHeaderPreview.imageProperty().bind(mControls.patternImageProperty());
-
-	    ReadOnlyDoubleProperty minSideSizeProperty;
-	    if (patternHeaderPreviewHBox.heightProperty().getValue() <
-		    patternHeaderPreviewHBox.widthProperty().getValue())
+	    if (patternHeaderPreview != null)
 	    {
-		    minSideSizeProperty = patternHeaderPreviewHBox.heightProperty();
-	    }
-	    else minSideSizeProperty = patternHeaderPreviewHBox.widthProperty();
+		    patternHeaderPreview.imageProperty().bind(mControls.patternImageProperty());
 
-		patternHeaderPreview.fitHeightProperty().bind(minSideSizeProperty);
-		patternHeaderPreview.fitWidthProperty().bind(minSideSizeProperty);
+		    ReadOnlyDoubleProperty minSideSizeProperty;
+		    if (patternHeaderPreviewHBox.heightProperty().getValue() <
+			    patternHeaderPreviewHBox.widthProperty().getValue())
+		    {
+			    minSideSizeProperty = patternHeaderPreviewHBox.heightProperty();
+		    }
+		    else minSideSizeProperty = patternHeaderPreviewHBox.widthProperty();
+
+		    patternHeaderPreview.fitHeightProperty().bind(minSideSizeProperty);
+		    patternHeaderPreview.fitWidthProperty().bind(minSideSizeProperty);
+	    }
     }
 
 	/**
@@ -314,84 +321,121 @@ public class Controller implements Initializable
         });
     }
 
+	/**
+	 * animates the fullscreen controls fading in
+	 */
     public void animateControlsFadeIn()
     {
+    	// show the cursor
 	    application.showCursor(true);
 
+	    // timeline and duration
 	    Timeline fadeInTimeline = new Timeline();
 	    Duration duration = new Duration(Settings.getFadeLengthMillis());
 
+	    // setup the key frames of the timeline and bind the corresponding values
 	    DoubleProperty angle = new SimpleDoubleProperty();
 	    KeyValue fadeControlsKV = new KeyValue(controlsLayer.opacityProperty(), 1);
 	    KeyValue rotateKV = new KeyValue(angle, -90);
 	    KeyFrame animationKF = new KeyFrame(duration, fadeControlsKV, rotateKV);
 
+	    // creates the rotation transform of the bottom box. the angle of rotation is linked to
+	    // the previously created keyframes
+	    // rotation is around the x axis
 	    Rotate bottomBoxRotate = new Rotate();
 	    bottomBoxRotate.angleProperty().bind(angle);
 	    bottomBoxRotate.setAxis(new Point3D(1, 0, 0));
 	    bottomBoxRotate.setPivotY(bottomBox.getLayoutX() + bottomBox.getHeight());
 	    bottomBox.getTransforms().add(bottomBoxRotate);
 
+	    // creates the rotation transform of the left box. the angle of rotation is linked to
+	    // the previously created keyframes
+	    // rotation is around the y axis
 	    Rotate leftBoxRotate = new Rotate();
 	    leftBoxRotate.angleProperty().bind(angle);
 	    leftBoxRotate.setAxis(new Point3D(0, 1, 0));
 	    leftBoxRotate.setPivotY(leftBox.getLayoutY());
 	    leftBox.getTransforms().add(leftBoxRotate);
 
+	    // start the animation
 	    fadeInTimeline.getKeyFrames().addAll(animationKF);
 	    fadeInTimeline.play();
     }
 
-    public void animateControlsFadeOut()
+	/**
+	 * animates the fullscreen controls fading out
+	 */
+	public void animateControlsFadeOut()
     {
+    	// timeline and duration
 	    Timeline fadeOutTimeline = new Timeline();
 	    Duration duration = new Duration(Settings.getFadeLengthMillis());
 
+	    // setup the key frames of the timeline and bind the corresponding values
 	    DoubleProperty angle = new SimpleDoubleProperty();
 	    KeyValue fadeControlsKV = new KeyValue(controlsLayer.opacityProperty(), 0);
 	    KeyValue rotateKV = new KeyValue(angle, 90);
-	    KeyFrame animationKF = new KeyFrame(duration, fadeControlsKV, rotateKV);
+	    // also hide the cursor onFinish
+	    KeyFrame animationKF = new KeyFrame(duration, (event) ->application.showCursor(false),
+		    fadeControlsKV, rotateKV);
 
+	    // creates the rotation transform of the bottom box. the angle of rotation is linked to
+	    // the previously created keyframes
+	    // rotation is around the x axis
 	    Rotate bottomBoxRotate = new Rotate();
 	    bottomBoxRotate.angleProperty().bind(angle);
 	    bottomBoxRotate.setAxis(new Point3D(1, 0, 0));
 	    bottomBoxRotate.setPivotY(bottomBox.getLayoutX() + bottomBox.getHeight());
 	    bottomBox.getTransforms().add(bottomBoxRotate);
 
+	    // creates the rotation transform of the left box. the angle of rotation is linked to
+	    // the previously created keyframes
+	    // rotation is around the y axis
 	    Rotate leftBoxRotate = new Rotate();
 	    leftBoxRotate.angleProperty().bind(angle);
 	    leftBoxRotate.setAxis(new Point3D(0, 1, 0));
 	    leftBoxRotate.setPivotY(leftBox.getLayoutY());
 	    leftBox.getTransforms().add(leftBoxRotate);
 
+	    // start the animation
 	    fadeOutTimeline.getKeyFrames().addAll(animationKF);
 	    fadeOutTimeline.play();
-
-	    application.showCursor(false);
     }
 
+	/**
+	 * sets the color of the colorPickers to the colors in the Master Controls
+	 */
 	public void setupColorPickers() {
 		foregroundCP.setValue(mControls.getPatternColor());
 		backgroundCP.setValue(mControls.getBackgroundColor());
 	}
 
-
+	/**
+	 * updates the colors in Master controls and asks for the appropriate changes
+	 */
     public void changeColor() {
 	    mControls.setPatternColor(foregroundCP.getValue());
 	    mControls.setBackgroundColor(backgroundCP.getValue());
 	    setupColorPickers();
     }
 
-	public void selectPatternHeaderImage() {
+	/**
+	 * picks a new image file for pattern header image. the file is accepted only if it has an
+	 * acceptable extension
+	 */
+	public void selectPatternHeaderImage()
+	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Resource File");
 
+		// only the below extensions are allowed
 		FileChooser.ExtensionFilter filter =
 			new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.gif", "*.bmp");
 		fileChooser.getExtensionFilters().add(filter);
 
 		File imageFile = fileChooser.showOpenDialog(application.getStage());
 
+		// if the file has an accepted extension, make it the new pattern header image
 		if (imageFile != null && fileMatchesFilter(imageFile, filter)) {
 			Image image = new Image(imageFile.toURI().toString());
 			mControls.setPatternImage(image);
@@ -399,6 +443,13 @@ public class Controller implements Initializable
 		}
 	}
 
+	/**
+	 * checks if the file ends with one of the extensions the filter has
+	 *
+	 * @param imageFile the newly selected file
+	 * @param filter holder of the acceptable extensions
+	 * @return true if the file ends with one of the extensions the filter has
+	 */
 	private boolean fileMatchesFilter(File imageFile, FileChooser.ExtensionFilter filter) {
 		for (String s : filter.getExtensions())
 			if (imageFile.getName().endsWith(s.substring(1)))
@@ -407,9 +458,47 @@ public class Controller implements Initializable
 
 	}
 
+
+	/**
+	 * removes current Pattern header image
+ 	 */
 	public void clearPatternHeaderImage() {
 		mControls.setPatternImage(null);
 		patternHeaderPreview.setImage(null);
+	}
+
+	/**
+	 * key bindings specific for Fullscreen Mode
+	 * @param root root node
+	 */
+	public void setupFullScreenKeyBinding(Node root){
+		root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+			if (event.getCode().equals(KeyCode.ESCAPE) ||
+				(event.getCode().equals(KeyCode.ENTER) && event.isAltDown()))
+			{
+				try { toggleFullscreen(); }
+				catch (IOException e){ e.printStackTrace(); }
+			}
+			else if (event.getCode().equals(KeyCode.SPACE))
+				togglePlayPause();
+		});
+	}
+
+	/**
+	 * key bindings specific for normal screen Mode
+	 * @param root root node
+	 */
+	public void setupStandardKeyBinding(Node root) {
+		root.addEventFilter(KeyEvent.KEY_PRESSED,event -> {
+			System.out.println(event);
+			if ((event.getCode().equals(KeyCode.ENTER) && event.isAltDown()))
+			{
+				try { toggleFullscreen(); }
+				catch (IOException e){ e.printStackTrace(); }
+			}
+			else if (event.getCode().equals(KeyCode.SPACE))
+				togglePlayPause();
+		});
 	}
 
 

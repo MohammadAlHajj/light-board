@@ -40,17 +40,14 @@
 	<GridPane fx:id="controlsGrid"
 		GridPane.rowIndex="1"
 		GridPane.columnIndex="0"
-		hgap="30"
-		vgap="30"
+		hgap="20"
+		vgap="20"
 		alignment="CENTER">
-		<!--<rowConstraints>-->
-			<!--<RowConstraints percentHeight="100"/>-->
-		<!--</rowConstraints>-->
 
 		<columnConstraints>
-			<ColumnConstraints minWidth="200" />
+			<ColumnConstraints minWidth="250" />
 			<ColumnConstraints/>
-			<ColumnConstraints prefWidth="300"/>
+			<ColumnConstraints prefWidth="330"/>
 			<!--<ColumnConstraints/>-->
 			<!--<ColumnConstraints minWidth="150" />-->
 			<!--<ColumnConstraints minWidth="50" />-->
@@ -132,8 +129,7 @@
 				GridPane.rowIndex="3"
 				GridPane.columnIndex="0"
 				maxWidth="Infinity"
-				maxHeight="Infinity"
-			/>
+				maxHeight="Infinity"/>
 
 			<Button text="O"
 				fx:id="CircleBtn"
@@ -142,6 +138,7 @@
 				GridPane.columnIndex="1"
 				maxWidth="Infinity"
 				maxHeight="Infinity"/>
+
 		</GridPane>
 
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
@@ -233,6 +230,7 @@
 				fx:id="speedTxt"
 				GridPane.rowIndex="3"
 				GridPane.columnIndex="2"/>
+
 		</GridPane>
 
         <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
@@ -275,6 +273,7 @@
 				maxWidth="Infinity"
 				maxHeight="Infinity"
 				onAction="#toggleFullscreen" />
+
 		</GridPane>
 
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->

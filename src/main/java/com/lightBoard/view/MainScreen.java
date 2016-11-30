@@ -89,8 +89,10 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         // and the mouse move listener
         mControls.setCanvas(canvas);
 
-        controller.setupPlayPauseBtn();
+	    // setup dependencies
+	    controller.setupPlayPauseBtn();
 		controller.setupMouseDetectionExtendedMode(root);
+		controller.setupFullScreenKeyBinding(root);
 
         // restart the primary stage with the newly created scene and make it maximized
 		primaryStage.setScene(scene);
@@ -136,8 +138,10 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         // set "canvas" as the used canvas in the master controls, and setup the play/pause button
         mControls.setCanvas(canvas);
 
+        // setup dependencies
         controller.setupPlayPauseBtn();
         controller.setupColorPickers();
+	    controller.setupStandardKeyBinding(root);
 
         // setup checkbox tooltip
         CheckBox colorOverrideCB = controller.getColorOverrideCB();
@@ -184,8 +188,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
                 Point p;
 
                 // draw desired points
-                for (int index = 0; index < buffer.size(); index++)
-                {
+                for (int index = 0; index < buffer.size(); index++) {
                     try {
                         alpha = ((buffer.size() - index) * 1.0 / buffer.size());
                         gc.setFill(new Color(red, green, blue, alpha));
