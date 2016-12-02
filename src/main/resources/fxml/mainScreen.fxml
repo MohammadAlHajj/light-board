@@ -48,17 +48,8 @@
 			<ColumnConstraints minWidth="250" />
 			<ColumnConstraints/>
 			<ColumnConstraints prefWidth="330"/>
-			<!--<ColumnConstraints/>-->
-			<!--<ColumnConstraints minWidth="150" />-->
-			<!--<ColumnConstraints minWidth="50" />-->
-			<!--<ColumnConstraints />-->
-			<!--<ColumnConstraints />-->
-			<!--<ColumnConstraints minWidth="150" />-->
-			<!--<ColumnConstraints minWidth="75" />-->
-			<!--<ColumnConstraints />-->
-			<!--<ColumnConstraints />-->
-			<!--<ColumnConstraints />-->
-			<!--<ColumnConstraints />-->
+			<ColumnConstraints/>
+			<!--<ColumnConstraints maxWidth="150"/>-->
 		</columnConstraints>
 
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
@@ -342,9 +333,14 @@
 			GridPane.vgrow="ALWAYS">
 			<rowConstraints>
 				<RowConstraints percentHeight="10"/>
-				<RowConstraints percentHeight="60"/>
-				<RowConstraints percentHeight="30"/>
+				<RowConstraints percentHeight="50"/>
+				<RowConstraints percentHeight="20"/>
+				<RowConstraints percentHeight="20"/>
 			</rowConstraints>
+			<columnConstraints>
+				<ColumnConstraints percentWidth="50"/>
+				<ColumnConstraints percentWidth="50" />
+			</columnConstraints>
 
 			<HBox id="groupTitle"
 				GridPane.rowIndex="0"
@@ -362,14 +358,26 @@
 				<ImageView fx:id="patternHeaderPreview"/>
 			</HBox>
 
-			<Button text="Pick"
+			<Slider fx:id="patternImageSizeSlider"
 				GridPane.rowIndex="2"
+				GridPane.columnIndex="0"
+				GridPane.columnSpan="2"
+				min="50"
+				max="500"
+				snapToTicks="true"
+				majorTickUnit="500"
+				minorTickCount="450"
+				showTickLabels="true"
+				showTickMarks="true"/>
+
+			<Button text="Pick"
+				GridPane.rowIndex="3"
 				GridPane.columnIndex="0"
 				maxWidth="Infinity"
 				onAction="#selectPatternHeaderImage"/>
 
 			<Button text="Clear"
-				GridPane.rowIndex="2"
+				GridPane.rowIndex="3"
 				GridPane.columnIndex="1"
 				maxWidth="Infinity"
 				onAction="#clearPatternHeaderImage"/>

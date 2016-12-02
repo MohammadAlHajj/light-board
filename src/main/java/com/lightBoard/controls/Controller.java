@@ -17,7 +17,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import javax.xml.stream.EventFilter;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -28,6 +27,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -126,6 +126,7 @@ public class Controller implements Initializable
 	 */
 	@FXML private ImageView patternHeaderPreview;
 	@FXML private HBox patternHeaderPreviewHBox;
+	@FXML private Slider patternImageSizeSlider;
 
 	/**
 	 * called right after init automatically by javafx
@@ -146,16 +147,24 @@ public class Controller implements Initializable
 	    {
 		    patternHeaderPreview.imageProperty().bind(mControls.patternImageProperty());
 
-		    ReadOnlyDoubleProperty minSideSizeProperty;
-		    if (patternHeaderPreviewHBox.heightProperty().getValue() <
-			    patternHeaderPreviewHBox.widthProperty().getValue())
-		    {
-			    minSideSizeProperty = patternHeaderPreviewHBox.heightProperty();
-		    }
-		    else minSideSizeProperty = patternHeaderPreviewHBox.widthProperty();
-
-		    patternHeaderPreview.fitHeightProperty().bind(minSideSizeProperty);
-		    patternHeaderPreview.fitWidthProperty().bind(minSideSizeProperty);
+		    ChangeListener previewBoxResizeListener =(observable, oldValue, newValue) -> {
+		    	double newSize = Math.min(patternHeaderPreviewHBox.getHeight(),
+					    patternHeaderPreviewHBox.getWidth());
+			    patternHeaderPreview.setFitWidth(newSize);
+			    patternHeaderPreview.setFitHeight(newSize);
+		    };
+		    patternHeaderPreviewHBox.widthProperty().addListener(previewBoxResizeListener);
+		    patternHeaderPreviewHBox.heightProperty().addListener(previewBoxResizeListener);
+//		    ReadOnlyDoubleProperty minSideSizeProperty;
+//		    if (patternHeaderPreviewHBox.heightProperty().getValue() <
+//			    patternHeaderPreviewHBox.widthProperty().getValue())
+//		    {
+//			    minSideSizeProperty = patternHeaderPreviewHBox.heightProperty();
+//		    }
+//		    else minSideSizeProperty = patternHeaderPreviewHBox.widthProperty();
+//		    System.out.println(minSideSizeProperty);
+//		    patternHeaderPreview.fitHeightProperty().bind(minSideSizeProperty);
+//		    patternHeaderPreview.fitWidthProperty().bind(minSideSizeProperty);
 	    }
     }
 
@@ -209,17 +218,14 @@ public class Controller implements Initializable
 		tailLengthTxt.setText((int)tailLengthSlider.getValue( )+ "");
 		tailThicknessTxt.setText((int) tailThicknessSlider.getValue() + "");
 		speedTxt.setText((int) speedSlider.getValue() + "");
+
+		// get pattern header image size and set slider accordingly
+		patternImageSizeSlider.setValue(mControls.getImageSize());
+		patternImageSizeSlider.setLabelFormatter(new TwoValueLabelFormatter(
+			"Small", "Big",  patternImageSizeSlider.getMax()));
+		patternImageSizeSlider.valueProperty().addListener(
+			(ov, old_val, new_val) -> mControls.setImageSize(new_val.intValue()));
 	}
-
-	private boolean isDouble (String s){
-        assert s != null;
-        return s.matches("\\d+(.\\d*)?");
-    }
-
-    private boolean isInt (String s){
-        assert s != null;
-        return s.matches("\\d+");
-    }
 
 	/**
 	 * switches to the pattern requested by the user
@@ -439,7 +445,6 @@ public class Controller implements Initializable
 		if (imageFile != null && fileMatchesFilter(imageFile, filter)) {
 			Image image = new Image(imageFile.toURI().toString());
 			mControls.setPatternImage(image);
-			patternHeaderPreview.setImage(image);
 		}
 	}
 
