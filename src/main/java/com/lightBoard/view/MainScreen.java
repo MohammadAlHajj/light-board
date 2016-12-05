@@ -161,7 +161,8 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
     }
 
     /**
-     * starts the drawing process on the canvas. This process will not stop until the program stops
+     * starts the drawing process on the canvas. This process will not stop until the program
+     * terminates
      */
     private void startAnimation() {
         mControls.startDrawing();

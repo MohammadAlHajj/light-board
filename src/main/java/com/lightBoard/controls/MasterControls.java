@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.lightBoard.controls.userProfiles.PatientProfile;
+import com.lightBoard.view.MainScreen;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
@@ -62,13 +63,21 @@ public enum MasterControls
 		    timeInFunc += smoothness;
 		    Point p;
 		    if (patternImage != null){
-		    	p = pattern.getPointAt((int) (canvas.getWidth() - imageSize),
-				    (int) (canvas.getHeight() - imageSize), timeInFunc);
-		    	p.x += imageSize/2;
-		    	p.y += imageSize/2;
+		    	p = pattern.getPointAt(
+		    		(int) (canvas.getWidth() - imageSize - brushSize),
+				    (int) (canvas.getHeight() - imageSize - brushSize),
+				    timeInFunc);
+		    	p.x += imageSize / 2;
+		    	p.y += imageSize / 2;
 		    }
-		    else p = pattern.getPointAt((int)canvas.getWidth(), (int)canvas.getHeight(), timeInFunc);
+		    else
+		    	p = pattern.getPointAt(
+		    		(int) (canvas.getWidth() - brushSize),
+				    (int) (canvas.getHeight() - brushSize),
+				    timeInFunc);
 
+		    p.x += + brushSize/2;
+		    p.y += + brushSize/2;
 		    buffer.addFirst(p);
 	    }
 
@@ -77,6 +86,10 @@ public enum MasterControls
         return buffer;
     }
 
+	/**
+	 * starts filling the pattern buffer to be drawn by the AnimationTimer in
+	 * "{@link MainScreen#startAnimation()} "
+	 */
 	public void startDrawing() {
         assert canvas != null : "Can't start drawing before setting the canvas.";
         service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
@@ -86,11 +99,9 @@ public enum MasterControls
      * @return true if playing after toggle
      */
 	public boolean togglePlayPause(){
-        if (playing){
-            pause();
-        } else {
-            play();
-        }
+        if (playing)    pause();
+        else            play();
+
         return playing;
     }
     public void play(){
@@ -102,9 +113,7 @@ public enum MasterControls
         playing = false;
     }
 
-    public void setRepeatDelay(int repeatDelay) {
-        this.repeatDelay = repeatDelay;
-    }
+    public void setRepeatDelay(int repeatDelay) {this.repeatDelay = repeatDelay;}
 	public int getMaxBufferSize() { return maxBufferSize; }
 	public void setMaxBufferSize(int maxBufferSize) { this.maxBufferSize = maxBufferSize; }
 	public Color getBackgroundColor() { return backgroundColor; }
