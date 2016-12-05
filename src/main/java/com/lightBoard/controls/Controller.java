@@ -155,16 +155,6 @@ public class Controller implements Initializable
 		    };
 		    patternHeaderPreviewHBox.widthProperty().addListener(previewBoxResizeListener);
 		    patternHeaderPreviewHBox.heightProperty().addListener(previewBoxResizeListener);
-//		    ReadOnlyDoubleProperty minSideSizeProperty;
-//		    if (patternHeaderPreviewHBox.heightProperty().getValue() <
-//			    patternHeaderPreviewHBox.widthProperty().getValue())
-//		    {
-//			    minSideSizeProperty = patternHeaderPreviewHBox.heightProperty();
-//		    }
-//		    else minSideSizeProperty = patternHeaderPreviewHBox.widthProperty();
-//		    System.out.println(minSideSizeProperty);
-//		    patternHeaderPreview.fitHeightProperty().bind(minSideSizeProperty);
-//		    patternHeaderPreview.fitWidthProperty().bind(minSideSizeProperty);
 	    }
     }
 

@@ -124,13 +124,10 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         canvas = controller.getCanvas();
 
         controlsGrid = controller.getControlsGrid();
-        DoubleBinding heightBinding =
-            grid.heightProperty().subtract(
-                controlsGrid.getHeight() +
-                controlsGrid.getPadding().getTop() +
-                controlsGrid.getPadding().getBottom() +
-                grid.getPadding().getTop() +
-                grid.getPadding().getBottom() + 200
+	    DoubleBinding heightBinding =
+            scene.heightProperty().subtract(
+	            controlsGrid.heightProperty()
+		            .add(grid.vgapProperty().doubleValue() * 2)
             );
         canvas.widthProperty().bind(scene.widthProperty());
         canvas.heightProperty().bind(heightBinding);

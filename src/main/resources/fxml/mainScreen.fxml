@@ -16,33 +16,23 @@
 <?import javafx.scene.layout.RowConstraints?>
 <GridPane fx:controller="com.lightBoard.controls.Controller"
 	xmlns:fx="http://javafx.com/fxml"
-	alignment="center"
+	alignment="CENTER"
 	hgap="10"
 	vgap="10">
 	<stylesheets>
 		<URL value="@../css/main.css"/>
 	</stylesheets>
-	<padding>
-		<Insets
-			top="25"
-			bottom="25"
-			left="25"
-			right="25"/>
-	</padding>
 
-	<HBox fx:id="canvasContainer"
+	<Canvas fx:id="canvas"
 		GridPane.rowIndex="0"
-		GridPane.columnIndex="0"
-		alignment="TOP_CENTER">
-		<Canvas fx:id="canvas"/>
-	</HBox>
+		GridPane.columnIndex="0"/>
 
 	<GridPane fx:id="controlsGrid"
 		GridPane.rowIndex="1"
 		GridPane.columnIndex="0"
+		alignment="CENTER"
 		hgap="20"
-		vgap="20"
-		alignment="CENTER">
+		vgap="20">
 
 		<columnConstraints>
 			<ColumnConstraints minWidth="250" />
@@ -234,6 +224,11 @@
 			hgap="10"
 			vgap="10"
 			maxHeight="Infinity">
+			<padding>
+				<Insets
+					top="10"
+					bottom="10" />
+			</padding>
 			<rowConstraints>
 				<RowConstraints percentHeight="10"/>
 				<RowConstraints percentHeight="30"/>
