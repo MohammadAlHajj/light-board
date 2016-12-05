@@ -5,7 +5,9 @@ import com.lightBoard.controls.MasterControls;
 
 import java.awt.Point;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -166,7 +168,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                LinkedList<Point> buffer = mControls.getBuffer();
+	            ConcurrentLinkedDeque<Point> buffer = mControls.getBuffer();
 
                 // clear the canvas using the background color
                 GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -179,28 +181,33 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
                 double blue = mControls.getPatternColor().getBlue();
                 double alpha = 1;
 
+                // get data from now to decrease loop overhead
                 double brushSize = mControls.getBrushSize();
-                double halfBrushSize = mControls.getBrushSize()/2;
+                double halfBrushSize = brushSize/2;
+                int maxBufferSize = mControls.getMaxBufferSize();
+	            int index = 0;
+	            Iterator<Point> iterator = buffer.iterator();
 
                 Point p;
+                // point to draw the pattern header image on
+                Point firstPoint = null;
 
                 // draw desired points
-                for (int index = 0; index < buffer.size(); index++) {
-                    try {
-                        alpha = ((buffer.size() - index) * 1.0 / buffer.size());
-                        gc.setFill(new Color(red, green, blue, alpha));
-                        p = buffer.get(index);
-                        gc.fillOval(p.x - halfBrushSize, p.y - halfBrushSize, brushSize, brushSize);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
+                while (iterator.hasNext() && index <= maxBufferSize) {
+                    alpha = ((maxBufferSize - index) * 1.0 / maxBufferSize);
+                    gc.setFill(new Color(red, green, blue, alpha));
+                    p = iterator.next();
+                    if(index == 0)
+                        firstPoint = p;
+                    gc.fillOval(p.x - halfBrushSize, p.y - halfBrushSize, brushSize, brushSize);
+                    index++;
                 }
                 Image i = mControls.getPatternImage();
-                if (i!= null) {
+                if (i!= null && firstPoint != null) {
                     gc.drawImage(
                         i,
-                        buffer.get(0).x - mControls.getImageSize() / 2,
-                        buffer.get(0).y - mControls.getImageSize() / 2,
+                        firstPoint.x - mControls.getImageSize() / 2,
+	                    firstPoint.y - mControls.getImageSize() / 2,
                         mControls.getImageSize(),
                         mControls.getImageSize());
                 }

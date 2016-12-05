@@ -1,6 +1,7 @@
 package com.lightBoard.controls;
 import java.awt.Point;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +38,7 @@ public enum MasterControls
 		new SimpleObjectProperty<>(patternImage);
 
 
-	private LinkedList<Point> buffer = new LinkedList<>();
+	private ConcurrentLinkedDeque<Point> buffer = new ConcurrentLinkedDeque<>();
 
     private Canvas canvas;
     private Color patternColor = patientProfile.getPatternColor();
@@ -54,7 +55,7 @@ public enum MasterControls
         }
     };
 
-    public LinkedList<Point> updateBuffer()
+    public ConcurrentLinkedDeque<Point> updateBuffer()
     {
 	    for (int i = 0; i < pointsPerFrame; i++)
 	    {
@@ -73,7 +74,6 @@ public enum MasterControls
 
         while (buffer.size() > maxBufferSize)
             buffer.removeLast();
-
         return buffer;
     }
 
@@ -114,7 +114,7 @@ public enum MasterControls
 	public void setSmoothness(double smoothness) { this.smoothness = smoothness; }
 	public float getBrushSize() { return brushSize; }
 	public void setBrushSize(float brushSize) { this.brushSize = brushSize; }
-    public LinkedList<Point> getBuffer() { return buffer; }
+    public ConcurrentLinkedDeque<Point> getBuffer() { return buffer; }
     public void setPattern(Pattern pattern) { this.pattern = pattern; }
 	public boolean isExtendedMode() { return extendedMode; }
 	public void setExtendedMode(boolean extendedMode) { this.extendedMode = extendedMode; }

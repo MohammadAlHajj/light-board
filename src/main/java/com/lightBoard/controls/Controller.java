@@ -199,7 +199,6 @@ public class Controller implements Initializable
 				.getMaxSpeedMicros()));
 			double a = 1000.0 / (Math.pow(Math.E, b));
 			double convertedExpSpeed = a * Math.pow(Math.E, b * new_val.doubleValue());
-			System.out.println(convertedExpSpeed);
 			mControls.setRepeatDelay((int)convertedExpSpeed);
 			speedTxt.setText(Math.round(speedSlider.getValue()) +"");
 		});
@@ -210,11 +209,14 @@ public class Controller implements Initializable
 		speedTxt.setText((int) speedSlider.getValue() + "");
 
 		// get pattern header image size and set slider accordingly
-		patternImageSizeSlider.setValue(mControls.getImageSize());
-		patternImageSizeSlider.setLabelFormatter(new TwoValueLabelFormatter(
-			"Small", "Big",  patternImageSizeSlider.getMax()));
-		patternImageSizeSlider.valueProperty().addListener(
-			(ov, old_val, new_val) -> mControls.setImageSize(new_val.intValue()));
+		if (patternImageSizeSlider != null)
+		{
+			patternImageSizeSlider.setValue(mControls.getImageSize());
+			patternImageSizeSlider.setLabelFormatter(new TwoValueLabelFormatter(
+				"Small", "Big", patternImageSizeSlider.getMax()));
+			patternImageSizeSlider.valueProperty().addListener(
+				(ov, old_val, new_val) -> mControls.setImageSize(new_val.intValue()));
+		}
 	}
 
 	/**
