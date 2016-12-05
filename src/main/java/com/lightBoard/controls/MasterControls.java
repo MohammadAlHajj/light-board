@@ -56,7 +56,12 @@ public enum MasterControls
         }
     };
 
-    public ConcurrentLinkedDeque<Point> updateBuffer()
+	/**
+	 * updates the pattern buffer accordingly. takes into consideration the bounds of the canvas,
+	 * the brush size, and the image size
+	 * @return
+	 */
+	public ConcurrentLinkedDeque<Point> updateBuffer()
     {
 	    for (int i = 0; i < pointsPerFrame; i++)
 	    {
@@ -88,10 +93,12 @@ public enum MasterControls
 
 	/**
 	 * starts filling the pattern buffer to be drawn by the AnimationTimer in
-	 * "{@link MainScreen#startAnimation()} "
+	 * "{@link MainScreen#startAnimation()}"
 	 */
 	public void startDrawing() {
         assert canvas != null : "Can't start drawing before setting the canvas.";
+        canvas.heightProperty().addListener((observable, oldValue, newValue) -> refreshBuffer());
+        canvas.widthProperty().addListener((observable, oldValue, newValue) -> refreshBuffer());
         service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
 	}
 
@@ -104,16 +111,32 @@ public enum MasterControls
 
         return playing;
     }
+
     public void play(){
         smoothness = 0.005;
         playing = true;
+        refreshBuffer();
     }
+
     public void pause(){
         smoothness = 0;
         playing = false;
+	    refreshBuffer();
     }
 
-    public void setRepeatDelay(int repeatDelay) {this.repeatDelay = repeatDelay;}
+    public void refreshBuffer(){
+    	int originalSize = buffer.size();
+    	buffer.clear();
+	    timeInFunc -= originalSize * smoothness;
+    	while (buffer.size() < originalSize)
+		    updateBuffer();
+    }
+
+    public void clearBuffer(){
+    	buffer.clear();
+    }
+
+	public void setRepeatDelay(int repeatDelay) {this.repeatDelay = repeatDelay;}
 	public int getMaxBufferSize() { return maxBufferSize; }
 	public void setMaxBufferSize(int maxBufferSize) { this.maxBufferSize = maxBufferSize; }
 	public Color getBackgroundColor() { return backgroundColor; }
@@ -122,11 +145,9 @@ public enum MasterControls
 	public double getSmoothness() { return smoothness; }
 	public void setSmoothness(double smoothness) { this.smoothness = smoothness; }
 	public float getBrushSize() { return brushSize; }
-	public void setBrushSize(float brushSize) { this.brushSize = brushSize; }
     public ConcurrentLinkedDeque<Point> getBuffer() { return buffer; }
     public void setPattern(Pattern pattern) { this.pattern = pattern; }
 	public boolean isExtendedMode() { return extendedMode; }
-	public void setExtendedMode(boolean extendedMode) { this.extendedMode = extendedMode; }
 	public Canvas getCanvas() { return canvas; }
 	public void setCanvas(Canvas canvas) { this.canvas = canvas; }
     public boolean isPlaying() { return playing; }
@@ -136,7 +157,6 @@ public enum MasterControls
 	public boolean isBypassColorCorrection() {return bypassColorCorrection;}
 	public void setBypassColorCorrection(boolean bypassColorCorrection) {this.bypassColorCorrection = bypassColorCorrection;}
 	public double getImageSize() {return imageSize;}
-	public void setImageSize(double imageSize) {this.imageSize = imageSize;}
 	public Image getPatternImage() {return patternImage;}
 	public Property<Image> patternImageProperty(){ return patternImageProperty;}
 
@@ -151,9 +171,26 @@ public enum MasterControls
 		if (!bypassColorCorrection)
 			this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor);
 	}
+
 	public void setPatternImage(Image patternImage) {
 		this.patternImage = patternImage;
 		patternImageProperty.set(patternImage);
+		refreshBuffer();
+	}
+
+	public void setExtendedMode(boolean extendedMode) {
+		this.extendedMode = extendedMode;
+		refreshBuffer();
+	}
+
+	public void setBrushSize(float brushSize) {
+		this.brushSize = brushSize;
+		refreshBuffer();
+	}
+
+	public void setImageSize(double imageSize) {
+		this.imageSize = imageSize;
+		refreshBuffer();
 	}
 
 }

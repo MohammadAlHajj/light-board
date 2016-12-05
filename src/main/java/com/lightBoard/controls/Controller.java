@@ -264,27 +264,29 @@ public class Controller implements Initializable
             playPauseBtn.setText("Play");
             playPauseBtn.setId("playBtn");
         }
+        mControls.refreshBuffer();
     }
 
 	/**
-	 * called when the changeScreenMode button is pressed
-	 * changes screen state in master controls and asks for changes accordingly
+	 * toggles screen state in master controls and asks for changes accordingly
 	 *
 	 * @throws IOException
 	 */
 	@FXML
     public void toggleFullscreen() throws IOException
     {
+    	// ORDER MATTERS: MasterControls.setExtendedMode(boolean) will refresh the pattern buffer
+	    // according to the current canvas. if the order is flipped setExtendedMode will refresh
+	    // on the same canvas and you will still have the dissected pattern when the screen mode is
+	    // actually changed
         if (mControls.isExtendedMode()){
-            mControls.setExtendedMode(false);
             application.setupStandardMode();
+            mControls.setExtendedMode(false);
         }
         else {
-            mControls.setExtendedMode(true);
             application.setupExtendedMode();
+            mControls.setExtendedMode(true);
         }
-        // clears the residue of the pattern from the canvas
-        mControls.getBuffer().clear();
         // clears any possible scheduled fade of the mouse cursor
 	    if (scheduledFuture != null && !scheduledFuture.isCancelled())
 	        scheduledFuture.cancel(true);
@@ -296,14 +298,14 @@ public class Controller implements Initializable
 	}
 
 
+	private ScheduledExecutorService executor;
+	private ScheduledFuture<?> scheduledFuture;
 	/**
 	 * sets up a listener for the mouse movement
 	 * once the listener is triggered, the controls layer will be shown with animation and
 	 * sceduled to disappear after x milliseconds
 	 * @param root the node that will listen to the mouse movement
 	 */
-	private ScheduledExecutorService executor;
-	private ScheduledFuture<?> scheduledFuture;
 	public void setupMouseDetectionExtendedMode(Node root)
     {
 		executor = Executors.newSingleThreadScheduledExecutor();
@@ -449,10 +451,9 @@ public class Controller implements Initializable
 	 */
 	private boolean fileMatchesFilter(File imageFile, FileChooser.ExtensionFilter filter) {
 		for (String s : filter.getExtensions())
-			if (imageFile.getName().endsWith(s.substring(1)))
+			if (imageFile.getName().endsWith(s.substring(1)))   // get rid of the leading "*"
 				return true;
 		return false;
-
 	}
 
 
