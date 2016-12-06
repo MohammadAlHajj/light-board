@@ -1,11 +1,18 @@
 package com.lightBoard.controls;
 import java.awt.Point;
-import java.util.LinkedList;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.lightBoard.controls.userProfiles.PatientProfile;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.lightBoard.model.PropertyBasedInterfaceMarshal;
+import com.lightBoard.model.userProfiles.PatientProfile;
 import com.lightBoard.view.MainScreen;
 
 import javafx.beans.property.Property;
@@ -13,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import sun.java2d.cmm.Profile;
 
 /**
  * @author Moham
@@ -22,23 +30,35 @@ public enum MasterControls
 {
     INSTANCE;
 
+	Gson gson;
+
 	private PatientProfile patientProfile = PatientProfile.defaultProfile();
 
+	// speed controls
 	private int repeatDelay = 1000;
-	private int maxBufferSize = 300;
-	private float brushSize = 5;
 	private double smoothness = 0.005;
 	private int pointsPerFrame = 2;
 	private double timeInFunc;
+
+	// pattern length and width
+	private int maxBufferSize = 300;
+	private float brushSize = 5;
+
+	// state holders
     private boolean playing = true;
 	private boolean extendedMode = false;
 	private boolean bypassColorCorrection = false;
+
+	// image properties
 	private double imageSize = 100;
 	private Image patternImage = null;
+	private String patternImageUrl = null;
 	private SimpleObjectProperty<Image> patternImageProperty =
 		new SimpleObjectProperty<>(patternImage);
 
-
+	/**
+	 * pattern points holder...thread safe
+	 */
 	private ConcurrentLinkedDeque<Point> buffer = new ConcurrentLinkedDeque<>();
 
     private Canvas canvas;
@@ -46,6 +66,7 @@ public enum MasterControls
 	private Color backgroundColor = patientProfile.getBackgroundColor();
 	private Pattern pattern = patientProfile.getDefaultPattern();
 
+	// pattern filling process
 	private ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
     private Runnable repeatTask = new Runnable() {
         @Override
@@ -55,6 +76,13 @@ public enum MasterControls
             service.schedule(this, repeatDelay * pointsPerFrame, TimeUnit.MICROSECONDS);
         }
     };
+
+    public void init()
+    {
+	    gson = new GsonBuilder()
+		    .registerTypeAdapter(Pattern.class, new PropertyBasedInterfaceMarshal())
+		    .create();
+    }
 
 	/**
 	 * updates the pattern buffer accordingly. takes into consideration the bounds of the canvas,
@@ -67,7 +95,8 @@ public enum MasterControls
 	    {
 		    timeInFunc += smoothness;
 		    Point p;
-		    if (patternImage != null){
+		    if (patternImage != null)
+		    {
 		    	p = pattern.getPointAt(
 		    		(int) (canvas.getWidth() - imageSize - brushSize),
 				    (int) (canvas.getHeight() - imageSize - brushSize),
@@ -132,6 +161,41 @@ public enum MasterControls
 		    updateBuffer();
     }
 
+	public void saveProfile() throws IOException {
+		updatePatientProfile();
+		Writer writer = new FileWriter("default.json");
+		gson.toJson(patientProfile, writer);
+		writer.close();
+	}
+
+	public void loadProfile(int id) throws IOException {
+		Reader reader = new FileReader("default.json");
+		patientProfile = gson.fromJson(reader, PatientProfile.class);
+		reader.close();
+
+		loadStateFromProfile(patientProfile);
+	}
+
+	private void loadStateFromProfile(PatientProfile profile)
+	{
+		backgroundColor = profile.getBackgroundColor();
+		patternColor = profile.getPatternColor();
+		setPattern(profile.getDefaultPattern());
+		setPatternImageUrl(profile.getImageUrl());
+	}
+
+	private void updatePatientProfile()
+	{
+		patientProfile = new PatientProfile.Builder()
+			.backgroundColor(backgroundColor)
+			.patternColor(patternColor)
+			.defaultPattern(pattern)
+			.firstName(patientProfile.getFirstName())
+			.lastName(patientProfile.getLastName())
+			.imageUrl(patternImageUrl)
+			.build();
+	}
+
     public void clearBuffer(){
     	buffer.clear();
     }
@@ -172,8 +236,11 @@ public enum MasterControls
 			this.patternColor = ColorHelper.getForegroundColor(backgroundColor, patternColor);
 	}
 
-	public void setPatternImage(Image patternImage) {
-		this.patternImage = patternImage;
+	public void setPatternImageUrl(String url) {
+		this.patternImageUrl = url;
+		if (url == null || url.isEmpty())
+			this.patternImage = null;
+		else this.patternImage = new Image(url);
 		patternImageProperty.set(patternImage);
 		refreshBuffer();
 	}
@@ -192,5 +259,6 @@ public enum MasterControls
 		this.imageSize = imageSize;
 		refreshBuffer();
 	}
+
 
 }

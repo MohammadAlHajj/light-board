@@ -5,7 +5,7 @@ import com.lightBoard.controls.patterns.DiagonalDownPattern;
 import com.lightBoard.controls.patterns.DiagonalUpPattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
 import com.lightBoard.controls.patterns.InfinityPattern;
-import com.lightBoard.controls.patterns.VerticalPatterm;
+import com.lightBoard.controls.patterns.VerticalPattern;
 import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.File;
@@ -21,12 +21,8 @@ import java.util.concurrent.TimeUnit;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Binding;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,7 +34,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -140,23 +135,37 @@ public class Controller implements Initializable
         assert infinityBtn != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
 
         mControls = MasterControls.INSTANCE;
+        mControls.init();
+	    try {
+//	    	mControls.saveProfile();
+		    mControls.loadProfile(0);
+	    } catch (IOException e) {
+		    e.printStackTrace();
+	    }
 
 	    setupSlidersAndTextDisplay();
-
-	    if (patternHeaderPreview != null)
-	    {
-		    patternHeaderPreview.imageProperty().bind(mControls.patternImageProperty());
-
-		    ChangeListener previewBoxResizeListener =(observable, oldValue, newValue) -> {
-		    	double newSize = Math.min(patternHeaderPreviewHBox.getHeight(),
-					    patternHeaderPreviewHBox.getWidth());
-			    patternHeaderPreview.setFitWidth(newSize);
-			    patternHeaderPreview.setFitHeight(newSize);
-		    };
-		    patternHeaderPreviewHBox.widthProperty().addListener(previewBoxResizeListener);
-		    patternHeaderPreviewHBox.heightProperty().addListener(previewBoxResizeListener);
-	    }
+	    setupPatternHeaderImagePreview();
     }
+
+	/**
+	 * sets up the preview that will show the currently selected image
+	 */
+	private void setupPatternHeaderImagePreview()
+	{
+		if (patternHeaderPreview != null)
+		{
+			patternHeaderPreview.imageProperty().bind(mControls.patternImageProperty());
+
+			ChangeListener previewBoxResizeListener =(observable, oldValue, newValue) -> {
+				double newSize = Math.min(patternHeaderPreviewHBox.getHeight(),
+					patternHeaderPreviewHBox.getWidth());
+				patternHeaderPreview.setFitWidth(newSize);
+				patternHeaderPreview.setFitHeight(newSize);
+			};
+			patternHeaderPreviewHBox.widthProperty().addListener(previewBoxResizeListener);
+			patternHeaderPreviewHBox.heightProperty().addListener(previewBoxResizeListener);
+		}
+	}
 
 	/**
 	 * sets up the pattern property sliders and their text display according to the master controls
@@ -231,7 +240,7 @@ public class Controller implements Initializable
         }else if (event.getSource().equals(horizontalBtn)) {
             mControls.setPattern(new HorizontalPattern());
         }else if (event.getSource().equals(verticalBtn)) {
-            mControls.setPattern(new VerticalPatterm());
+            mControls.setPattern(new VerticalPattern());
         }else if (event.getSource().equals(diagonalUpBtn)) {
             mControls.setPattern(new DiagonalUpPattern());
         }else if (event.getSource().equals(diagonalDownBtn)) {
@@ -436,10 +445,8 @@ public class Controller implements Initializable
 		File imageFile = fileChooser.showOpenDialog(application.getStage());
 
 		// if the file has an accepted extension, make it the new pattern header image
-		if (imageFile != null && fileMatchesFilter(imageFile, filter)) {
-			Image image = new Image(imageFile.toURI().toString());
-			mControls.setPatternImage(image);
-		}
+		if (imageFile != null && fileMatchesFilter(imageFile, filter))
+			mControls.setPatternImageUrl(imageFile.toURI().toString());
 	}
 
 	/**
@@ -461,7 +468,7 @@ public class Controller implements Initializable
 	 * removes current Pattern header image
  	 */
 	public void clearPatternHeaderImage() {
-		mControls.setPatternImage(null);
+		mControls.setPatternImageUrl(null);
 		patternHeaderPreview.setImage(null);
 	}
 

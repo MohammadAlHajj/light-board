@@ -7,7 +7,7 @@ import java.awt.Point;
 /**
  * Created by Mohammad on 10/7/2016.
  */
-public class VerticalPatterm implements Pattern {
+public class VerticalPattern implements Pattern {
     @Override
     public Point getPointAt(int maxWidth, int maxHeight, double time) {
         Point p = new Point();

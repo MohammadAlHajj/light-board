@@ -1,10 +1,8 @@
-package com.lightBoard.controls.userProfiles;
+package com.lightBoard.model.userProfiles;
 
 import com.lightBoard.controls.ColorHelper;
 import com.lightBoard.controls.Pattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
-
-import java.net.URL;
 
 import javafx.scene.paint.Color;
 
@@ -18,7 +16,7 @@ public class PatientProfile
 		private Pattern defaultPattern = new HorizontalPattern();
 		private String firstName = "";
 		private String lastName = "";
-		private URL imageLink;
+		private String imageUrl;
 		private Color patternColor = ColorHelper.SOFT_WHITE;
 		private Color backgroundColor = ColorHelper.SOFT_BLACK;
 
@@ -37,8 +35,8 @@ public class PatientProfile
 			return this;
 		}
 
-		public Builder imageLink(URL imageLink) {
-			this.imageLink = imageLink;
+		public Builder imageUrl(String url) {
+			this.imageUrl = url;
 			return this;
 		}
 
@@ -53,7 +51,7 @@ public class PatientProfile
 		}
 
 		public PatientProfile build() {
-			return new PatientProfile(defaultPattern, firstName, lastName, imageLink, patternColor,
+			return new PatientProfile(defaultPattern, firstName, lastName, imageUrl, patternColor,
 				backgroundColor);
 		}
 	}
@@ -62,17 +60,17 @@ public class PatientProfile
 	private Pattern defaultPattern;
 	private String firstName;
 	private String lastName;
-	private URL imageLink;
+	private String imageUrl;
 	private Color patternColor;
 	private Color backgroundColor;
 
 	private PatientProfile(Pattern defaultPattern, String firstName, String lastName,
-		URL imageLink, Color patternColor, Color backgroundColor)
+		String imageUrl, Color patternColor, Color backgroundColor)
 	{
 		this.defaultPattern = defaultPattern;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.imageLink = imageLink;
+		this.imageUrl = imageUrl;
 		this.patternColor = patternColor;
 		this.backgroundColor = backgroundColor;
 	}
@@ -84,14 +82,14 @@ public class PatientProfile
 	public Pattern getDefaultPattern() {return defaultPattern;}
 	public String getFirstName() {return firstName;}
 	public String getLastName() {return lastName;}
-	public URL getImageLink() {return imageLink;}
+	public String getImageUrl() {return imageUrl;}
 	public Color getPatternColor() {return patternColor;}
 	public Color getBackgroundColor() {return backgroundColor;}
 
 	public void setDefaultPattern(Pattern defaultPattern) {this.defaultPattern = defaultPattern;}
 	public void setFirstName(String firstName) {this.firstName = firstName;}
 	public void setLastName(String lastName) {this.lastName = lastName;}
-	public void setImageLink(URL imageLink) {this.imageLink = imageLink;}
+	public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}
 	public void setPatternColor(Color patternColor) {this.patternColor = patternColor;}
 	public void setBackgroundColor(Color backgroundColor) {this.backgroundColor = backgroundColor;}
 }
