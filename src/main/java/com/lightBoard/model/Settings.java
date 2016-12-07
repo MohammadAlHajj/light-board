@@ -1,4 +1,4 @@
-package com.lightBoard.controls;
+package com.lightBoard.model;
 
 /**
  * Created by Moham on 11/16/2016.
@@ -7,11 +7,13 @@ public class Settings
 {
 	private static int minSpeedMicros = 150;
 	private static int maxSpeedMicros = 1000;
-	// FIXME: 11/16/2016 these are not used yet
+
+	// TODO: 11/16/2016 these are not used yet
 	private static int minTailLengthPixels = 0;
 	private static int maxTailLengthPixels = 0;
 	private static int minTailThicknessPixels = 0;
 	private static int maxTailThicknessPixels = 0;
+
 	private static long fadeDelayMillis = 2000;
 	private static long fadeLengthMillis = 500;
 
@@ -42,7 +44,4 @@ public class Settings
 	public static void setFadeLengthMillis(long fadeLengthMillis) {
 		Settings.fadeLengthMillis = fadeLengthMillis;
 	}
-
-
-
 }

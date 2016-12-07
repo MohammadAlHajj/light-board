@@ -6,6 +6,7 @@ import com.lightBoard.controls.patterns.DiagonalUpPattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
 import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.patterns.VerticalPattern;
+import com.lightBoard.model.Settings;
 import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.File;
@@ -62,6 +63,7 @@ public class Controller implements Initializable
 	 * application reference
 	 */
     private IScreenModeSetup application;
+
 	/**
 	 * master Controls singleton reference
 	 */
@@ -135,9 +137,7 @@ public class Controller implements Initializable
         assert infinityBtn != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
 
         mControls = MasterControls.INSTANCE;
-        mControls.init();
 	    try {
-//	    	mControls.saveProfile();
 		    mControls.loadProfile(0);
 	    } catch (IOException e) {
 		    e.printStackTrace();

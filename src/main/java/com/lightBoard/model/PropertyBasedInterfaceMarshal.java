@@ -11,10 +11,10 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 
 /**
- * Created by Moham on 12/6/2016.
+ * Created by StackOverflow on 12/6/2016.
  *
- * This is a magic class. now one other then the creator knows how it works, but it does. Thank
- * you StackOverflow
+ * This is a magic class. no one other then the creator knows how it works, but it does. Thank
+ * you StackOverflow. okok, i get what he does, i'm just pulling your leg
  */
 public class PropertyBasedInterfaceMarshal implements
 	JsonSerializer<Object>, JsonDeserializer<Object>
@@ -41,8 +41,7 @@ public class PropertyBasedInterfaceMarshal implements
 	public JsonElement serialize(Object object, Type type,
 		JsonSerializationContext jsonSerializationContext) {
 		JsonElement jsonEle = jsonSerializationContext.serialize(object, object.getClass());
-		jsonEle.getAsJsonObject().addProperty(CLASS_META_KEY,
-			object.getClass().getCanonicalName());
+		jsonEle.getAsJsonObject().addProperty(CLASS_META_KEY, object.getClass().getCanonicalName());
 		return jsonEle;
 	}
 }

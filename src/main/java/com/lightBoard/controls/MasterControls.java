@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lightBoard.model.PropertyBasedInterfaceMarshal;
-import com.lightBoard.model.userProfiles.PatientProfile;
+import com.lightBoard.model.PatientProfile;
 import com.lightBoard.view.MainScreen;
 
 import javafx.beans.property.Property;
@@ -20,7 +20,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import sun.java2d.cmm.Profile;
 
 /**
  * @author Moham
@@ -30,7 +29,9 @@ public enum MasterControls
 {
     INSTANCE;
 
-	Gson gson;
+	private Gson gson= new GsonBuilder()
+		.registerTypeAdapter(Pattern.class, new PropertyBasedInterfaceMarshal())
+		.create();
 
 	private PatientProfile patientProfile = PatientProfile.defaultProfile();
 
@@ -76,13 +77,6 @@ public enum MasterControls
             service.schedule(this, repeatDelay * pointsPerFrame, TimeUnit.MICROSECONDS);
         }
     };
-
-    public void init()
-    {
-	    gson = new GsonBuilder()
-		    .registerTypeAdapter(Pattern.class, new PropertyBasedInterfaceMarshal())
-		    .create();
-    }
 
 	/**
 	 * updates the pattern buffer accordingly. takes into consideration the bounds of the canvas,
@@ -163,21 +157,27 @@ public enum MasterControls
 
 	public void saveProfile() throws IOException {
 		updatePatientProfile();
-		Writer writer = new FileWriter("default.json");
+		Writer writer;
+		if (patientProfile.isDefault())
+			writer = new FileWriter("default.json");
+		else writer = new FileWriter(patientProfile.getId() + ".json");
+
 		gson.toJson(patientProfile, writer);
 		writer.close();
 	}
 
 	public void loadProfile(int id) throws IOException {
-		Reader reader = new FileReader("default.json");
+		Reader reader;
+		if (patientProfile.isDefault())
+			reader = new FileReader("default.json");
+		else reader = new FileReader(id + ".json");
 		patientProfile = gson.fromJson(reader, PatientProfile.class);
 		reader.close();
 
 		loadStateFromProfile(patientProfile);
 	}
 
-	private void loadStateFromProfile(PatientProfile profile)
-	{
+	private void loadStateFromProfile(PatientProfile profile) {
 		backgroundColor = profile.getBackgroundColor();
 		patternColor = profile.getPatternColor();
 		setPattern(profile.getDefaultPattern());
@@ -259,6 +259,4 @@ public enum MasterControls
 		this.imageSize = imageSize;
 		refreshBuffer();
 	}
-
-
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.lightBoard.controls;
+package com.lightBoard.unused;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -31,14 +31,15 @@ public class DocFilter extends DocumentFilter
 		sb.append(doc.getText(0, doc.getLength()));
 		sb.insert(offset, string);
 
-		if (testInputFOrmat(sb.toString())) {
+		if (testInputFormat(sb.toString())) {
 			super.insertString(fb, offset, string, attr);
 		} else {
-			// warn the user and don't allow the insert
+			// TODO: 12/7/2016 warn the user and don't allow the insert
 		}
 	}
 
-	private boolean testInputFOrmat(String text) {
+	private boolean testInputFormat(String text)
+	{
 		try {
 			if (format.equals(Float.class))
 			{
@@ -67,14 +68,14 @@ public class DocFilter extends DocumentFilter
 
 	@Override
 	public void replace(FilterBypass fb, int offset, int length, String text,
-			AttributeSet attrs) throws BadLocationException {
-
+			AttributeSet attrs) throws BadLocationException
+	{
 		Document doc = fb.getDocument();
 		StringBuilder sb = new StringBuilder();
 		sb.append(doc.getText(0, doc.getLength()));
 		sb.replace(offset, offset + length, text);
 
-		if (testInputFOrmat(sb.toString())) {
+		if (testInputFormat(sb.toString())) {
 			super.replace(fb, offset, length, text, attrs);
 		} else {
 			// warn the user and don't allow the insert
@@ -82,8 +83,8 @@ public class DocFilter extends DocumentFilter
 	}
 
 	@Override
-	public void remove(FilterBypass fb, int offset, int length)
-			throws BadLocationException {
+	public void remove(FilterBypass fb, int offset, int length) throws BadLocationException
+	{
 		Document doc = fb.getDocument();
 		StringBuilder sb = new StringBuilder();
 		sb.append(doc.getText(0, doc.getLength()));
@@ -92,7 +93,7 @@ public class DocFilter extends DocumentFilter
 		if (sb.length() == 0)
 			sb.append(0);
 		
-		if (testInputFOrmat(sb.toString())) {
+		if (testInputFormat(sb.toString())) {
 			super.remove(fb, offset, length);
 		} else {
 			// warn the user and don't allow the insert
