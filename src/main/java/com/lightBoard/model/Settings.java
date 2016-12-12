@@ -1,12 +1,16 @@
 package com.lightBoard.model;
 
+import com.lightBoard.controls.MasterControls;
+
 /**
  * Created by Moham on 11/16/2016.
  */
 public class Settings
 {
-	private static int minSpeedMicros = 150;
-	private static int maxSpeedMicros = 1000;
+	// the weird ratio is because the smoothness has been changed from 0.05 to be divisible by
+	// Math.PI. this keeps the speed equal to the given requirements
+	private static int minSpeedMicros = (int)(150 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
+	private static int maxSpeedMicros = (int)(1000 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
 
 	// TODO: 11/16/2016 these are not used yet
 	private static int minTailLengthPixels = 0;

@@ -9,8 +9,12 @@ High priority:
 - add "no image" image
 - fix circle speed
 - add right/top borders to fullscreen mode
+- fix thickness slider tick location
+
 Mid priority:
 -* adding per-client profile
+- link bunber of dot in a cycle to the max/min speed, and later to the screen size
+- fix min and max speed names in settings
 
 low priority:
 

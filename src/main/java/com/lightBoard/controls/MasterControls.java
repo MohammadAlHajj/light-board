@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lightBoard.model.PropertyBasedInterfaceMarshal;
 import com.lightBoard.model.PatientProfile;
+import com.lightBoard.model.Settings;
 import com.lightBoard.view.MainScreen;
 
 import javafx.beans.property.Property;
@@ -24,10 +25,12 @@ import javafx.scene.paint.Color;
 /**
  * @author Moham
  * Master Controls singleton
+ *
  */
 public enum MasterControls
 {
     INSTANCE;
+
 
 	private Gson gson= new GsonBuilder()
 		.registerTypeAdapter(Pattern.class, new PropertyBasedInterfaceMarshal())
@@ -36,9 +39,16 @@ public enum MasterControls
 	private PatientProfile patientProfile = PatientProfile.defaultProfile();
 
 	// speed controls
-	private int repeatDelay = 1000;
-	private double smoothness = 0.005;
-	private int pointsPerFrame = 2;
+
+	public static final int N_OF_DOTS_IN_HALF_CYCLE = 750;
+	/**
+	 * difference between time instances where f(time) = current dot location in pattern.
+	 * The cycle takes time = 2 * Math.PI to complete
+	 */
+	public static final double DEFAULT_SMOOTHNESS = Math.PI / N_OF_DOTS_IN_HALF_CYCLE;
+	private int repeatDelay = Settings.getMaxSpeedMicros();
+	private double smoothness = DEFAULT_SMOOTHNESS;
+	private int pointsPerFrame = 1;
 	private double timeInFunc;
 
 	// pattern length and width
@@ -73,6 +83,7 @@ public enum MasterControls
         @Override
         public void run() {
             updateBuffer();
+            // the repetition of this runnable should be is always above 500 Microseconds
 	        pointsPerFrame = Math.max(1, 1000 / repeatDelay);
             service.schedule(this, repeatDelay * pointsPerFrame, TimeUnit.MICROSECONDS);
         }
@@ -136,15 +147,15 @@ public enum MasterControls
     }
 
     public void play(){
-        smoothness = 0.005;
-        playing = true;
-        refreshBuffer();
+        smoothness = DEFAULT_SMOOTHNESS;
+	    playing = true;
     }
 
     public void pause(){
         smoothness = 0;
         playing = false;
-	    refreshBuffer();
+        // go to center of board - requirement
+	    timeInFunc = Math.PI/2;
     }
 
     public void refreshBuffer(){

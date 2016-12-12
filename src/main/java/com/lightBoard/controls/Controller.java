@@ -210,7 +210,7 @@ public class Controller implements Initializable
 				max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));
 			double b = 1/99.0 * (Math.log(Settings.getMinSpeedMicros()) - Math.log(Settings
 				.getMaxSpeedMicros()));
-			double a = 1000.0 / (Math.pow(Math.E, b));
+			double a = Settings.getMaxSpeedMicros() / (Math.pow(Math.E, b));
 			double convertedExpSpeed = a * Math.pow(Math.E, b * new_val.doubleValue());
 			mControls.setRepeatDelay((int)convertedExpSpeed);
 			speedTxt.setText(Math.round(speedSlider.getValue()) +"");
@@ -279,7 +279,6 @@ public class Controller implements Initializable
             playPauseBtn.setText("Play");
             playPauseBtn.setId("playBtn");
         }
-        mControls.refreshBuffer();
     }
 
 	/**
