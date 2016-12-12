@@ -4,21 +4,16 @@
 
 High priority:
 - fix lag on color change
-- add space and esc - add keyboard shortcuts for controls
-- make speed faster
 - find a better way to play/pause
 - fix dimentions of buttons in image settings
 - add "no image" image
-
-
+- fix circle speed
+- add right/top borders to fullscreen mode
 Mid priority:
--- make canvas inlargable like youtube
+-* adding per-client profile
 
-low priority
--- color controls
-- add pic to head of line
+low priority:
 
 LATER:
-- network control
-- mobile app control
--* adding per-client profile
+- network control >>> mobile app control
+

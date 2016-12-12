@@ -55,7 +55,12 @@
 				maxWidth="Infinity"/>
 
 			<Button text="O"
-				fx:id="CircleBtn"
+				fx:id="clockwiseCircleBtn"
+				onAction="#changePattern"
+				maxWidth="Infinity"/>
+
+			<Button text="Reverse O"
+				fx:id="counterclockwiseCircleBtn"
 				onAction="#changePattern"
 				maxWidth="Infinity"/>
 		</VBox>

@@ -1,6 +1,7 @@
 package com.lightBoard.controls;
 
-import com.lightBoard.controls.patterns.CircularPattern;
+import com.lightBoard.controls.patterns.ClockwiseCircularPattern;
+import com.lightBoard.controls.patterns.CounterclockwiseCircualPattern;
 import com.lightBoard.controls.patterns.DiagonalDownPattern;
 import com.lightBoard.controls.patterns.DiagonalUpPattern;
 import com.lightBoard.controls.patterns.HorizontalPattern;
@@ -77,7 +78,8 @@ public class Controller implements Initializable
     @FXML private Button verticalBtn;
     @FXML private Button diagonalUpBtn;
     @FXML private Button diagonalDownBtn;
-    @FXML private Button CircleBtn;
+    @FXML private Button clockwiseCircleBtn;
+    @FXML private Button counterclockwiseCircleBtn;
 
 	/**
 	 * pattern property control sliders and their display text
@@ -137,8 +139,10 @@ public class Controller implements Initializable
         assert infinityBtn != null : "fx:id=\"myButton\" was not injected: check your FXML file 'simple.fxml'.";
 
         mControls = MasterControls.INSTANCE;
+
 	    try {
-		    mControls.loadProfile(0);
+	    	if (mControls.getPatientProfile() == null)
+		        mControls.loadProfile(0);
 	    } catch (IOException e) {
 		    e.printStackTrace();
 	    }
@@ -245,8 +249,10 @@ public class Controller implements Initializable
             mControls.setPattern(new DiagonalUpPattern());
         }else if (event.getSource().equals(diagonalDownBtn)) {
             mControls.setPattern(new DiagonalDownPattern());
-        }else if (event.getSource().equals(CircleBtn)){
-            mControls.setPattern(new CircularPattern());
+        }else if (event.getSource().equals(clockwiseCircleBtn)){
+            mControls.setPattern(new ClockwiseCircularPattern());
+        }else if (event.getSource().equals(counterclockwiseCircleBtn)){
+            mControls.setPattern(new CounterclockwiseCircualPattern());
         }
     }
 

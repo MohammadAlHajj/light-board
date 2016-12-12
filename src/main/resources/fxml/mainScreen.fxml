@@ -55,9 +55,10 @@
 			GridPane.vgrow="ALWAYS">
 			<rowConstraints>
 				<RowConstraints percentHeight="10"/>
-				<RowConstraints percentHeight="30"/>
-				<RowConstraints percentHeight="30"/>
-				<RowConstraints percentHeight="30"/>
+				<RowConstraints percentHeight="22.5"/>
+				<RowConstraints percentHeight="22.5"/>
+				<RowConstraints percentHeight="22.5"/>
+				<RowConstraints percentHeight="22.5"/>
 			</rowConstraints>
 			<columnConstraints>
 				<ColumnConstraints percentWidth="50" />
@@ -104,21 +105,31 @@
 				maxWidth="Infinity"
 				maxHeight="Infinity"/>
 
-			<Button text="Infinity"
-				fx:id="infinityBtn"
+			<Button text="O"
+				fx:id="clockwiseCircleBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="3"
 				GridPane.columnIndex="0"
 				maxWidth="Infinity"
 				maxHeight="Infinity"/>
 
-			<Button text="O"
-				fx:id="CircleBtn"
+			<Button text="Reverse O"
+				fx:id="counterclockwiseCircleBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="3"
 				GridPane.columnIndex="1"
 				maxWidth="Infinity"
 				maxHeight="Infinity"/>
+
+			<Button text="Infinity"
+				fx:id="infinityBtn"
+				onAction="#changePattern"
+				GridPane.rowIndex="4"
+				GridPane.columnIndex="0"
+				GridPane.columnSpan="2"
+				maxWidth="Infinity"
+				maxHeight="Infinity"/>
+
 
 		</GridPane>
 

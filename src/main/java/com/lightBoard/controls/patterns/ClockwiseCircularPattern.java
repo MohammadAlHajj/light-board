@@ -7,7 +7,7 @@ import java.awt.Point;
 /**
  * Created by Mohammad on 10/31/2016.
  */
-public class CircularPattern implements Pattern{
+public class ClockwiseCircularPattern implements Pattern{
     @Override
     public Point getPointAt(int maxWidth, int maxHeight, double time) {
         Point p = new Point();
