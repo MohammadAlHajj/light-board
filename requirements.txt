@@ -5,11 +5,11 @@
 High priority:
 - fix lag on color change
 - find a better way to play/pause
-- fix dimentions of buttons in image settings
 - add "no image" image
-- fix circle speed
 - add right/top borders to fullscreen mode
 - fix thickness slider tick location
+- complete cycle before pausing
+- not all images are working
 
 Mid priority:
 -* adding per-client profile
@@ -17,6 +17,7 @@ Mid priority:
 - fix min and max speed names in settings
 
 low priority:
+- add an unblocking process wher the point stops and taunts the user
 
 LATER:
 - network control >>> mobile app control

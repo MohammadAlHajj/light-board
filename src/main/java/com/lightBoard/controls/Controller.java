@@ -36,6 +36,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -43,6 +44,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
@@ -107,6 +109,7 @@ public class Controller implements Initializable
 	@FXML private ColorPicker foregroundCP;
 	@FXML private ColorPicker backgroundCP;
 	@FXML private CheckBox colorOverrideCB;
+	@FXML private ImageView colorOverrideTooltipIV;
 
 	/**
 	 * normal screen mode only
@@ -324,6 +327,9 @@ public class Controller implements Initializable
     {
 		executor = Executors.newSingleThreadScheduledExecutor();
 		root.setOnMouseMoved(event -> {
+
+			application.showCursor(true);
+
 			if (scheduledFuture != null && scheduledFuture.isDone())
 				animateControlsFadeIn();
 
@@ -511,6 +517,29 @@ public class Controller implements Initializable
 		});
 	}
 
+	public void setupColorOverrideTooltip()
+	{
+		// setup checkbox tooltip
+		Tooltip tooltip = new Tooltip(
+			"This program takes the sensitivity of \n" +
+				"the human eye to colors into consideration \n" +
+				"and changes the latter accordingly. Check \n" +
+				"this box to disable color correction.\n\n" +
+				"NOTE: The pattern color is the target of \nthis change");
+		ChangeListener<Boolean> listener = (observable, oldValue, newValue) -> {
+			if (! newValue)
+				tooltip.show(application.getStage());
+		};
+		colorOverrideTooltipIV.setOnMouseEntered( event ->
+			tooltip.showingProperty().addListener(listener));
+		colorOverrideTooltipIV.setOnMouseExited(event -> {
+			tooltip.showingProperty().removeListener(listener);
+			tooltip.hide();
+		});
+		tooltip.setFont(Font.font(18));
+		Tooltip.install(colorOverrideTooltipIV, tooltip);
+	}
+
 
 	/**
 	 * gives this controller a copy of the app it is linked to
@@ -523,4 +552,5 @@ public class Controller implements Initializable
 	public Canvas getCanvas() {return canvas;}
 	public GridPane getControlsGrid() {return controlsGrid;}
 	public CheckBox getColorOverrideCB() {return colorOverrideCB;}
+	public ImageView getColorOverrideTooltipIV() {return colorOverrideTooltipIV;}
 }

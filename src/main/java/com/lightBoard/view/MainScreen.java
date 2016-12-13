@@ -12,8 +12,11 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,7 +25,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -141,15 +146,9 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         controller.setupPlayPauseBtn();
         controller.setupColorPickers();
 	    controller.setupStandardKeyBinding(root);
+	    controller.setupColorOverrideTooltip();
 
-        // setup checkbox tooltip
-        CheckBox colorOverrideCB = controller.getColorOverrideCB();
-        Tooltip tooltip = new Tooltip(
-            "This program takes the sensitivity of \n" +
-            "the human eye to colors into consideration \n" +
-            "and changes the latter accordingly. Check \n" +
-            "this box to disable the feature.");
-        colorOverrideCB.setTooltip(tooltip);
+
 
         // restart the primary stage with the newly created scene and make it maximized
         primaryStage.setScene(scene);
