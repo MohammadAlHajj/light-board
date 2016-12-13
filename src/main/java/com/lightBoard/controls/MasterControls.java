@@ -91,13 +91,25 @@ public enum MasterControls
 
 	/**
 	 * updates the pattern buffer accordingly. takes into consideration the bounds of the canvas,
-	 * the brush size, and the image size
-	 * @return
+	 * the brush size, and the pattern header image size. If the pause button was pressed, wait
+	 * until the pattern reaches a quarter or three-quarters of a cycle and calls the method that
+	 * continues the pausing process
+	 * @return the updated buffer
 	 */
+	private boolean inPausingProcess;
+	private static final double RADIANCE_FULL_CYCLE = Math.PI*2;
+	private static final double RADIANCE_QUARTER_CYCLE = Math.PI/2;
+	private static final double RADIANCE_THREE_QUARTERS_CYCLE = Math.PI*3/2;
 	public ConcurrentLinkedDeque<Point> updateBuffer()
     {
 	    for (int i = 0; i < pointsPerFrame; i++)
 	    {
+		    if(inPausingProcess)
+		    	if((timeInFunc + RADIANCE_QUARTER_CYCLE) % (RADIANCE_FULL_CYCLE) < DEFAULT_SMOOTHNESS)
+				    pauseContinued(RADIANCE_THREE_QUARTERS_CYCLE);
+		        else if((timeInFunc + RADIANCE_THREE_QUARTERS_CYCLE) % (RADIANCE_FULL_CYCLE) < DEFAULT_SMOOTHNESS)
+				    pauseContinued(RADIANCE_QUARTER_CYCLE);
+
 		    timeInFunc += smoothness;
 		    Point p;
 		    if (patternImage != null)
@@ -148,14 +160,19 @@ public enum MasterControls
 
     public void play(){
         smoothness = DEFAULT_SMOOTHNESS;
+	    inPausingProcess = false;
 	    playing = true;
     }
 
     public void pause(){
-        smoothness = 0;
-        playing = false;
-        // go to center of board - requirement
-	    timeInFunc = Math.PI/2;
+	    inPausingProcess = true;
+	    playing = false;
+    }
+    public void pauseContinued(double newTimeInFunc){
+	    smoothness = 0;
+	    // go to center of board - requirement
+	    timeInFunc = newTimeInFunc;
+	    inPausingProcess = false;
     }
 
     public void refreshBuffer(){

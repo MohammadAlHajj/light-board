@@ -255,6 +255,7 @@
 			<Button text="Pause"
 				fx:id="playPauseBtn"
 				id="playPauseBtn"
+				focusTraversable="false"
 				GridPane.rowIndex="1"
 				GridPane.columnIndex="0"
 				GridPane.rowSpan="3"

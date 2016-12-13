@@ -77,6 +77,7 @@
 			<Button text="Pause"
 				fx:id="playPauseBtn"
 				onAction="#togglePlayPause"
+				focusTraversable="false"
 				minWidth="200"/>
 
 			<HBox

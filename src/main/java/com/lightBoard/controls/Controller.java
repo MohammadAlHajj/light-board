@@ -506,7 +506,6 @@ public class Controller implements Initializable
 	 */
 	public void setupStandardKeyBinding(Node root) {
 		root.addEventFilter(KeyEvent.KEY_PRESSED,event -> {
-			System.out.println(event);
 			if ((event.getCode().equals(KeyCode.ENTER) && event.isAltDown()))
 			{
 				try { toggleFullscreen(); }
