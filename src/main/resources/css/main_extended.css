@@ -2,6 +2,10 @@
 	-fx-background-image: url(background.jpg);
 }
 
+.text{
+	-fx-text-fill: white;
+}
+
 .label {
     -fx-text-fill: white;
 	-fx-font-size: 12px;
@@ -14,9 +18,14 @@
 #bottomBoxControls {
 	-fx-background-color: linear-gradient(to bottom , rgba(0,0,0,0), rgba(0,0,0,1));
 }
-
 #leftBox {
 	-fx-background-color: linear-gradient(to left , rgba(0,0,0,0), rgba(0,0,0,1));
+}
+#topBox{
+	-fx-background-color: linear-gradient(to top , rgba(0,0,0,0), rgba(0,0,0,1));
+}
+#rightBox{
+	-fx-background-color: linear-gradient(to right , rgba(0,0,0,0), rgba(0,0,0,1));
 }
 
 .button {

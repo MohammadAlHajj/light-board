@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Rectangle?>
 <StackPane fx:controller="com.lightBoard.controls.Controller"
 	xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
@@ -20,6 +21,18 @@
 
 	<AnchorPane fx:id="controlsLayer"
 		pickOnBounds="false">
+
+		<VBox fx:id="rightBox"
+			alignment="CENTER"
+			AnchorPane.rightAnchor="0"
+			AnchorPane.bottomAnchor="0"
+			AnchorPane.topAnchor="0"/>
+
+		<HBox fx:id="topBox"
+			alignment="CENTER"
+			AnchorPane.leftAnchor="0"
+			AnchorPane.rightAnchor="0"
+			AnchorPane.topAnchor="0"/>
 
 		<VBox fx:id="leftBox"
 			alignment="CENTER"
@@ -81,7 +94,7 @@
 				minWidth="200"/>
 
 			<HBox
-				id="bottomBoxControls"
+				fx:id="bottomBoxControls"
 				alignment="center"
 				spacing="10">
 				<padding>

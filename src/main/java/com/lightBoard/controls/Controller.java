@@ -44,6 +44,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -122,6 +123,9 @@ public class Controller implements Initializable
     @FXML private AnchorPane controlsLayer;
 	@FXML private VBox bottomBox;
 	@FXML private VBox leftBox;
+	@FXML private VBox rightBox;
+	@FXML private HBox topBox;
+	@FXML private HBox bottomBoxControls;
 
 	/**
 	 * pattern image header controls
@@ -152,6 +156,12 @@ public class Controller implements Initializable
 
 	    setupSlidersAndTextDisplay();
 	    setupPatternHeaderImagePreview();
+
+	    if (rightBox != null && topBox != null) {
+		    // TODO: 12/15/2016 make this nonstatic
+		    rightBox.setPrefWidth(90);
+		    topBox.setPrefHeight(70);
+	    }
     }
 
 	/**
@@ -359,23 +369,30 @@ public class Controller implements Initializable
 	    KeyValue rotateKV = new KeyValue(angle, -90);
 	    KeyFrame animationKF = new KeyFrame(duration, fadeControlsKV, rotateKV);
 
-	    // creates the rotation transform of the bottom box. the angle of rotation is linked to
+	    // creates the rotation transform of the boxes. the angle of rotation is linked to
 	    // the previously created keyframes
 	    // rotation is around the x axis
 	    Rotate bottomBoxRotate = new Rotate();
 	    bottomBoxRotate.angleProperty().bind(angle);
 	    bottomBoxRotate.setAxis(new Point3D(1, 0, 0));
-	    bottomBoxRotate.setPivotY(bottomBox.getLayoutX() + bottomBox.getHeight());
+	    bottomBoxRotate.setPivotY(bottomBox.getHeight());
 	    bottomBox.getTransforms().add(bottomBoxRotate);
 
-	    // creates the rotation transform of the left box. the angle of rotation is linked to
-	    // the previously created keyframes
-	    // rotation is around the y axis
 	    Rotate leftBoxRotate = new Rotate();
 	    leftBoxRotate.angleProperty().bind(angle);
 	    leftBoxRotate.setAxis(new Point3D(0, 1, 0));
-	    leftBoxRotate.setPivotY(leftBox.getLayoutY());
 	    leftBox.getTransforms().add(leftBoxRotate);
+
+	    Rotate topBoxRotate = new Rotate();
+	    topBoxRotate.angleProperty().bind(angle);
+	    topBoxRotate.setAxis(new Point3D(1, 0, 0));
+	    topBox.getTransforms().add(topBoxRotate);
+
+	    Rotate rightBoxRotate = new Rotate();
+	    rightBoxRotate.angleProperty().bind(angle);
+	    rightBoxRotate.setAxis(new Point3D(0, 1, 0));
+	    rightBoxRotate.setPivotX(rightBox.getWidth());
+	    rightBox.getTransforms().add(rightBoxRotate);
 
 	    // start the animation
 	    fadeInTimeline.getKeyFrames().addAll(animationKF);
@@ -399,23 +416,30 @@ public class Controller implements Initializable
 	    KeyFrame animationKF = new KeyFrame(duration, (event) ->application.showCursor(false),
 		    fadeControlsKV, rotateKV);
 
-	    // creates the rotation transform of the bottom box. the angle of rotation is linked to
+	    // creates the rotation transform of the boxes. the angle of rotation is linked to
 	    // the previously created keyframes
 	    // rotation is around the x axis
 	    Rotate bottomBoxRotate = new Rotate();
 	    bottomBoxRotate.angleProperty().bind(angle);
 	    bottomBoxRotate.setAxis(new Point3D(1, 0, 0));
-	    bottomBoxRotate.setPivotY(bottomBox.getLayoutX() + bottomBox.getHeight());
+	    bottomBoxRotate.setPivotY(bottomBox.getHeight());
 	    bottomBox.getTransforms().add(bottomBoxRotate);
 
-	    // creates the rotation transform of the left box. the angle of rotation is linked to
-	    // the previously created keyframes
-	    // rotation is around the y axis
 	    Rotate leftBoxRotate = new Rotate();
 	    leftBoxRotate.angleProperty().bind(angle);
 	    leftBoxRotate.setAxis(new Point3D(0, 1, 0));
-	    leftBoxRotate.setPivotY(leftBox.getLayoutY());
 	    leftBox.getTransforms().add(leftBoxRotate);
+
+	    Rotate topBoxRotate = new Rotate();
+	    topBoxRotate.angleProperty().bind(angle);
+	    topBoxRotate.setAxis(new Point3D(1, 0, 0));
+	    topBox.getTransforms().add(topBoxRotate);
+
+	    Rotate rightBoxRotate = new Rotate();
+	    rightBoxRotate.angleProperty().bind(angle);
+	    rightBoxRotate.setAxis(new Point3D(0, 1, 0));
+	    rightBoxRotate.setPivotX(rightBox.getWidth());
+	    rightBox.getTransforms().add(rightBoxRotate);
 
 	    // start the animation
 	    fadeOutTimeline.getKeyFrames().addAll(animationKF);
