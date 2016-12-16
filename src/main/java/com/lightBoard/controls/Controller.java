@@ -35,6 +35,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -158,9 +159,9 @@ public class Controller implements Initializable
 	    setupPatternHeaderImagePreview();
 
 	    if (rightBox != null && topBox != null) {
-		    // TODO: 12/15/2016 make this nonstatic
-		    rightBox.setPrefWidth(90);
-		    topBox.setPrefHeight(70);
+		    // TODO: 12/15/2016 make this non-static
+		    rightBox.setPrefWidth(110);
+		    topBox.setPrefHeight(60);
 	    }
     }
 
