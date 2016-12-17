@@ -9,8 +9,8 @@ public class Settings
 {
 	// the weird ratio is because the smoothness has been changed from 0.05 to be divisible by
 	// Math.PI. this keeps the speed equal to the given requirements
-	private static int minSpeedMicros = (int)(150 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
-	private static int maxSpeedMicros = (int)(1000 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
+	private static int maxSpeedMicros = (int)(150 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
+	private static int minSpeedMicros = (int)(1000 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
 
 	// TODO: 11/16/2016 these are not used yet
 	private static int minTailLengthPixels = 0;
@@ -21,8 +21,8 @@ public class Settings
 	private static long fadeDelayMillis = 2000;
 	private static long fadeLengthMillis = 500;
 
-	public static int getMinSpeedMicros() {return minSpeedMicros;}
 	public static int getMaxSpeedMicros() {return maxSpeedMicros;}
+	public static int getMinSpeedMicros() {return minSpeedMicros;}
 	public static int getMinTailLengthPixels() {return minTailLengthPixels;}
 	public static int getMaxTailLengthPixels() {return maxTailLengthPixels;}
 	public static int getMinTailThicknessPixels() {return minTailThicknessPixels;}
@@ -31,10 +31,10 @@ public class Settings
 	public static long getFadeLengthMillis() {return fadeLengthMillis;}
 
 
-	public static void setMinSpeedMicros(int minSpeedMicros) {
-		Settings.minSpeedMicros = minSpeedMicros;}
 	public static void setMaxSpeedMicros(int maxSpeedMicros) {
 		Settings.maxSpeedMicros = maxSpeedMicros;}
+	public static void setMinSpeedMicros(int minSpeedMicros) {
+		Settings.minSpeedMicros = minSpeedMicros;}
 	public static void setMinTailLengthPixels(int minTailLengthPixels) {
 		Settings.minTailLengthPixels = minTailLengthPixels;}
 	public static void setMaxTailLengthPixels(int maxTailLengthPixels) {

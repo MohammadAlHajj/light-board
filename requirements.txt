@@ -6,8 +6,6 @@ High priority:
 - fix lag on color change
 - find a better way to play/pause
 - add "no image" image
-- add right/top borders to fullscreen mode
-- fix thickness slider tick location
 - not all images are working
 
 Mid priority:

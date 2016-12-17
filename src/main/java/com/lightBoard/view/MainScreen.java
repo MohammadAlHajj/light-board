@@ -6,28 +6,20 @@ import com.lightBoard.controls.MasterControls;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -40,7 +32,6 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 {
     private MasterControls mControls;
     @FXML private Canvas canvas;
-    @FXML private GridPane controlsGrid;
     private Controller controller;
     private Parent root;
     private Scene scene;
@@ -130,7 +121,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         GridPane grid = (GridPane) root;
         canvas = controller.getCanvas();
 
-        controlsGrid = controller.getControlsGrid();
+        GridPane controlsGrid = controller.getControlsGrid();
 	    DoubleBinding heightBinding =
             scene.heightProperty().subtract(
 	            controlsGrid.heightProperty()
@@ -166,6 +157,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
     private void startAnimation() {
         mControls.startDrawing();
         AnimationTimer timer = new AnimationTimer() {
+
             @Override
             public void handle(long now) {
 	            ConcurrentLinkedDeque<Point> buffer = mControls.getBuffer();
@@ -176,9 +168,9 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
                 gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
                 // set Points color
-                double red = mControls.getPatternColor().getRed();
+                double red   = mControls.getPatternColor().getRed();
                 double green = mControls.getPatternColor().getGreen();
-                double blue = mControls.getPatternColor().getBlue();
+                double blue  = mControls.getPatternColor().getBlue();
                 double alpha = 1;
 
                 // get data from now to decrease loop overhead

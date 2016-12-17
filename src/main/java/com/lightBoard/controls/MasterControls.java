@@ -46,7 +46,7 @@ public enum MasterControls
 	 * The cycle takes time = 2 * Math.PI to complete
 	 */
 	public static final double DEFAULT_SMOOTHNESS = Math.PI / N_OF_DOTS_IN_HALF_CYCLE;
-	private int repeatDelay = Settings.getMaxSpeedMicros();
+	private int repeatDelay = Settings.getMinSpeedMicros();
 	private double smoothness = DEFAULT_SMOOTHNESS;
 	private int pointsPerFrame = 1;
 	private double timeInFunc;

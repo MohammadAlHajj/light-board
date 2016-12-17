@@ -35,7 +35,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -45,7 +44,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
@@ -209,8 +207,8 @@ public class Controller implements Initializable
 		});
 
 		// get speed and set slider accordingly
-		int min = Settings.getMinSpeedMicros();
-		int max = Settings.getMaxSpeedMicros();
+		int min = Settings.getMaxSpeedMicros();
+		int max = Settings.getMinSpeedMicros();
 		int originalSliderValue = (int)(
 			(max - mControls.getRepeatDelay()) * ((speedSlider.getMax()-1)/(max-min)) +1
 			// invert direction of max
@@ -222,9 +220,9 @@ public class Controller implements Initializable
 		speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
 			double convertedSpeed =
 				max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));
-			double b = 1/99.0 * (Math.log(Settings.getMinSpeedMicros()) - Math.log(Settings
-				.getMaxSpeedMicros()));
-			double a = Settings.getMaxSpeedMicros() / (Math.pow(Math.E, b));
+			double b = 1/99.0 * (Math.log(Settings.getMaxSpeedMicros()) - Math.log(Settings
+				.getMinSpeedMicros()));
+			double a = Settings.getMinSpeedMicros() / (Math.pow(Math.E, b));
 			double convertedExpSpeed = a * Math.pow(Math.E, b * new_val.doubleValue());
 			mControls.setRepeatDelay((int)convertedExpSpeed);
 			speedTxt.setText(Math.round(speedSlider.getValue()) +"");
