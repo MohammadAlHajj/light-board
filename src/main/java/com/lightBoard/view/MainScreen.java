@@ -115,7 +115,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         controller = fxmlLoader.getController();
         controller.setApp(this);
 
-        scene = new Scene(root, 1400, 850);
+        scene = new Scene(root, 1600, 850);
 
         // bind the size of the canvas to the size of the scene - the height of the controls
         GridPane grid = (GridPane) root;
@@ -135,11 +135,11 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 
         // setup dependencies
         controller.setupPlayPauseBtn();
+        controller.setupMuteUnmuteBtn();
         controller.setupColorPickers();
 	    controller.setupStandardKeyBinding(root);
 	    controller.setupColorOverrideTooltip();
-
-
+	    controller.setupSoundSweepTooltip();
 
         // restart the primary stage with the newly created scene and make it maximized
         primaryStage.setScene(scene);

@@ -21,6 +21,8 @@ public class Settings
 	private static long fadeDelayMillis = 2000;
 	private static long fadeLengthMillis = 500;
 
+	private static int tooltipFontSize = 18;
+
 	public static int getMaxSpeedMicros() {return maxSpeedMicros;}
 	public static int getMinSpeedMicros() {return minSpeedMicros;}
 	public static int getMinTailLengthPixels() {return minTailLengthPixels;}
@@ -29,6 +31,8 @@ public class Settings
 	public static int getMaxTailThicknessPixels() {return maxTailThicknessPixels;}
 	public static long getFadeDelayMillis() {return fadeDelayMillis;}
 	public static long getFadeLengthMillis() {return fadeLengthMillis;}
+	public static int getTooltipFontSize() {return tooltipFontSize;}
+
 
 
 	public static void setMaxSpeedMicros(int maxSpeedMicros) {
@@ -46,6 +50,7 @@ public class Settings
 	public static void setFadeDelayMillis(long fadeDelayMillis) {
 		Settings.fadeDelayMillis = fadeDelayMillis;}
 	public static void setFadeLengthMillis(long fadeLengthMillis) {
-		Settings.fadeLengthMillis = fadeLengthMillis;
-	}
+		Settings.fadeLengthMillis = fadeLengthMillis;}
+	public static void setTooltipFontSize(int tooltipFontSize) {
+		Settings.tooltipFontSize = tooltipFontSize;}
 }

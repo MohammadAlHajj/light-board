@@ -7,11 +7,14 @@ High priority:
 - find a better way to play/pause
 - add "no image" image
 - not all images are working
+- find a way to benchmark
+- add extension filter to sound file chooser
 
 Mid priority:
 -* adding per-client profile
 - link bunber of dot in a cycle to the max/min speed, and later to the screen size
 - fix min and max speed names in settings
+- make file choosers open to default location first then to last opened dir
 
 low priority:
 - add an unblocking process wher the point stops and taunts the user

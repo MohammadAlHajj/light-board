@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URISyntaxException;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,8 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 /**
@@ -60,8 +63,18 @@ public enum MasterControls
 	private boolean extendedMode = false;
 	private boolean bypassColorCorrection = false;
 
+
 	// image properties
 	private double imageSize = 100;
+	private Media patternSound;
+	private MediaPlayer mediaPlayer;
+	private String patternSoundUrl = null;
+	private SimpleObjectProperty<Media> patternSoundProperty =
+		new SimpleObjectProperty<>(patternSound);
+
+	// sound properties
+	private boolean playingSound = true;
+	private boolean swingingSound = false;
 	private Image patternImage = null;
 	private String patternImageUrl = null;
 	private SimpleObjectProperty<Image> patternImageProperty =
@@ -76,6 +89,8 @@ public enum MasterControls
     private Color patternColor = patientProfile.getPatternColor();
 	private Color backgroundColor = patientProfile.getBackgroundColor();
 	private Pattern pattern = patientProfile.getDefaultPattern();
+
+
 
 	// pattern filling process
 	private ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
@@ -100,16 +115,33 @@ public enum MasterControls
 	private static final double RADIANCE_FULL_CYCLE = Math.PI*2;
 	private static final double RADIANCE_QUARTER_CYCLE = Math.PI/2;
 	private static final double RADIANCE_THREE_QUARTERS_CYCLE = Math.PI*3/2;
+	private boolean firstHalfCycle = false;
+
 	public ConcurrentLinkedDeque<Point> updateBuffer()
     {
+	    long start = System.nanoTime();
+
 	    for (int i = 0; i < pointsPerFrame; i++)
 	    {
-		    if(inPausingProcess)
+	    	// this piece of code continues providing new points in the pattern until the
+		    // pattern reaches the middle of the board
+		    if(inPausingProcess){
 		    	if((timeInFunc + RADIANCE_QUARTER_CYCLE) % (RADIANCE_FULL_CYCLE) < DEFAULT_SMOOTHNESS)
 				    pauseContinued(RADIANCE_THREE_QUARTERS_CYCLE);
 		        else if((timeInFunc + RADIANCE_THREE_QUARTERS_CYCLE) % (RADIANCE_FULL_CYCLE) < DEFAULT_SMOOTHNESS)
 				    pauseContinued(RADIANCE_QUARTER_CYCLE);
+			}
+			// control the balance of the sound
+		    if(playingSound && mediaPlayer != null)
+		    {
+			    double balance = timeInFunc % RADIANCE_FULL_CYCLE / RADIANCE_QUARTER_CYCLE;
+			    firstHalfCycle = balance < 2;
 
+			    if(swingingSound)
+				    mediaPlayer.setBalance(firstHalfCycle ? 1-balance : balance-3);
+			    else
+			    	mediaPlayer.setBalance(firstHalfCycle ? -1 : 1);
+		    }
 		    timeInFunc += smoothness;
 		    Point p;
 		    if (patternImage != null)
@@ -134,7 +166,10 @@ public enum MasterControls
 
         while (buffer.size() > maxBufferSize)
             buffer.removeLast();
-        return buffer;
+
+//	    System.out.println(System.nanoTime() - start);
+
+	    return buffer;
     }
 
 	/**
@@ -143,13 +178,38 @@ public enum MasterControls
 	 */
 	public void startDrawing() {
         assert canvas != null : "Can't start drawing before setting the canvas.";
+        // refresh buffer when canvas size is altered
         canvas.heightProperty().addListener((observable, oldValue, newValue) -> refreshBuffer());
         canvas.widthProperty().addListener((observable, oldValue, newValue) -> refreshBuffer());
+
+        // setup sound, start playing if the state says so;
+        setupSound();
+        if (playingSound)
+        	mediaPlayer.play();
+
         service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
 	}
 
-    /**
-     * @return true if playing after toggle
+	/**
+	 * setup sound and its player
+	 */
+	private void setupSound() {
+		if (patternSound == null){
+			try {
+				patternSound = new Media(getClass().getResource(
+					"/sound/pattern_sounds/sound.m4a").toURI().toString());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
+		else patternSound = new Media(patternSoundUrl);
+		if (mediaPlayer != null)
+			mediaPlayer.stop();
+		mediaPlayer = new MediaPlayer(patternSound);
+	}
+
+	/**
+     * @return new value after toggle after toggle
      */
 	public boolean togglePlayPause(){
         if (playing)    pause();
@@ -158,7 +218,11 @@ public enum MasterControls
         return playing;
     }
 
-    public void play(){
+    public void play()
+    {
+	    if (playingSound && patternSound != null && mediaPlayer != null)
+	        mediaPlayer.play();
+
         smoothness = DEFAULT_SMOOTHNESS;
 	    inPausingProcess = false;
 	    playing = true;
@@ -168,14 +232,39 @@ public enum MasterControls
 	    inPausingProcess = true;
 	    playing = false;
     }
-    public void pauseContinued(double newTimeInFunc){
+    public void pauseContinued(double newTimeInFunc)
+    {
+	    if (patternSound != null && mediaPlayer != null)
+		    mediaPlayer.pause();
+
 	    smoothness = 0;
 	    // go to center of board - requirement
 	    timeInFunc = newTimeInFunc;
 	    inPausingProcess = false;
     }
 
-    public void refreshBuffer(){
+	/**
+	 * @return new value after toggle after toggle
+	 */
+	public boolean togglePlayPauseSound(){
+		if (playingSound)   pauseSound();
+		else                playSound();
+
+		return playingSound;
+	}
+	public void playSound() {
+		playingSound = true;
+		if (playing && patternSound != null && mediaPlayer!= null)
+			mediaPlayer.play();
+	}
+	public void pauseSound() {
+		playingSound = false;
+		if (patternSound != null && mediaPlayer!= null)
+			mediaPlayer.pause();
+	}
+
+
+	public void refreshBuffer(){
     	int originalSize = buffer.size();
     	buffer.clear();
 	    timeInFunc -= originalSize * smoothness;
@@ -212,6 +301,7 @@ public enum MasterControls
 		setPatternImageUrl(profile.getImageUrl());
 	}
 
+	// TODO: 12/22/2016 keep updating this
 	private void updatePatientProfile()
 	{
 		patientProfile = new PatientProfile.Builder()
@@ -251,6 +341,14 @@ public enum MasterControls
 	public double getImageSize() {return imageSize;}
 	public Image getPatternImage() {return patternImage;}
 	public Property<Image> patternImageProperty(){ return patternImageProperty;}
+	public boolean isSwingingSound() {return swingingSound;}
+	public void setSwingingSound(boolean swingingSound) {this.swingingSound = swingingSound;}
+	public Property<Media> patternSoundProperty() { return patternSoundProperty;}
+	public boolean isPlayingSound() { return playingSound; }
+
+	public void setPlayingSound(boolean playingSound) {
+		this.playingSound = playingSound;
+	}
 
 	public void setPatternColor(Color patternColor) {
 		if(bypassColorCorrection) this.patternColor = patternColor;
@@ -286,5 +384,15 @@ public enum MasterControls
 	public void setImageSize(double imageSize) {
 		this.imageSize = imageSize;
 		refreshBuffer();
+	}
+
+	public void setPatternSoundUrl(String url) {
+		this.patternSoundUrl = url;
+		if (url == null || url.isEmpty())
+			this.patternSound = null;
+		else
+			this.patternSound = new Media(url);
+		patternSoundProperty.set(patternSound);
+		setupSound();
 	}
 }

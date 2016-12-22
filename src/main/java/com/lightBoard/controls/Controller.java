@@ -12,6 +12,7 @@ import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
@@ -27,6 +28,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point3D;
@@ -35,6 +37,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -108,7 +111,6 @@ public class Controller implements Initializable
 	 */
 	@FXML private ColorPicker foregroundCP;
 	@FXML private ColorPicker backgroundCP;
-	@FXML private CheckBox colorOverrideCB;
 	@FXML private ImageView colorOverrideTooltipIV;
 
 	/**
@@ -132,6 +134,13 @@ public class Controller implements Initializable
 	@FXML private ImageView patternHeaderPreview;
 	@FXML private HBox patternHeaderPreviewHBox;
 	@FXML private Slider patternImageSizeSlider;
+
+	/**
+	 * pattern sound controls
+	 */
+	@FXML private Label currentSoundLbl;
+	@FXML private Button togglePlayPauseSoundBtn;
+	@FXML private ImageView continuousSoundSwingTooltipIV;
 
 	/**
 	 * called right after init automatically by javafx
@@ -318,8 +327,9 @@ public class Controller implements Initializable
 	        scheduledFuture.cancel(true);
     }
 
-	public void toggleColorOverride() {
-		mControls.setBypassColorCorrection(colorOverrideCB.isSelected());
+	public void toggleColorOverride(Event event) {
+		CheckBox ColorOverrideCB = (CheckBox)event.getSource();
+		mControls.setBypassColorCorrection(ColorOverrideCB.isSelected());
 		changeColor();
 	}
 
@@ -469,7 +479,13 @@ public class Controller implements Initializable
 	public void selectPatternHeaderImage()
 	{
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open Resource File");
+		fileChooser.setTitle("Select Image Header");
+		try {
+			fileChooser.setInitialDirectory( new File( getClass().getResource(
+				"/images/pattern_images/").toURI()));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
 		// only the below extensions are allowed
 		FileChooser.ExtensionFilter filter =
@@ -546,8 +562,10 @@ public class Controller implements Initializable
 			"This program takes the sensitivity of \n" +
 				"the human eye to colors into consideration \n" +
 				"and changes the latter accordingly. Check \n" +
-				"this box to disable color correction.\n\n" +
-				"NOTE: The pattern color is the target of \nthis change");
+				"this box to disable color correction.\n" +
+				"\n" +
+				"NOTE: The pattern color is the target of \n" +
+				"this change");
 		ChangeListener<Boolean> listener = (observable, oldValue, newValue) -> {
 			if (! newValue)
 				tooltip.show(application.getStage());
@@ -562,6 +580,86 @@ public class Controller implements Initializable
 		Tooltip.install(colorOverrideTooltipIV, tooltip);
 	}
 
+	public void setupSoundSweepTooltip()
+	{
+		// setup checkbox tooltip
+		Tooltip tooltip = new Tooltip(
+			"this checkbox will, when checked, \n" +
+				"make the sound move with the pattern, \n" +
+				"otherwise the sound will jump \n" +
+				"abruptly from one ear to the other");
+		ChangeListener<Boolean> listener = (observable, oldValue, newValue) -> {
+			if (! newValue)
+				tooltip.show(application.getStage());
+		};
+		continuousSoundSwingTooltipIV.setOnMouseEntered( event ->
+			tooltip.showingProperty().addListener(listener));
+		continuousSoundSwingTooltipIV.setOnMouseExited(event -> {
+			tooltip.showingProperty().removeListener(listener);
+			tooltip.hide();
+		});
+		tooltip.setFont(Font.font(18));
+		Tooltip.install(continuousSoundSwingTooltipIV, tooltip);
+	}
+
+	/**
+	 * picks a new image file for pattern header image. the file is accepted only if it has an
+	 * acceptable extension
+	 */
+	public void selectPatternSound()
+	{
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Resource File");
+		try {
+			fileChooser.setInitialDirectory( new File( getClass().getResource(
+				"/sound/pattern_sounds/").toURI()));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+
+		// TODO: 12/20/2016 add filter for sound files
+
+//		// only the below extensions are allowed
+//		FileChooser.ExtensionFilter filter =
+//			new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.gif", "*.bmp");
+//		fileChooser.getExtensionFilters().add(filter);
+
+		File soundFile = fileChooser.showOpenDialog(application.getStage());
+
+		// if the file has an accepted extension, make it the new pattern header image
+		if (soundFile != null) {// && fileMatchesFilter(imageFile, filter))
+			mControls.setPatternSoundUrl(soundFile.toURI().toString());
+			if (currentSoundLbl != null)
+				currentSoundLbl.setText(soundFile.getName());
+		}
+	}
+
+	public void toggleSoundSwing(Event event){
+		CheckBox soundSwingCB = (CheckBox) event.getSource();
+		mControls.setSwingingSound(soundSwingCB.isSelected());
+	}
+
+	public void toggleMuteUnmutePatternSound(){
+		mControls.togglePlayPauseSound();
+		setupMuteUnmuteBtn();
+	}
+
+	/**
+	 * checks the play state in master controls and changes the text and style of
+	 * the button accordingly
+	 */
+	public void setupMuteUnmuteBtn() {
+		if (mControls.isPlayingSound()) {
+			togglePlayPauseSoundBtn.setText("Mute");
+			togglePlayPauseSoundBtn.setId("muteBtn");
+		}
+		else {
+			togglePlayPauseSoundBtn.setText("Play");
+			togglePlayPauseSoundBtn.setId("unmuteBtn");
+		}
+	}
+
+
 
 	/**
 	 * gives this controller a copy of the app it is linked to
@@ -573,6 +671,5 @@ public class Controller implements Initializable
 
 	public Canvas getCanvas() {return canvas;}
 	public GridPane getControlsGrid() {return controlsGrid;}
-	public CheckBox getColorOverrideCB() {return colorOverrideCB;}
 	public ImageView getColorOverrideTooltipIV() {return colorOverrideTooltipIV;}
 }
