@@ -37,7 +37,7 @@
 		vgap="20">
 
 		<columnConstraints>
-			<ColumnConstraints minWidth="250" />
+			<ColumnConstraints minWidth="200" />
 			<ColumnConstraints/>
 			<ColumnConstraints prefWidth="330"/>
 			<ColumnConstraints/>
@@ -75,62 +75,118 @@
 				<Text text="Patterns"/>
 			</HBox>
 
-			<Button text="--"
-				fx:id="horizontalBtn"
+			<Button fx:id="horizontalBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="1"
 				GridPane.columnIndex="0"
 				maxWidth="Infinity"
-				maxHeight="Infinity"/>
+				maxHeight="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/horizontal_pattern_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="|"
-				fx:id="verticalBtn"
+			<Button fx:id="verticalBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="1"
 				GridPane.columnIndex="1"
 				maxWidth="Infinity"
-				maxHeight="Infinity"/>
+				maxHeight="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/vertical_pattern_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="/"
-				fx:id="diagonalUpBtn"
+			<Button fx:id="diagonalUpBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="2"
 				GridPane.columnIndex="0"
 				maxWidth="Infinity"
-				maxHeight="Infinity"/>
+				maxHeight="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/diagonal_pattern_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="\\"
-				fx:id="diagonalDownBtn"
+			<Button fx:id="diagonalDownBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="2"
 				GridPane.columnIndex="1"
 				maxWidth="Infinity"
-				maxHeight="Infinity"/>
+				maxHeight="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/back_diagonal_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="O"
-				fx:id="clockwiseCircleBtn"
+			<Button fx:id="clockwiseCircleBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="3"
 				GridPane.columnIndex="0"
 				maxWidth="Infinity"
-				maxHeight="Infinity"/>
+				maxHeight="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/clockwise_circular_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="Reverse O"
-				fx:id="counterclockwiseCircleBtn"
+			<Button fx:id="counterclockwiseCircleBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="3"
 				GridPane.columnIndex="1"
 				maxWidth="Infinity"
-				maxHeight="Infinity"/>
+				maxHeight="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/counterclockwise_circular_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="Infinity"
-				fx:id="infinityBtn"
+			<Button	fx:id="infinityBtn"
 				onAction="#changePattern"
 				GridPane.rowIndex="4"
 				GridPane.columnIndex="0"
 				GridPane.columnSpan="2"
 				maxWidth="Infinity"
-				maxHeight="Infinity"/>
+				maxHeight="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/infinity_pattern_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
 
 		</GridPane>
@@ -253,25 +309,43 @@
 				<ColumnConstraints percentWidth="40" />
 			</columnConstraints>
 
-			<Button text="Pause"
-				fx:id="playPauseBtn"
+			<Button	fx:id="playPauseBtn"
 				focusTraversable="false"
 				GridPane.rowIndex="1"
 				GridPane.columnIndex="0"
 				GridPane.rowSpan="3"
 				maxWidth="Infinity"
 				maxHeight="Infinity"
-				onAction="#togglePlayPause" />
+				onAction="#togglePlayPause">
+				<graphic>
+					<ImageView fx:id="playBtnIV"
+						fitWidth="140"
+						fitHeight="140"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/play_btn.png" />
+					</ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="Max"
-				fx:id="fullScreenBtn"
+			<Button fx:id="fullScreenBtn"
 				id="pauseBtn"
 				GridPane.rowIndex="2"
 				GridPane.columnIndex="1"
 				GridPane.rowSpan="2"
 				maxWidth="Infinity"
 				maxHeight="Infinity"
-				onAction="#toggleFullscreen" />
+				onAction="#toggleFullscreen" >
+				<graphic>
+					<ImageView
+						fitWidth="75"
+						fitHeight="75"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/maximize_btn.png" />
+					</ImageView>
+				</graphic>
+			</Button>
 
 		</GridPane>
 
@@ -414,6 +488,7 @@
 		<GridPane id="group"
 			GridPane.rowIndex="0"
 			GridPane.columnIndex="5"
+			prefWidth="200"
 			hgap="10"
 			vgap="10"
 			maxHeight="Infinity"
@@ -448,14 +523,25 @@
 				GridPane.rowIndex="2"
 				GridPane.columnIndex="0"
 				maxWidth="Infinity"
+				maxHeight="Infinity"
 				onAction="#selectPatternSound"/>
 
-			<Button fx:id="togglePlayPauseSoundBtn"
-				text="Mute"
+			<Button fx:id="toggleMuteUnmuteBtn"
 				GridPane.rowIndex="2"
 				GridPane.columnIndex="1"
 				maxWidth="Infinity"
-				onAction="#toggleMuteUnmutePatternSound"/>
+				maxHeight="Infinity"
+				onAction="#toggleMuteUnmutePatternSound">
+				<graphic>
+					<ImageView fx:id="muteUnmuteBtnIV"
+						fitWidth="45"
+						fitHeight="45"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/mute_btn.png" />
+					</ImageView>
+				</graphic>
+			</Button>
 
 			<HBox
 				GridPane.rowIndex="3"

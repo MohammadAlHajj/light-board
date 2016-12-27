@@ -40,6 +40,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -100,6 +101,7 @@ public class Controller implements Initializable
 	 * play/Pause Button
 	 */
     @FXML private Button playPauseBtn;
+    @FXML private ImageView playBtnIV;
 
 	/**
 	 * the canvas that the program draws the patterns on
@@ -139,7 +141,8 @@ public class Controller implements Initializable
 	 * pattern sound controls
 	 */
 	@FXML private Label currentSoundLbl;
-	@FXML private Button togglePlayPauseSoundBtn;
+	@FXML private Button toggleMuteUnmuteBtn;
+	@FXML private ImageView muteUnmuteBtnIV;
 	@FXML private ImageView continuousSoundSwingTooltipIV;
 
 	/**
@@ -292,14 +295,20 @@ public class Controller implements Initializable
 	 * the button accordingly
 	 */
 	public void setupPlayPauseBtn() {
-        if (mControls.isPlaying()) {
-            playPauseBtn.setText("Pause");
-            playPauseBtn.setId("pauseBtn");
-        }
-        else {
-            playPauseBtn.setText("Play");
-            playPauseBtn.setId("playBtn");
-        }
+		try {
+			if (mControls.isPlaying()) {
+		        playBtnIV.setImage(new Image(getClass().getResource
+			        ("/images/control_buttons/pause_btn.png").toURI().toString()));
+				playPauseBtn.setId("pauseBtn");
+	        }
+	        else {
+		        playBtnIV.setImage(new Image(getClass().getResource
+			        ("/images/control_buttons/play_btn.png").toURI().toString()));
+	            playPauseBtn.setId("playBtn");
+            }
+        } catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
     }
 
 	/**
@@ -648,14 +657,21 @@ public class Controller implements Initializable
 	 * checks the play state in master controls and changes the text and style of
 	 * the button accordingly
 	 */
-	public void setupMuteUnmuteBtn() {
-		if (mControls.isPlayingSound()) {
-			togglePlayPauseSoundBtn.setText("Mute");
-			togglePlayPauseSoundBtn.setId("muteBtn");
-		}
-		else {
-			togglePlayPauseSoundBtn.setText("Play");
-			togglePlayPauseSoundBtn.setId("unmuteBtn");
+	public void setupMuteUnmuteBtn()
+	{
+		try {
+			if (mControls.isPlayingSound()) {
+				muteUnmuteBtnIV.setImage(new Image(getClass().getResource
+					("/images/control_buttons/mute_btn.png").toURI().toString()));
+				toggleMuteUnmuteBtn.setId("muteBtn");
+			}
+			else {
+				muteUnmuteBtnIV.setImage(new Image(getClass().getResource
+					("/images/control_buttons/unmute_btn.png").toURI().toString()));
+				toggleMuteUnmuteBtn.setId("unmuteBtn");
+			}
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 		}
 	}
 

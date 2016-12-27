@@ -75,3 +75,10 @@
   -fx-background-color: rgba(10,0,30,0.10);
   -fx-background-insets: 0 -10 0 -10;
 }
+
+#buttonImage {
+    -fx-min-height: 25px;
+    -fx-pref-width: 25px;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}

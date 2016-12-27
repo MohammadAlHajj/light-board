@@ -10,6 +10,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <StackPane fx:controller="com.lightBoard.controls.Controller"
 	xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
@@ -47,40 +49,97 @@
 			<Text text="Patterns"
 				fill="whitesmoke"/>
 
-			<Button text="--"
-				fx:id="horizontalBtn"
+			<Button fx:id="horizontalBtn"
 				onAction="#changePattern"
-				maxWidth="Infinity"/>
+				maxWidth="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/horizontal_pattern_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="|"
-				fx:id="verticalBtn"
+			<Button fx:id="verticalBtn"
 				onAction="#changePattern"
-				maxWidth="Infinity"/>
+				maxWidth="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/vertical_pattern_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="/"
-				fx:id="diagonalUpBtn"
+			<Button fx:id="diagonalUpBtn"
 				onAction="#changePattern"
-				maxWidth="Infinity"/>
+				maxWidth="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/diagonal_pattern_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="\\"
-				fx:id="diagonalDownBtn"
+			<Button fx:id="diagonalDownBtn"
 				onAction="#changePattern"
-				maxWidth="Infinity"/>
+				maxWidth="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/back_diagonal_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="Infinity"
-				fx:id="infinityBtn"
+			<Button fx:id="clockwiseCircleBtn"
 				onAction="#changePattern"
-				maxWidth="Infinity"/>
+				maxWidth="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/clockwise_circular_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="O"
-				fx:id="clockwiseCircleBtn"
+			<Button fx:id="counterclockwiseCircleBtn"
 				onAction="#changePattern"
-				maxWidth="Infinity"/>
+				maxWidth="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/counterclockwise_circular_btn.png" /></ImageView>
+				</graphic>
+			</Button>
 
-			<Button text="Reverse O"
-				fx:id="counterclockwiseCircleBtn"
+			<Button fx:id="infinityBtn"
 				onAction="#changePattern"
-				maxWidth="Infinity"/>
+				maxWidth="Infinity">
+				<graphic>
+					<ImageView id="buttonImage"
+						fitWidth="35"
+						fitHeight="35"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/infinity_pattern_btn.png" /></ImageView>
+				</graphic>
+			</Button>
+
 		</VBox>
 
 		<!-- bottom box-->
@@ -92,11 +151,20 @@
 			AnchorPane.leftAnchor="0"
 			AnchorPane.rightAnchor="0">
 
-			<Button text="Pause"
-				fx:id="playPauseBtn"
+			<Button fx:id="playPauseBtn"
 				onAction="#togglePlayPause"
 				focusTraversable="false"
-				minWidth="200"/>
+				minWidth="100">
+				<graphic>
+					<ImageView fx:id="playBtnIV"
+						fitWidth="100"
+						fitHeight="100"
+						pickOnBounds="true"
+						preserveRatio="true">
+						<Image url="/images/control_buttons/play_btn.png" />
+					</ImageView>
+				</graphic>
+			</Button>
 
 			<HBox
 				fx:id="bottomBoxControls"
@@ -167,10 +235,18 @@
 
 		</VBox>
 
-		<Button text="Min"
-			AnchorPane.bottomAnchor="5"
+		<Button AnchorPane.bottomAnchor="5"
 			AnchorPane.rightAnchor="5"
-			onAction="#toggleFullscreen"/>
+			onAction="#toggleFullscreen">
+			<graphic>
+				<ImageView id="buttonImage"
+					fitWidth="50"
+					fitHeight="50"
+					pickOnBounds="true"
+					preserveRatio="true">
+					<Image url="/images/control_buttons/minimize_btn.png" /></ImageView>
+			</graphic>
+		</Button>
 	</AnchorPane>
 
 </StackPane>
