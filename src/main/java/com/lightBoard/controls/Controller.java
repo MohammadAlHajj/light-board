@@ -12,6 +12,7 @@ import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -172,6 +173,13 @@ public class Controller implements Initializable
 		    // TODO: 12/15/2016 make this non-static
 		    rightBox.setPrefWidth(110);
 		    topBox.setPrefHeight(60);
+	    }
+
+	    if (currentSoundLbl != null) {
+		    currentSoundLbl.textProperty().bind(mControls.patternSoundProperty().getMediaNameProperty());
+		    Tooltip tooltip = new Tooltip();
+		    tooltip.textProperty().bind(mControls.patternSoundProperty().getMediaNameProperty());
+		    currentSoundLbl.setTooltip(tooltip);
 	    }
     }
 
@@ -638,8 +646,6 @@ public class Controller implements Initializable
 		// if the file has an accepted extension, make it the new pattern header image
 		if (soundFile != null) {// && fileMatchesFilter(imageFile, filter))
 			mControls.setPatternSoundUrl(soundFile.toURI().toString());
-			if (currentSoundLbl != null)
-				currentSoundLbl.setText(soundFile.getName());
 		}
 	}
 

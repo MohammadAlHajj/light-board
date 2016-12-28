@@ -1,5 +1,6 @@
 package com.lightBoard.controls;
 import java.awt.Point;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,7 +19,10 @@ import com.lightBoard.model.Settings;
 import com.lightBoard.view.MainScreen;
 
 import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
@@ -33,6 +37,25 @@ import javafx.scene.paint.Color;
 public enum MasterControls
 {
     INSTANCE;
+
+    public class MediaWithNameProperty extends SimpleObjectProperty<Media>{
+	    private SimpleStringProperty mediaNameProperty = new SimpleStringProperty();
+
+	    @Override
+	    public void set(Media newValue) {
+		    super.set(newValue);
+		    String rawName = new File(newValue.getSource()).getName();
+		    rawName = rawName.replaceAll("%20"," ");
+		    String cleanName = rawName.substring(0, rawName.lastIndexOf('.'));
+		    mediaNameProperty.set(cleanName);
+		    System.out.println(cleanName);
+	    }
+
+	    public ReadOnlyStringProperty getMediaNameProperty() {
+		    return mediaNameProperty;
+	    }
+    }
+
 
 
 	private Gson gson= new GsonBuilder()
@@ -64,17 +87,15 @@ public enum MasterControls
 	private boolean bypassColorCorrection = false;
 
 
-	// image properties
-	private double imageSize = 100;
-	private Media patternSound;
-	private MediaPlayer mediaPlayer;
-	private String patternSoundUrl = null;
-	private SimpleObjectProperty<Media> patternSoundProperty =
-		new SimpleObjectProperty<>(patternSound);
-
 	// sound properties
 	private boolean playingSound = true;
 	private boolean swingingSound = false;
+	private double imageSize = 100;
+	private MediaWithNameProperty patternSoundProperty = new MediaWithNameProperty();
+	private MediaPlayer mediaPlayer;
+	private String patternSoundUrl = null;
+
+	// image properties
 	private Image patternImage = null;
 	private String patternImageUrl = null;
 	private SimpleObjectProperty<Image> patternImageProperty =
@@ -194,18 +215,18 @@ public enum MasterControls
 	 * setup sound and its player
 	 */
 	private void setupSound() {
-		if (patternSound == null){
+		if (patternSoundProperty.getValue() == null){
 			try {
-				patternSound = new Media(getClass().getResource(
-					"/sound/pattern_sounds/sound.m4a").toURI().toString());
+				patternSoundProperty.setValue(new Media(getClass().getResource(
+					"/sound/pattern_sounds/sound.m4a").toURI().toString()));
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 			}
 		}
-		else patternSound = new Media(patternSoundUrl);
+		else patternSoundProperty.setValue(new Media(patternSoundUrl));
 		if (mediaPlayer != null)
 			mediaPlayer.stop();
-		mediaPlayer = new MediaPlayer(patternSound);
+		mediaPlayer = new MediaPlayer(patternSoundProperty.getValue());
 	}
 
 	/**
@@ -220,7 +241,7 @@ public enum MasterControls
 
     public void play()
     {
-	    if (playingSound && patternSound != null && mediaPlayer != null)
+	    if (playingSound && patternSoundProperty.getValue() != null && mediaPlayer != null)
 	        mediaPlayer.play();
 
         smoothness = DEFAULT_SMOOTHNESS;
@@ -234,7 +255,7 @@ public enum MasterControls
     }
     public void pauseContinued(double newTimeInFunc)
     {
-	    if (patternSound != null && mediaPlayer != null)
+	    if (patternSoundProperty.getValue() != null && mediaPlayer != null)
 		    mediaPlayer.pause();
 
 	    smoothness = 0;
@@ -254,12 +275,12 @@ public enum MasterControls
 	}
 	public void playSound() {
 		playingSound = true;
-		if (playing && patternSound != null && mediaPlayer!= null)
+		if (playing && patternSoundProperty.getValue() != null && mediaPlayer!= null)
 			mediaPlayer.play();
 	}
 	public void pauseSound() {
 		playingSound = false;
-		if (patternSound != null && mediaPlayer!= null)
+		if (patternSoundProperty.getValue() != null && mediaPlayer!= null)
 			mediaPlayer.pause();
 	}
 
@@ -343,7 +364,8 @@ public enum MasterControls
 	public Property<Image> patternImageProperty(){ return patternImageProperty;}
 	public boolean isSwingingSound() {return swingingSound;}
 	public void setSwingingSound(boolean swingingSound) {this.swingingSound = swingingSound;}
-	public Property<Media> patternSoundProperty() { return patternSoundProperty;}
+	public MediaWithNameProperty patternSoundProperty() { return patternSoundProperty;}
+	public String getPatternSoundUrl() {return patternSoundUrl;}
 	public boolean isPlayingSound() { return playingSound; }
 
 	public void setPlayingSound(boolean playingSound) {
@@ -389,10 +411,9 @@ public enum MasterControls
 	public void setPatternSoundUrl(String url) {
 		this.patternSoundUrl = url;
 		if (url == null || url.isEmpty())
-			this.patternSound = null;
+			this.patternSoundProperty.setValue(null);
 		else
-			this.patternSound = new Media(url);
-		patternSoundProperty.set(patternSound);
+			this.patternSoundProperty.setValue(new Media(url));
 		setupSound();
 	}
 }
