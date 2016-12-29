@@ -636,17 +636,17 @@ public class Controller implements Initializable
 
 		// TODO: 12/20/2016 add filter for sound files
 
-//		// only the below extensions are allowed
-//		FileChooser.ExtensionFilter filter =
-//			new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.gif", "*.bmp");
-//		fileChooser.getExtensionFilters().add(filter);
+		// only the below extensions are allowed
+		FileChooser.ExtensionFilter filter =
+			new FileChooser.ExtensionFilter("Sound", "*.mp3", "*.aif", "*.aiff",
+				"*.wav", "*.m4a", "*.aac");
+		fileChooser.getExtensionFilters().add(filter);
 
 		File soundFile = fileChooser.showOpenDialog(application.getStage());
 
 		// if the file has an accepted extension, make it the new pattern header image
-		if (soundFile != null) {// && fileMatchesFilter(imageFile, filter))
+		if (soundFile != null && fileMatchesFilter(soundFile, filter))
 			mControls.setPatternSoundUrl(soundFile.toURI().toString());
-		}
 	}
 
 	public void toggleSoundSwing(Event event){
