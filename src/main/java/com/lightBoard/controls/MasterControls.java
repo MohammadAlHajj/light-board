@@ -48,7 +48,6 @@ public enum MasterControls
 		    rawName = rawName.replaceAll("%20"," ");
 		    String cleanName = rawName.substring(0, rawName.lastIndexOf('.'));
 		    mediaNameProperty.set(cleanName);
-		    System.out.println(cleanName);
 	    }
 
 	    public ReadOnlyStringProperty getMediaNameProperty() {
@@ -86,9 +85,8 @@ public enum MasterControls
 	private boolean extendedMode = false;
 	private boolean bypassColorCorrection = false;
 
-
 	// sound properties
-	private boolean playingSound = true;
+	private boolean playingSound = false;
 	private boolean swingingSound = false;
 	private double imageSize = 100;
 	private MediaWithNameProperty patternSoundProperty = new MediaWithNameProperty();
@@ -96,10 +94,8 @@ public enum MasterControls
 	private String patternSoundUrl = null;
 
 	// image properties
-	private Image patternImage = null;
 	private String patternImageUrl = null;
-	private SimpleObjectProperty<Image> patternImageProperty =
-		new SimpleObjectProperty<>(patternImage);
+	private SimpleObjectProperty<Image> patternImageProperty = new SimpleObjectProperty<>();
 
 	/**
 	 * pattern points holder...thread safe
@@ -125,6 +121,19 @@ public enum MasterControls
         }
     };
 
+
+	/**
+	 * according to the requirements, the patter should stop at the center of the screen (when
+	 * possible) when the user presses pause, this boolean will be set to true and thus will tell
+	 * {@link #updateBuffer()} to stop when it reaches the next center of the screen and call
+	 * {@link #pauseContinued(double)}. the double is basically the direction of the pattern when
+	 * it wants to continue
+	 */
+	private boolean inPausingProcess;
+	private static final double RADIANCE_FULL_CYCLE = Math.PI*2;
+	private static final double RADIANCE_QUARTER_CYCLE = Math.PI/2;
+	private static final double RADIANCE_THREE_QUARTERS_CYCLE = Math.PI*3/2;
+	private boolean firstHalfCycle = false;
 	/**
 	 * updates the pattern buffer accordingly. takes into consideration the bounds of the canvas,
 	 * the brush size, and the pattern header image size. If the pause button was pressed, wait
@@ -132,12 +141,6 @@ public enum MasterControls
 	 * continues the pausing process
 	 * @return the updated buffer
 	 */
-	private boolean inPausingProcess;
-	private static final double RADIANCE_FULL_CYCLE = Math.PI*2;
-	private static final double RADIANCE_QUARTER_CYCLE = Math.PI/2;
-	private static final double RADIANCE_THREE_QUARTERS_CYCLE = Math.PI*3/2;
-	private boolean firstHalfCycle = false;
-
 	public ConcurrentLinkedDeque<Point> updateBuffer()
     {
 	    long start = System.nanoTime();
@@ -165,7 +168,7 @@ public enum MasterControls
 		    }
 		    timeInFunc += smoothness;
 		    Point p;
-		    if (patternImage != null)
+		    if (patternImageProperty.get() != null)
 		    {
 		    	p = pattern.getPointAt(
 		    		(int) (canvas.getWidth() - imageSize - brushSize),
@@ -205,8 +208,6 @@ public enum MasterControls
 
         // setup sound, start playing if the state says so;
         setupSound();
-        if (playingSound)
-        	mediaPlayer.play();
 
         service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
 	}
@@ -227,6 +228,8 @@ public enum MasterControls
 		if (mediaPlayer != null)
 			mediaPlayer.stop();
 		mediaPlayer = new MediaPlayer(patternSoundProperty.getValue());
+		if (playingSound)
+			playSound();
 	}
 
 	/**
@@ -253,11 +256,9 @@ public enum MasterControls
 	    inPausingProcess = true;
 	    playing = false;
     }
-    public void pauseContinued(double newTimeInFunc)
-    {
+    public void pauseContinued(double newTimeInFunc) {
 	    if (patternSoundProperty.getValue() != null && mediaPlayer != null)
 		    mediaPlayer.pause();
-
 	    smoothness = 0;
 	    // go to center of board - requirement
 	    timeInFunc = newTimeInFunc;
@@ -277,6 +278,7 @@ public enum MasterControls
 		playingSound = true;
 		if (playing && patternSoundProperty.getValue() != null && mediaPlayer!= null)
 			mediaPlayer.play();
+
 	}
 	public void pauseSound() {
 		playingSound = false;
@@ -360,14 +362,13 @@ public enum MasterControls
 	public boolean isBypassColorCorrection() {return bypassColorCorrection;}
 	public void setBypassColorCorrection(boolean bypassColorCorrection) {this.bypassColorCorrection = bypassColorCorrection;}
 	public double getImageSize() {return imageSize;}
-	public Image getPatternImage() {return patternImage;}
+	public Image getPatternImage() {return patternImageProperty.getValue();}
 	public Property<Image> patternImageProperty(){ return patternImageProperty;}
 	public boolean isSwingingSound() {return swingingSound;}
 	public void setSwingingSound(boolean swingingSound) {this.swingingSound = swingingSound;}
 	public MediaWithNameProperty patternSoundProperty() { return patternSoundProperty;}
 	public String getPatternSoundUrl() {return patternSoundUrl;}
 	public boolean isPlayingSound() { return playingSound; }
-
 	public void setPlayingSound(boolean playingSound) {
 		this.playingSound = playingSound;
 	}
@@ -387,9 +388,8 @@ public enum MasterControls
 	public void setPatternImageUrl(String url) {
 		this.patternImageUrl = url;
 		if (url == null || url.isEmpty())
-			this.patternImage = null;
-		else this.patternImage = new Image(url);
-		patternImageProperty.set(patternImage);
+			patternImageProperty.set(null);
+		else patternImageProperty.set(new Image(url));
 		refreshBuffer();
 	}
 

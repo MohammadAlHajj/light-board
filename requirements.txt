@@ -7,10 +7,8 @@ High priority:
 - find a better way to play/pause
 - add "no image" image
 - not all images are working
-- find a way to benchmark
+-* find a way to benchmark
 - add extension filter to sound file chooser
-- play sound after pick if sound was playing
-- add initial name of sound
 
 Mid priority:
 -* adding per-client profile
