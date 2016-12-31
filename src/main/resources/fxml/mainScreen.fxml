@@ -87,7 +87,7 @@
 						fitHeight="35"
 						pickOnBounds="true"
 						preserveRatio="true">
-						<Image url="/images/control_buttons/horizontal_pattern_btn.png" /></ImageView>
+						<Image url="/images/control_buttons/horizontal_btn.png" /></ImageView>
 				</graphic>
 			</Button>
 
@@ -103,7 +103,7 @@
 						fitHeight="35"
 						pickOnBounds="true"
 						preserveRatio="true">
-						<Image url="/images/control_buttons/vertical_pattern_btn.png" /></ImageView>
+						<Image url="/images/control_buttons/vertical_btn.png" /></ImageView>
 				</graphic>
 			</Button>
 
@@ -119,7 +119,7 @@
 						fitHeight="35"
 						pickOnBounds="true"
 						preserveRatio="true">
-						<Image url="/images/control_buttons/diagonal_pattern_btn.png" /></ImageView>
+						<Image url="/images/control_buttons/diagonal_up_btn.png" /></ImageView>
 				</graphic>
 			</Button>
 
@@ -135,7 +135,7 @@
 						fitHeight="35"
 						pickOnBounds="true"
 						preserveRatio="true">
-						<Image url="/images/control_buttons/back_diagonal_btn.png" /></ImageView>
+						<Image url="/images/control_buttons/diagonal_down_btn.png" /></ImageView>
 				</graphic>
 			</Button>
 
@@ -151,7 +151,7 @@
 						fitHeight="35"
 						pickOnBounds="true"
 						preserveRatio="true">
-						<Image url="/images/control_buttons/clockwise_circular_btn.png" /></ImageView>
+						<Image url="/images/control_buttons/clockwise_circle_btn.png" /></ImageView>
 				</graphic>
 			</Button>
 
@@ -167,7 +167,7 @@
 						fitHeight="35"
 						pickOnBounds="true"
 						preserveRatio="true">
-						<Image url="/images/control_buttons/counterclockwise_circular_btn.png" /></ImageView>
+						<Image url="/images/control_buttons/counterclockwise_circle_btn.png" /></ImageView>
 				</graphic>
 			</Button>
 
@@ -184,7 +184,7 @@
 						fitHeight="35"
 						pickOnBounds="true"
 						preserveRatio="true">
-						<Image url="/images/control_buttons/infinity_pattern_btn.png" /></ImageView>
+						<Image url="/images/control_buttons/infinity_btn.png" /></ImageView>
 				</graphic>
 			</Button>
 

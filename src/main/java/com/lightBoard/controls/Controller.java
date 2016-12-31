@@ -191,7 +191,7 @@ public class Controller implements Initializable
 		{
 			patternHeaderPreview.imageProperty().bind(mControls.patternImageProperty());
 
-			ChangeListener previewBoxResizeListener =(observable, oldValue, newValue) -> {
+			ChangeListener<Number> previewBoxResizeListener =(observable, oldValue, newValue) -> {
 				double newSize = Math.min(patternHeaderPreviewHBox.getHeight(),
 					patternHeaderPreviewHBox.getWidth());
 				patternHeaderPreview.setFitWidth(newSize);
