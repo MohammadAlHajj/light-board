@@ -160,7 +160,7 @@ public class Controller implements Initializable
 
 	    try {
 	    	if (mControls.getPatientProfile() == null)
-		        mControls.loadProfile(0);
+		        mControls.setPatientProfile(ProfileLoader.loadProfile(0));
 	    } catch (IOException e) {
 		    e.printStackTrace();
 	    }
