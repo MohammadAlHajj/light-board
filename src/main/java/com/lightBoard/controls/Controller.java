@@ -12,7 +12,6 @@ import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -303,20 +302,14 @@ public class Controller implements Initializable
 	 * the button accordingly
 	 */
 	public void setupPlayPauseBtn() {
-		try {
-			if (mControls.isPlaying()) {
-		        playBtnIV.setImage(new Image(getClass().getResource
-			        ("/images/control_buttons/pause_btn.png").toURI().toString()));
-				playPauseBtn.setId("pauseBtn");
-	        }
-	        else {
-		        playBtnIV.setImage(new Image(getClass().getResource
-			        ("/images/control_buttons/play_btn.png").toURI().toString()));
-	            playPauseBtn.setId("playBtn");
-            }
-        } catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		if (mControls.isPlaying()) {
+	        playBtnIV.setImage(new Image("/images/control_buttons/pause_btn.png"));
+			playPauseBtn.setId("pauseBtn");
+        }
+        else {
+	        playBtnIV.setImage(new Image("/images/control_buttons/play_btn.png"));
+            playPauseBtn.setId("playBtn");
+        }
     }
 
 	/**
@@ -497,12 +490,8 @@ public class Controller implements Initializable
 	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Image Header");
-		try {
-			fileChooser.setInitialDirectory( new File( getClass().getResource(
-				"/images/pattern_images/").toURI()));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+
+		fileChooser.setInitialDirectory(mControls.loadFile(mControls.getDefaultImageRoot()));
 
 		// only the below extensions are allowed
 		FileChooser.ExtensionFilter filter =
@@ -512,8 +501,11 @@ public class Controller implements Initializable
 		File imageFile = fileChooser.showOpenDialog(application.getStage());
 
 		// if the file has an accepted extension, make it the new pattern header image
-		if (imageFile != null && fileMatchesFilter(imageFile, filter))
-			mControls.setPatternImageUrl(imageFile.toURI().toString());
+		if (imageFile != null){
+			mControls.setDefaultImageRoot(imageFile.getParentFile().getPath());
+			if(fileMatchesFilter(imageFile, filter))
+				mControls.setPatternImageUrl(imageFile.toURI().toString());
+		}
 	}
 
 	/**
@@ -627,14 +619,7 @@ public class Controller implements Initializable
 	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Resource File");
-		try {
-			fileChooser.setInitialDirectory( new File( getClass().getResource(
-				"/sound/pattern_sounds/").toURI()));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-
-		// TODO: 12/20/2016 add filter for sound files
+		fileChooser.setInitialDirectory(mControls.loadFile(mControls.getDefaultSoundRoot()));
 
 		// only the below extensions are allowed
 		FileChooser.ExtensionFilter filter =
@@ -645,8 +630,11 @@ public class Controller implements Initializable
 		File soundFile = fileChooser.showOpenDialog(application.getStage());
 
 		// if the file has an accepted extension, make it the new pattern header image
-		if (soundFile != null && fileMatchesFilter(soundFile, filter))
-			mControls.setPatternSoundUrl(soundFile.toURI().toString());
+		if (soundFile != null) {
+			mControls.setDefaultSoundRoot(soundFile.getParent());
+			if (fileMatchesFilter(soundFile, filter))
+				mControls.setPatternSoundUrl(soundFile.toURI().toString());
+		}
 	}
 
 	public void toggleSoundSwing(Event event){
@@ -665,19 +653,13 @@ public class Controller implements Initializable
 	 */
 	public void setupMuteUnmuteBtn()
 	{
-		try {
-			if (mControls.isPlayingSound()) {
-				muteUnmuteBtnIV.setImage(new Image(getClass().getResource
-					("/images/control_buttons/mute_btn.png").toURI().toString()));
-				toggleMuteUnmuteBtn.setId("muteBtn");
-			}
-			else {
-				muteUnmuteBtnIV.setImage(new Image(getClass().getResource
-					("/images/control_buttons/unmute_btn.png").toURI().toString()));
-				toggleMuteUnmuteBtn.setId("unmuteBtn");
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
+		if (mControls.isPlayingSound()) {
+			muteUnmuteBtnIV.setImage(new Image("/images/control_buttons/mute_btn.png"));
+			toggleMuteUnmuteBtn.setId("muteBtn");
+		}
+		else {
+			muteUnmuteBtnIV.setImage(new Image("/images/control_buttons/unmute_btn.png"));
+			toggleMuteUnmuteBtn.setId("unmuteBtn");
 		}
 	}
 

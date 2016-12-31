@@ -92,10 +92,13 @@ public enum MasterControls
 	private MediaWithNameProperty patternSoundProperty = new MediaWithNameProperty();
 	private MediaPlayer mediaPlayer;
 	private String patternSoundUrl = null;
+	private String defaultSoundRoot = Settings.DEFAULT_AUDIO_DIR;
 
 	// image properties
 	private String patternImageUrl = null;
 	private SimpleObjectProperty<Image> patternImageProperty = new SimpleObjectProperty<>();
+	private String defaultImageRoot = Settings.DEFAULT_IMAGE_DIR;
+
 
 	/**
 	 * pattern points holder...thread safe
@@ -372,6 +375,10 @@ public enum MasterControls
 	public void setPlayingSound(boolean playingSound) {
 		this.playingSound = playingSound;
 	}
+	public String getDefaultSoundRoot() {return defaultSoundRoot;}
+	public void setDefaultSoundRoot(String defaultSoundRoot) {this.defaultSoundRoot = defaultSoundRoot;}
+	public String getDefaultImageRoot() {return defaultImageRoot;}
+	public void setDefaultImageRoot(String defaultImageRoot) {this.defaultImageRoot = defaultImageRoot;}
 
 	public void setPatternColor(Color patternColor) {
 		if(bypassColorCorrection) this.patternColor = patternColor;
@@ -408,12 +415,24 @@ public enum MasterControls
 		refreshBuffer();
 	}
 
-	public void setPatternSoundUrl(String url) {
+	public void setPatternSoundUrl(String url)
+	{
 		this.patternSoundUrl = url;
 		if (url == null || url.isEmpty())
 			this.patternSoundProperty.setValue(null);
 		else
 			this.patternSoundProperty.setValue(new Media(url));
 		setupSound();
+	}
+
+	public File loadFile(String path){
+		try {
+			return new File(getClass().getResource(path).toURI());
+		}catch (NullPointerException e) {
+			return new File(path);
+		}catch (URISyntaxException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
