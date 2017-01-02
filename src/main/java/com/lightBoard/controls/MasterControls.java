@@ -37,21 +37,7 @@ public enum MasterControls
 {
     INSTANCE;
 
-    public class MediaWithNameProperty extends SimpleObjectProperty<Media>{
-	    private SimpleStringProperty mediaNameProperty = new SimpleStringProperty();
 
-	    @Override
-	    public void set(Media newValue) {
-		    super.set(newValue);
-		    String rawName = new File(newValue.getSource()).getName();
-		    rawName = rawName.replaceAll("%20"," ");
-		    String cleanName = rawName.substring(0, rawName.lastIndexOf('.'));
-		    mediaNameProperty.set(cleanName);
-	    }
-	    public ReadOnlyStringProperty getMediaNameProperty() {
-		    return mediaNameProperty;
-	    }
-    }
 
 
 
@@ -81,13 +67,7 @@ public enum MasterControls
 	private boolean extendedMode = false;
 	private boolean bypassColorCorrection = false;
 
-	// sound properties
-	private boolean playingSound = false;
-	private boolean swingingSound = false;
-	private MediaWithNameProperty patternSoundProperty = new MediaWithNameProperty();
-	private MediaPlayer mediaPlayer;
-	private String patternSoundUrl = null;
-	private String defaultSoundRoot = Settings.DEFAULT_AUDIO_DIR;
+	SoundPatternControls soundControls = new SoundPatternControls();
 
 	// image properties
 	private String patternImageUrl = null;
@@ -131,8 +111,6 @@ public enum MasterControls
 	private static final double RADIANCE_FULL_CYCLE = Math.PI * 2;
 	private static final double RADIANCE_QUARTER_CYCLE = Math.PI / 2;
 	private static final double RADIANCE_THREE_QUARTERS_CYCLE = Math.PI * 3.0/2;
-	private boolean firstHalfCycle = false;
-
 	/**
 	 * updates all elements relevant to pattern (visual, sound) that change with the time in the
 	 * current cycle ({@link #currentTimeInCycle})
@@ -151,7 +129,7 @@ public enum MasterControls
 		        else if((currentTimeInCycle + RADIANCE_THREE_QUARTERS_CYCLE) % (RADIANCE_FULL_CYCLE) < DEFAULT_SMOOTHNESS)
 				    pauseContinued(RADIANCE_QUARTER_CYCLE);
 			}
-			updateSound();
+			soundControls.updateSound(currentTimeInCycle);
 
 			addPointToVisualPattern();
 	    }
@@ -192,19 +170,7 @@ public enum MasterControls
 		buffer.addFirst(p);
 	}
 
-	private void updateSound() {
-		// control the balance of the sound
-		if(playingSound && mediaPlayer != null)
-		{
-			double balance = currentTimeInCycle % RADIANCE_FULL_CYCLE / RADIANCE_QUARTER_CYCLE;
-			firstHalfCycle = balance < 2;
 
-			if(swingingSound)
-				mediaPlayer.setBalance(firstHalfCycle ? 1-balance : balance-3);
-			else
-				mediaPlayer.setBalance(firstHalfCycle ? -1 : 1);
-		}
-	}
 
 	/**
 	 * starts filling the pattern buffer to be drawn by the AnimationTimer in
@@ -217,30 +183,12 @@ public enum MasterControls
         canvas.widthProperty().addListener((observable, oldValue, newValue) -> refreshBuffer());
 
         // setup sound, start playing if the state says so
-        setupSound();
+        soundControls.setupSound();
 
         service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
 	}
 
-	/**
-	 * setup sound and its player. it starts playing if {@link #playingSound} is true
-	 */
-	private void setupSound() {
-		if (patternSoundProperty.getValue() == null){
-			try {
-				patternSoundProperty.setValue(new Media(getClass().getResource(
-					"/sound/pattern_sounds/sound.m4a").toURI().toString()));
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
-		}
-		else patternSoundProperty.setValue(new Media(patternSoundUrl));
-		if (mediaPlayer != null)
-			mediaPlayer.stop();
-		mediaPlayer = new MediaPlayer(patternSoundProperty.getValue());
-		if (playingSound)
-			playSound();
-	}
+
 
 	/**
      * @return new value after toggle after toggle
@@ -283,27 +231,6 @@ public enum MasterControls
 	    currentTimeInCycle = newTimeInFunc;
 	    pausing = false;
     }
-
-	/**
-	 * @return new value after toggle after toggle
-	 */
-	public boolean togglePlayPauseSound(){
-		if (playingSound)   pauseSound();
-		else                playSound();
-
-		return playingSound;
-	}
-	public void playSound() {
-		playingSound = true;
-		if (playing && patternSoundProperty.getValue() != null && mediaPlayer!= null)
-			mediaPlayer.play();
-
-	}
-	public void pauseSound() {
-		playingSound = false;
-		if (patternSoundProperty.getValue() != null && mediaPlayer!= null)
-			mediaPlayer.pause();
-	}
 
 	/**
 	 * recreates the buffer from scratch to mask any artifacts created when modifying variables
@@ -371,16 +298,6 @@ public enum MasterControls
 	public double getImageSize() {return imageSize;}
 	public Image getPatternImage() {return patternImageProperty.getValue();}
 	public Property<Image> patternImageProperty(){ return patternImageProperty;}
-	public boolean isSwingingSound() {return swingingSound;}
-	public void setSwingingSound(boolean swingingSound) {this.swingingSound = swingingSound;}
-	public MediaWithNameProperty patternSoundProperty() { return patternSoundProperty;}
-	public String getPatternSoundUrl() {return patternSoundUrl;}
-	public boolean isPlayingSound() { return playingSound; }
-	public void setPlayingSound(boolean playingSound) {
-		this.playingSound = playingSound;
-	}
-	public String getDefaultSoundRoot() {return defaultSoundRoot;}
-	public void setDefaultSoundRoot(String defaultSoundRoot) {this.defaultSoundRoot = defaultSoundRoot;}
 	public String getDefaultImageRoot() {return defaultImageRoot;}
 	public void setDefaultImageRoot(String defaultImageRoot) {this.defaultImageRoot = defaultImageRoot;}
 
@@ -424,15 +341,7 @@ public enum MasterControls
 		refreshBuffer();
 	}
 
-	public void setPatternSoundUrl(String url)
-	{
-		this.patternSoundUrl = url;
-		if (url == null || url.isEmpty())
-			this.patternSoundProperty.setValue(null);
-		else
-			this.patternSoundProperty.setValue(new Media(url));
-		setupSound();
-	}
+
 
 	/**
 	 * utility method to load a file
