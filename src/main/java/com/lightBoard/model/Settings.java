@@ -14,6 +14,7 @@ public class Settings
 	private static int maxSpeedMicros = (int)(150 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
 	private static int minSpeedMicros = (int)(1000 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
 	public static final String DEFAULT_AUDIO_DIR = "/sound/pattern_sounds/";
+	public static final String DEFAULT_AUDIO_FILE = "/sound/pattern_sounds/sound.m4a";
 	public static final String DEFAULT_IMAGE_DIR = "/images/pattern_images/";
 
 	// TODO: 11/16/2016 these are not used yet

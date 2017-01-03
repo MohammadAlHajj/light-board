@@ -3,7 +3,6 @@ package com.lightBoard.controls;
 import com.lightBoard.model.Settings;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,9 +15,19 @@ import javafx.scene.media.MediaPlayer;
  */
 public class SoundPatternControls
 {
-	public class MediaWithNameProperty extends SimpleObjectProperty<Media> {
+	/**
+	 * this class is to enable binding of the media name with the UI directly
+	 */
+	public class MediaWithNameProperty extends SimpleObjectProperty<Media>
+	{
+		/**
+		 * holds the name of the media
+		 */
 		private SimpleStringProperty mediaNameProperty = new SimpleStringProperty();
-
+		/**
+		 * sets the new sound to be played and updates the media name accordingly
+		 * @param newValue new sound
+		 */
 		@Override
 		public void set(Media newValue) {
 			super.set(newValue);
@@ -32,20 +41,30 @@ public class SoundPatternControls
 		}
 	}
 
-	// sound properties
+	// state holders
 	private boolean playingSound = false;
 	private boolean swingingSound = false;
+
+	// media nd media player
 	private MediaWithNameProperty patternSoundProperty = new MediaWithNameProperty();
 	private MediaPlayer mediaPlayer;
-	private String patternSoundUrl = null;
-	private String defaultSoundRoot = Settings.DEFAULT_AUDIO_DIR;
 
+	// path to media
+	private String patternSoundUrl = Settings.DEFAULT_AUDIO_FILE;
 
+	/**
+	 * useful so not to calculate these at every call to {@link #updateSoundBalance(double)}
+	 */
 	private static final double RADIANCE_FULL_CYCLE = Math.PI * 2;
 	private static final double RADIANCE_QUARTER_CYCLE = Math.PI / 2;
 	private static final double RADIANCE_THREE_QUARTERS_CYCLE = Math.PI * 3.0/2;
 
-	public void updateSound(double currentTimeInCycle) {
+	/**
+	 * this method will update the sound balance depending on the time frame in the current
+	 * pattern cycle
+	 * @param currentTimeInCycle the current time of the latest cycle of the pattern
+	 */
+	public void updateSoundBalance(double currentTimeInCycle) {
 		// control the balance of the sound
 		if(playingSound && mediaPlayer != null)
 		{
@@ -62,16 +81,9 @@ public class SoundPatternControls
 	/**
 	 * setup sound and its player. it starts playing if {@link #playingSound} is true
 	 */
-	private void setupSound() {
-		if (patternSoundProperty.getValue() == null){
-			try {
-				patternSoundProperty.setValue(new Media(getClass().getResource(
-						"/sound/pattern_sounds/sound.m4a").toURI().toString()));
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-			}
-		}
-		else patternSoundProperty.setValue(new Media(patternSoundUrl));
+	public void setupSound()
+	{
+		patternSoundProperty.setValue(new Media(MasterControls.INSTANCE.getFilePath(patternSoundUrl)));
 		if (mediaPlayer != null)
 			mediaPlayer.stop();
 		mediaPlayer = new MediaPlayer(patternSoundProperty.getValue());
@@ -79,22 +91,12 @@ public class SoundPatternControls
 			playSound();
 	}
 
-	/**
-	 * @return new value after toggle after toggle
-	 */
-	public boolean togglePlayPauseSound(){
-		if (playingSound)   pauseSound();
-		else                playSound();
-
-		return playingSound;
-	}
-
 	public void playSound() {
 		playingSound = true;
-		if (MasterControls.INSTANCE.isPlaying() && patternSoundProperty.getValue() != null && mediaPlayer!= null)
+		if (patternSoundProperty.getValue() != null && mediaPlayer!= null)
 			mediaPlayer.play();
-
 	}
+
 	public void pauseSound() {
 		playingSound = false;
 		if (patternSoundProperty.getValue() != null && mediaPlayer!= null)
@@ -106,12 +108,11 @@ public class SoundPatternControls
 	public MediaWithNameProperty patternSoundProperty() { return patternSoundProperty;}
 	public String getPatternSoundUrl() {return patternSoundUrl;}
 	public boolean isPlayingSound() { return playingSound; }
-	public void setPlayingSound(boolean playingSound) {
-		this.playingSound = playingSound;
-	}
-	public String getDefaultSoundRoot() {return defaultSoundRoot;}
-	public void setDefaultSoundRoot(String defaultSoundRoot) {this.defaultSoundRoot = defaultSoundRoot;}
 
+	/**
+	 * updates the pattern sound
+	 * @param url the file path of the new sound
+	 */
 	public void setPatternSoundUrl(String url)
 	{
 		this.patternSoundUrl = url;

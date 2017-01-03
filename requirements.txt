@@ -2,6 +2,9 @@
 --	: done
 -*	: in progress
 
+HOT:
+- increase image usability
+
 High priority:
 - fix lag on color change
 - find a better way to play/pause
@@ -9,6 +12,10 @@ High priority:
 - not all images are working
 -* find a way to benchmark
 - fix bug: image retauns to original size after max -> min
+- make song name bigger
+- make sound flip in the middle
+- find the fucking corrolation between file and url that caused me that shitstorm and move all files to use it
+
 
 Mid priority:
 -* adding per-client profile
@@ -20,4 +27,4 @@ low priority:
 
 LATER:
 - network control >>> mobile app control >>> internet control
-
+- experimental: add skype

@@ -12,7 +12,6 @@ import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
@@ -175,9 +174,11 @@ public class Controller implements Initializable
 	    }
 
 	    if (currentSoundLbl != null) {
-		    currentSoundLbl.textProperty().bind(mControls.patternSoundProperty().getMediaNameProperty());
+		    currentSoundLbl.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
+			    .getMediaNameProperty());
 		    Tooltip tooltip = new Tooltip();
-		    tooltip.textProperty().bind(mControls.patternSoundProperty().getMediaNameProperty());
+		    tooltip.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
+			    .getMediaNameProperty());
 		    currentSoundLbl.setTooltip(tooltip);
 	    }
     }
@@ -633,13 +634,13 @@ public class Controller implements Initializable
 		if (soundFile != null) {
 			mControls.setDefaultSoundRoot(soundFile.getParent());
 			if (fileMatchesFilter(soundFile, filter))
-				mControls.setPatternSoundUrl(soundFile.toURI().toString());
+				mControls.getSoundControls().setPatternSoundUrl(soundFile.toURI().toString());
 		}
 	}
 
 	public void toggleSoundSwing(Event event){
 		CheckBox soundSwingCB = (CheckBox) event.getSource();
-		mControls.setSwingingSound(soundSwingCB.isSelected());
+		mControls.getSoundControls().setSwingingSound(soundSwingCB.isSelected());
 	}
 
 	public void toggleMuteUnmutePatternSound(){
@@ -653,11 +654,10 @@ public class Controller implements Initializable
 	 */
 	public void setupMuteUnmuteBtn()
 	{
-		if (mControls.isPlayingSound()) {
+		if (mControls.getPlaySound()) {
 			muteUnmuteBtnIV.setImage(new Image("/images/control_buttons/mute_btn.png"));
 			toggleMuteUnmuteBtn.setId("muteBtn");
-		}
-		else {
+		} else {
 			muteUnmuteBtnIV.setImage(new Image("/images/control_buttons/unmute_btn.png"));
 			toggleMuteUnmuteBtn.setId("unmuteBtn");
 		}

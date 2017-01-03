@@ -1,31 +1,19 @@
 package com.lightBoard.controls;
 import java.awt.Point;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 import java.net.URISyntaxException;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.lightBoard.model.PropertyBasedInterfaceMarshal;
 import com.lightBoard.model.PatientProfile;
 import com.lightBoard.model.Settings;
 import com.lightBoard.view.MainScreen;
 
 import javafx.beans.property.Property;
-import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 /**
@@ -36,12 +24,6 @@ import javafx.scene.paint.Color;
 public enum MasterControls
 {
     INSTANCE;
-
-
-
-
-
-
 
 	private PatientProfile patientProfile = PatientProfile.defaultProfile();
 
@@ -64,8 +46,11 @@ public enum MasterControls
 
 	// state holders
     private boolean playing = true;
+    private boolean playSound = false;
 	private boolean extendedMode = false;
 	private boolean bypassColorCorrection = false;
+
+	private String defaultSoundRoot = Settings.DEFAULT_AUDIO_DIR;
 
 	SoundPatternControls soundControls = new SoundPatternControls();
 
@@ -129,7 +114,7 @@ public enum MasterControls
 		        else if((currentTimeInCycle + RADIANCE_THREE_QUARTERS_CYCLE) % (RADIANCE_FULL_CYCLE) < DEFAULT_SMOOTHNESS)
 				    pauseContinued(RADIANCE_QUARTER_CYCLE);
 			}
-			soundControls.updateSound(currentTimeInCycle);
+			soundControls.updateSoundBalance(currentTimeInCycle);
 
 			addPointToVisualPattern();
 	    }
@@ -205,8 +190,8 @@ public enum MasterControls
 	 */
 	public void play()
     {
-	    if (playingSound && patternSoundProperty.getValue() != null && mediaPlayer != null)
-	        mediaPlayer.play();
+	    if (playSound)
+	        soundControls.playSound();
 
         smoothness = DEFAULT_SMOOTHNESS;
 	    pausing = false;
@@ -221,11 +206,11 @@ public enum MasterControls
 	/**
 	 * pause everything related to patterns. it is called after the pause button is pressed and the
 	 * visual pattern reached the middle of the screen
-	 * @param newTimeInFunc
+	 * @param newTimeInFunc shows the direction that the pattern will continue in when the
+	 *                         pattern is played again
 	 */
 	public void pauseContinued(double newTimeInFunc) {
-	    if (patternSoundProperty.getValue() != null && mediaPlayer != null)
-		    mediaPlayer.pause();
+	    soundControls.pauseSound();
 	    smoothness = 0;
 	    // go to center of board - requirement
 	    currentTimeInCycle = newTimeInFunc;
@@ -300,6 +285,11 @@ public enum MasterControls
 	public Property<Image> patternImageProperty(){ return patternImageProperty;}
 	public String getDefaultImageRoot() {return defaultImageRoot;}
 	public void setDefaultImageRoot(String defaultImageRoot) {this.defaultImageRoot = defaultImageRoot;}
+	public SoundPatternControls getSoundControls() { return soundControls; }
+	public String getDefaultSoundRoot() {return defaultSoundRoot;}
+	public void setDefaultSoundRoot(String defaultSoundRoot) {this.defaultSoundRoot = defaultSoundRoot;}
+	public boolean getPlaySound() {return playSound;}
+	public void setPlaySound(boolean playSound) {this.playSound = playSound;}
 
 	public void setPatientProfile(PatientProfile patientProfile) {
 		this.patientProfile = patientProfile;
@@ -341,7 +331,23 @@ public enum MasterControls
 		refreshBuffer();
 	}
 
+	/**
+	 * toggle if the sound should be played when the master controls is playing
+	 * @return new value after toggle
+	 */
+	public boolean togglePlayPauseSound(){
+		if (playSound) {
+			playSound = false;
+			soundControls.pauseSound();
+		}
+		else {
+			playSound = true;
+			if (playing)
+				soundControls.playSound();
+		}
 
+		return playSound;
+	}
 
 	/**
 	 * utility method to load a file
@@ -357,5 +363,20 @@ public enum MasterControls
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public String getFilePath(String path){
+		String absFilepath;
+		try {
+			new File(getClass().getResource(path).toURI());
+			absFilepath = getClass().getResource(path).toURI().toASCIIString();
+		}catch (NullPointerException e) {
+			new File(path);
+			absFilepath = path;
+		}catch (URISyntaxException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return absFilepath;
 	}
 }
