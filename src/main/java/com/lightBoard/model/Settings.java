@@ -1,18 +1,20 @@
 package com.lightBoard.model;
 
-import com.lightBoard.controls.MasterControls;
-
-import java.io.File;
-
 /**
  * Created by Moham on 11/16/2016.
  */
 public class Settings
 {
+	public static final int N_OF_DELTAS_IN_HALF_CYCLE = 750;
+	/**
+	 * difference between x instances where f(x) = current dot location in pattern.
+	 * The cycle takes Math.PI to complete
+	 */
+	public static final double DEFAULT_PATTERN_SMOOTHNESS = Math.PI / N_OF_DELTAS_IN_HALF_CYCLE;
 	// the weird ratio is because the smoothness has been changed from 0.05 to be divisible by
-	// Math.PI. this keeps the speed equal to the given requirements
-	private static int maxSpeedMicros = (int)(150 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
-	private static int minSpeedMicros = (int)(1000 / (0.005 / MasterControls.DEFAULT_SMOOTHNESS));
+	// Math.PI. this keeps the speed equal to the previously agreed upon requirements
+	private static int maxSpeedMicros = (int)(150 / (0.005 / DEFAULT_PATTERN_SMOOTHNESS));
+	private static int minSpeedMicros = (int)(1000 / (0.005 / DEFAULT_PATTERN_SMOOTHNESS));
 	public static final String DEFAULT_AUDIO_DIR = "/sound/pattern_sounds/";
 	public static final String DEFAULT_AUDIO_FILE = "/sound/pattern_sounds/sound.m4a";
 	public static final String DEFAULT_IMAGE_DIR = "/images/pattern_images/";

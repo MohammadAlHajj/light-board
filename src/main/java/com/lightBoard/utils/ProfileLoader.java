@@ -1,7 +1,8 @@
-package com.lightBoard.controls;
+package com.lightBoard.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lightBoard.controls.VisualPattern;
 import com.lightBoard.model.PatientProfile;
 import com.lightBoard.model.PropertyBasedInterfaceMarshal;
 
@@ -17,7 +18,7 @@ import java.io.Writer;
 public class ProfileLoader
 {
 	private static Gson gson= new GsonBuilder()
-			.registerTypeAdapter(Pattern.class, new PropertyBasedInterfaceMarshal())
+			.registerTypeAdapter(VisualPattern.class, new PropertyBasedInterfaceMarshal())
 			.create();
 
 	/**

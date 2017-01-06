@@ -418,7 +418,7 @@
 		</GridPane>
 
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-		<!-- pattern header image settings -->
+		<!-- visualPattern header image settings -->
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 
 		<GridPane id="group"

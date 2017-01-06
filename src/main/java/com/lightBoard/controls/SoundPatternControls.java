@@ -1,6 +1,7 @@
 package com.lightBoard.controls;
 
 import com.lightBoard.model.Settings;
+import com.lightBoard.utils.FileLoader;
 
 import java.io.File;
 
@@ -83,7 +84,7 @@ public class SoundPatternControls
 	 */
 	public void setupSound()
 	{
-		patternSoundProperty.setValue(new Media(MasterControls.INSTANCE.getFilePath(patternSoundUrl)));
+		patternSoundProperty.setValue(new Media(FileLoader.getFilePath(patternSoundUrl)));
 		if (mediaPlayer != null)
 			mediaPlayer.stop();
 		mediaPlayer = new MediaPlayer(patternSoundProperty.getValue());

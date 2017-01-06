@@ -15,6 +15,8 @@ High priority:
 - make song name bigger
 - make sound flip in the middle
 - find the fucking corrolation between file and url that caused me that shitstorm and move all files to use it
+- modulo the value in MasterControls (search for fixme)
+- setup sound controls in it's constructor and not in master controls
 
 
 Mid priority:

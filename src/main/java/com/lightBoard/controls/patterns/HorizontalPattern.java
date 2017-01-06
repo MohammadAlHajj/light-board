@@ -1,13 +1,14 @@
 package com.lightBoard.controls.patterns;
 
-import com.lightBoard.controls.Pattern;
+import com.lightBoard.controls.VisualPattern;
 
 import java.awt.Point;
 
 /**
  * Created by Mohammad on 10/7/2016.
  */
-public class HorizontalPattern implements Pattern{
+public class HorizontalPattern implements VisualPattern
+{
 
     @Override
     public Point getPointAt(int maxWidth, int maxHeight, double time) {

@@ -1,10 +1,8 @@
 /**
  * 
  */
-package com.lightBoard.controls;
+package com.lightBoard.utils;
 
-
-import com.sun.istack.internal.Nullable;
 
 import javafx.scene.paint.Color;
 

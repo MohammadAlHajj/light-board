@@ -2,13 +2,13 @@ package com.lightBoard.controls.patterns;
 
 import java.awt.Point;
 
-import com.lightBoard.controls.Pattern;
+import com.lightBoard.controls.VisualPattern;
 
 /**
  * @author Moham
  *
  */
-public class InfinityPattern implements Pattern
+public class InfinityPattern implements VisualPattern
 {
 	@Override
 	public Point getPointAt(int maxWidth, int maxHeight, double time)

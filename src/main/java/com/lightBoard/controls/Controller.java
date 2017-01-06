@@ -8,6 +8,8 @@ import com.lightBoard.controls.patterns.HorizontalPattern;
 import com.lightBoard.controls.patterns.InfinityPattern;
 import com.lightBoard.controls.patterns.VerticalPattern;
 import com.lightBoard.model.Settings;
+import com.lightBoard.utils.FileLoader;
+import com.lightBoard.utils.ProfileLoader;
 import com.lightBoard.view.labelFormatters.TwoValueLabelFormatter;
 
 import java.io.File;
@@ -209,42 +211,44 @@ public class Controller implements Initializable
 	private void setupSlidersAndTextDisplay()
 	{
 		// get tail length and set slider accordingly
-		tailLengthSlider.setValue(mControls.getMaxBufferSize());
+		tailLengthSlider.setValue(mControls.getVisualControl().getMaxBufferSize());
 		tailLengthSlider.setLabelFormatter(new TwoValueLabelFormatter(
 			"Short", "Long", tailLengthSlider.getMax()));
 		tailLengthSlider.valueProperty().addListener((ov, old_val, new_val)-> {
-			mControls.setMaxBufferSize(new_val.intValue());
+			mControls.getVisualControl().setMaxBufferSize(new_val.intValue());
 			tailLengthTxt.setText(new_val.intValue() + "");
 		});
 
 		// get tail thickness and set slider accordingly
-		 tailThicknessSlider.setValue(mControls.getBrushSize());
+		 tailThicknessSlider.setValue(mControls.getVisualControl().getBrushSize());
 		 tailThicknessSlider.setLabelFormatter(new TwoValueLabelFormatter(
 			"Thin", "Thick",  tailThicknessSlider.getMax()));
 		 tailThicknessSlider.valueProperty().addListener((ov, old_val, new_val)-> {
-			mControls.setBrushSize(new_val.intValue());
+			mControls.getVisualControl().setBrushSize(new_val.intValue());
 			tailThicknessTxt.setText(new_val.intValue() + "");
 		});
 
 		// get speed and set slider accordingly
-		int min = Settings.getMaxSpeedMicros();
-		int max = Settings.getMinSpeedMicros();
+		int minMicros = Settings.getMaxSpeedMicros();
+		int maxMicros = Settings.getMinSpeedMicros();
 		int originalSliderValue = (int)(
-			(max - mControls.getRepeatDelay()) * ((speedSlider.getMax()-1)/(max-min)) +1
-			// invert direction of max
+			// invert direction of maxMicros
+			(maxMicros - mControls.getUpdatePatternsRunnableRepeatDelay()) *
 			// scale to fit in slider
+			((speedSlider.getMax()-1)/(maxMicros-minMicros))
+			+1
 		);
 		speedSlider.setValue(originalSliderValue);
 		speedSlider.setLabelFormatter(new TwoValueLabelFormatter(
 			"Slow", "Fast", speedSlider.getMax()));
 		speedSlider.valueProperty().addListener((ov, old_val, new_val) ->{
 			double convertedSpeed =
-				max - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(max-min)));
+				maxMicros - ((new_val.doubleValue()-1) / ((speedSlider.getMax()-1)/(maxMicros-minMicros)));
 			double b = 1/99.0 * (Math.log(Settings.getMaxSpeedMicros()) - Math.log(Settings
 				.getMinSpeedMicros()));
 			double a = Settings.getMinSpeedMicros() / (Math.pow(Math.E, b));
 			double convertedExpSpeed = a * Math.pow(Math.E, b * new_val.doubleValue());
-			mControls.setRepeatDelay((int)convertedExpSpeed);
+			mControls.setUpdatePatternsRunnableRepeatDelay((int)convertedExpSpeed);
 			speedTxt.setText(Math.round(speedSlider.getValue()) +"");
 		});
 
@@ -272,19 +276,19 @@ public class Controller implements Initializable
     public void changePattern(ActionEvent event)
     {
         if (event.getSource().equals(infinityBtn)) {
-            mControls.setPattern(new InfinityPattern());
+            mControls.getVisualControl().setPattern(new InfinityPattern());
         }else if (event.getSource().equals(horizontalBtn)) {
-            mControls.setPattern(new HorizontalPattern());
+            mControls.getVisualControl().setPattern(new HorizontalPattern());
         }else if (event.getSource().equals(verticalBtn)) {
-            mControls.setPattern(new VerticalPattern());
+            mControls.getVisualControl().setPattern(new VerticalPattern());
         }else if (event.getSource().equals(diagonalUpBtn)) {
-            mControls.setPattern(new DiagonalUpPattern());
+            mControls.getVisualControl().setPattern(new DiagonalUpPattern());
         }else if (event.getSource().equals(diagonalDownBtn)) {
-            mControls.setPattern(new DiagonalDownPattern());
+            mControls.getVisualControl().setPattern(new DiagonalDownPattern());
         }else if (event.getSource().equals(clockwiseCircleBtn)){
-            mControls.setPattern(new ClockwiseCircularPattern());
+            mControls.getVisualControl().setPattern(new ClockwiseCircularPattern());
         }else if (event.getSource().equals(counterclockwiseCircleBtn)){
-            mControls.setPattern(new CounterclockwiseCircualPattern());
+            mControls.getVisualControl().setPattern(new CounterclockwiseCircualPattern());
         }
     }
 
@@ -492,7 +496,7 @@ public class Controller implements Initializable
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Image Header");
 
-		fileChooser.setInitialDirectory(mControls.loadFile(mControls.getDefaultImageRoot()));
+		fileChooser.setInitialDirectory(FileLoader.loadFile(mControls.getDefaultImageRoot()));
 
 		// only the below extensions are allowed
 		FileChooser.ExtensionFilter filter =
@@ -525,7 +529,7 @@ public class Controller implements Initializable
 
 
 	/**
-	 * removes current Pattern header image
+	 * removes current VisualPattern header image
  	 */
 	public void clearPatternHeaderImage() {
 		mControls.setPatternImageUrl(null);
@@ -620,7 +624,7 @@ public class Controller implements Initializable
 	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Resource File");
-		fileChooser.setInitialDirectory(mControls.loadFile(mControls.getDefaultSoundRoot()));
+		fileChooser.setInitialDirectory(FileLoader.loadFile(mControls.getDefaultSoundRoot()));
 
 		// only the below extensions are allowed
 		FileChooser.ExtensionFilter filter =

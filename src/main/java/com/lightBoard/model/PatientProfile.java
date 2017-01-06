@@ -1,7 +1,7 @@
 package com.lightBoard.model;
 
-import com.lightBoard.controls.ColorHelper;
-import com.lightBoard.controls.Pattern;
+import com.lightBoard.controls.VisualPattern;
+import com.lightBoard.utils.ColorHelper;
 import com.lightBoard.controls.patterns.HorizontalPattern;
 
 import javafx.scene.paint.Color;
@@ -15,7 +15,7 @@ public class PatientProfile
 	{
 		private int id = -1;    // id = -1 means invalid, 0 means default
 		private transient static int idCounter = -1;
-		private Pattern defaultPattern = new HorizontalPattern();
+		private VisualPattern defaultVisualPattern = new HorizontalPattern();
 		private String firstName = "";
 		private String lastName = "";
 		private String imageUrl;
@@ -27,8 +27,8 @@ public class PatientProfile
 			return this;
 		}
 
-		public Builder defaultPattern(final Pattern defaultPattern) {
-			this.defaultPattern = defaultPattern;
+		public Builder defaultPattern(final VisualPattern defaultVisualPattern) {
+			this.defaultVisualPattern = defaultVisualPattern;
 			return this;
 		}
 
@@ -63,24 +63,24 @@ public class PatientProfile
 				idCounter++;
 			}
 
-			return new PatientProfile(id, defaultPattern, firstName, lastName, imageUrl,
+			return new PatientProfile(id, defaultVisualPattern, firstName, lastName, imageUrl,
 				patternColor, backgroundColor);
 		}
 	}
 
 	private int id = -1;        // id = -1 means invalid, 0 means default
-	private Pattern defaultPattern;
+	private VisualPattern defaultVisualPattern;
 	private String firstName;
 	private String lastName;
 	private String imageUrl;
 	private Color patternColor;
 	private Color backgroundColor;
 
-	private PatientProfile(int id, Pattern defaultPattern, String firstName, String lastName,
+	private PatientProfile(int id, VisualPattern defaultVisualPattern, String firstName, String lastName,
 		String imageUrl, Color patternColor, Color backgroundColor)
 	{
 		this.id = id;
-		this.defaultPattern = defaultPattern;
+		this.defaultVisualPattern = defaultVisualPattern;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.imageUrl = imageUrl;
@@ -93,14 +93,14 @@ public class PatientProfile
 	}
 
 	public int getId() { return id; }
-	public Pattern getDefaultPattern() {return defaultPattern;}
+	public VisualPattern getDefaultVisualPattern() {return defaultVisualPattern;}
 	public String getFirstName() {return firstName;}
 	public String getLastName() {return lastName;}
 	public String getImageUrl() {return imageUrl;}
 	public Color getPatternColor() {return patternColor;}
 	public Color getBackgroundColor() {return backgroundColor;}
 
-	public void setDefaultPattern(Pattern defaultPattern) {this.defaultPattern = defaultPattern;}
+	public void setDefaultVisualPattern(VisualPattern defaultVisualPattern) {this.defaultVisualPattern = defaultVisualPattern;}
 	public void setFirstName(String firstName) {this.firstName = firstName;}
 	public void setLastName(String lastName) {this.lastName = lastName;}
 	public void setImageUrl(String imageUrl) {this.imageUrl = imageUrl;}

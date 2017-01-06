@@ -1,48 +1,43 @@
 package com.lightBoard.controls;
-import java.awt.Point;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.lightBoard.model.PatientProfile;
 import com.lightBoard.model.Settings;
-import com.lightBoard.view.MainScreen;
+import com.lightBoard.utils.ColorHelper;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+
+import static com.lightBoard.model.Settings.DEFAULT_PATTERN_SMOOTHNESS;
 
 /**
  * @author Moham
  * Master Controls singleton
- *
  */
 public enum MasterControls
 {
+	/**
+	 * the enum type in java is very good as a base for a singleton since all characteristics of
+	 * an enum (as a singleton) are enforced by the JVM
+	 * {@link #INSTANCE} is like calling SingletonClass.getInstance() in a conventional singleton
+	 * class
+	 */
     INSTANCE;
 
+	/**
+	 * profile holding patient specific settings. It is currently defaulted to the default profile
+	 */
 	private PatientProfile patientProfile = PatientProfile.defaultProfile();
 
 	// speed controls
+	private int updatePatternsRunnableRepeatDelay = Settings.getMinSpeedMicros();
+	private double smoothness = DEFAULT_PATTERN_SMOOTHNESS;
+	private int pointsPerUpdatePatternsRunnable = 1;
 
-	public static final int N_OF_DOTS_IN_HALF_CYCLE = 750;
-	/**
-	 * difference between time instances where f(time) = current dot location in pattern.
-	 * The cycle takes time = 2 * Math.PI to complete
-	 */
-	public static final double DEFAULT_SMOOTHNESS = Math.PI / N_OF_DOTS_IN_HALF_CYCLE;
-	private int repeatDelay = Settings.getMinSpeedMicros();
-	private double smoothness = DEFAULT_SMOOTHNESS;
-	private int pointsPerFrame = 1;
 	private double currentTimeInCycle;
-
-	// pattern length and width
-	private int maxBufferSize = 300;
-	private float brushSize = 5;
 
 	// state holders
     private boolean playing = true;
@@ -50,37 +45,41 @@ public enum MasterControls
 	private boolean extendedMode = false;
 	private boolean bypassColorCorrection = false;
 
+	// default file chooser locations when picking image and audio files. these change every time
+	// the user picks a new file
 	private String defaultSoundRoot = Settings.DEFAULT_AUDIO_DIR;
+	private String defaultImageRoot = Settings.DEFAULT_IMAGE_DIR;
 
-	SoundPatternControls soundControls = new SoundPatternControls();
+	// the different pattern controls
+	private SoundPatternControls soundControls = new SoundPatternControls();
+	private VisualPatternControl visualControl = new VisualPatternControl(
+		patientProfile.getDefaultVisualPattern());
 
 	// image properties
 	private String patternImageUrl = null;
 	private SimpleObjectProperty<Image> patternImageProperty = new SimpleObjectProperty<>();
-	private String defaultImageRoot = Settings.DEFAULT_IMAGE_DIR;
 	private double imageSize = 100;
 
-	/**
-	 * pattern points holder...thread safe
-	 */
-	private ConcurrentLinkedDeque<Point> buffer = new ConcurrentLinkedDeque<>();
-
-    private Canvas canvas;
-    private Color patternColor = patientProfile.getPatternColor();
+	// color properties
+	private Color patternColor = patientProfile.getPatternColor();
 	private Color backgroundColor = patientProfile.getBackgroundColor();
-	private Pattern pattern = patientProfile.getDefaultPattern();
 
-
+	MasterControls(){
+		// setup sound, start playing if the state says so
+		soundControls.setupSound();
+	}
 
 	// pattern filling process
 	private ScheduledThreadPoolExecutor service = new ScheduledThreadPoolExecutor(1);
-    private Runnable repeatTask = new Runnable() {
+    private Runnable updatePatternsRunnable = new Runnable() {
         @Override
         public void run() {
-            updateEverything();
+            updateVisualAudioPatterns();
             // the repetition of this runnable should be is always above 500 Microseconds
-	        pointsPerFrame = Math.max(1, 1000 / repeatDelay);
-            service.schedule(this, repeatDelay * pointsPerFrame, TimeUnit.MICROSECONDS);
+	        pointsPerUpdatePatternsRunnable = Math.max(1, 1000 / updatePatternsRunnableRepeatDelay);
+            service.schedule(this,
+	            updatePatternsRunnableRepeatDelay * pointsPerUpdatePatternsRunnable,
+	            TimeUnit.MICROSECONDS);
         }
     };
 
@@ -88,7 +87,7 @@ public enum MasterControls
 	/**
 	 * according to the requirements, the pattern should only stop at the center of the screen (when
 	 * possible) when the user presses pause, this boolean will be set to true and thus will tell
-	 * {@link #updateEverything()} to stop when it reaches the next center of the screen and call
+	 * {@link #updateVisualAudioPatterns()} to stop when it reaches the next center of the screen and call
 	 * {@link #pauseContinued(double)}. the double is basically the direction of the pattern when
 	 * it wants to continue
 	 */
@@ -100,83 +99,65 @@ public enum MasterControls
 	 * updates all elements relevant to pattern (visual, sound) that change with the time in the
 	 * current cycle ({@link #currentTimeInCycle})
 	 */
-	public void updateEverything()
+	public void updateVisualAudioPatterns()
     {
 	    long start = System.nanoTime();
 
-	    for (int i = 0; i < pointsPerFrame; i++)
+	    for (int i = 0; i < pointsPerUpdatePatternsRunnable; i++)
 	    {
-	    	// this piece of code continues providing new points in the pattern until the
+		    // FIXME: 1/4/2017 modulo the value
+		    // this piece of code continues providing new points in the pattern until the
 		    // pattern reaches the middle of the board
 		    if(pausing){
-		    	if((currentTimeInCycle + RADIANCE_QUARTER_CYCLE) % (RADIANCE_FULL_CYCLE) < DEFAULT_SMOOTHNESS)
+		    	if((currentTimeInCycle + RADIANCE_QUARTER_CYCLE) % (RADIANCE_FULL_CYCLE)
+				    < DEFAULT_PATTERN_SMOOTHNESS)
+			    {
 				    pauseContinued(RADIANCE_THREE_QUARTERS_CYCLE);
-		        else if((currentTimeInCycle + RADIANCE_THREE_QUARTERS_CYCLE) % (RADIANCE_FULL_CYCLE) < DEFAULT_SMOOTHNESS)
+			    }
+		        else if((currentTimeInCycle + RADIANCE_THREE_QUARTERS_CYCLE) % (RADIANCE_FULL_CYCLE)
+				    < DEFAULT_PATTERN_SMOOTHNESS)
+			    {
 				    pauseContinued(RADIANCE_QUARTER_CYCLE);
+			    }
 			}
-			soundControls.updateSoundBalance(currentTimeInCycle);
+		    currentTimeInCycle += smoothness;// (currentTimeInCycle + smoothness) %  RADIANCE_FULL_CYCLE;
 
-			addPointToVisualPattern();
+		    soundControls.updateSoundBalance(currentTimeInCycle);
+			visualControl.addPointToVisualPattern(currentTimeInCycle,
+				patternImageProperty.get() != null, imageSize);
 	    }
-
-	    // clean the old excess points that are present for some reason
-        while (buffer.size() > maxBufferSize)
-            buffer.removeLast();
+	    visualControl.trimExcessTailPoints();
 
 //	    System.out.println(System.nanoTime() - start);
     }
 
-	/**
-	 * adds a point to the visual buffer
-	 */
-	private void addPointToVisualPattern()
-	{
-		currentTimeInCycle += smoothness;
 
-		Point p;
-		// if i have a
-		if (patternImageProperty.get() != null)
-		{
-			p = pattern.getPointAt(
-				(int) (canvas.getWidth() - imageSize - brushSize),
-				(int) (canvas.getHeight() - imageSize - brushSize),
-					currentTimeInCycle);
-			p.x += imageSize / 2;
-			p.y += imageSize / 2;
+	/**
+	 * starts the pattern updating process. the process will be infinitely repeated until the
+	 * program is closed
+	 */
+	public void startUpdatingPatterns() {
+		assert visualControl.getCanvas() != null : "Can't start drawing before setting the canvas.";
+        service.schedule(updatePatternsRunnable, 0L, TimeUnit.MILLISECONDS);
+	}
+
+	/**
+	 * recreates the buffer from scratch to mask any artifacts created when modifying variables
+	 * relevant in the process of building the pattern (ex. changing screen, and by extension the
+	 * canvas, size. changing the image header size...)
+	 */
+	public void refreshVisualPattern(){
+		if (playing) {
+			smoothness = 0;
+			visualControl.refreshPattern(currentTimeInCycle, DEFAULT_PATTERN_SMOOTHNESS,
+				patternImageProperty.get() != null, imageSize);
+			smoothness = DEFAULT_PATTERN_SMOOTHNESS;
 		}
-		else
-			p = pattern.getPointAt(
-				(int) (canvas.getWidth() - brushSize),
-				(int) (canvas.getHeight() - brushSize),
-					currentTimeInCycle);
-
-		p.x += + brushSize/2;
-		p.y += + brushSize/2;
-		buffer.addFirst(p);
+		else visualControl.clearBuffer();
 	}
 
-
-
 	/**
-	 * starts filling the pattern buffer to be drawn by the AnimationTimer in
-	 * "{@link MainScreen#startAnimation()}"
-	 */
-	public void startDrawing() {
-        assert canvas != null : "Can't start drawing before setting the canvas.";
-        // refresh buffer when canvas size is altered
-        canvas.heightProperty().addListener((observable, oldValue, newValue) -> refreshBuffer());
-        canvas.widthProperty().addListener((observable, oldValue, newValue) -> refreshBuffer());
-
-        // setup sound, start playing if the state says so
-        soundControls.setupSound();
-
-        service.schedule(repeatTask, 0L, TimeUnit.MILLISECONDS);
-	}
-
-
-
-	/**
-     * @return new value after toggle after toggle
+     * @return new value after toggle
      */
 	public boolean togglePlayPause(){
         if (playing)    pause();
@@ -193,7 +174,7 @@ public enum MasterControls
 	    if (playSound)
 	        soundControls.playSound();
 
-        smoothness = DEFAULT_SMOOTHNESS;
+        smoothness = DEFAULT_PATTERN_SMOOTHNESS;
 	    pausing = false;
 	    playing = true;
     }
@@ -217,18 +198,7 @@ public enum MasterControls
 	    pausing = false;
     }
 
-	/**
-	 * recreates the buffer from scratch to mask any artifacts created when modifying variables
-	 * relevant in the process of building the pattern (ex. changing screen, and by extension the
-	 * canvas, size. changing the image header size...)
-	 */
-	public void refreshBuffer(){
-    	int originalSize = buffer.size();
-    	buffer.clear();
-	    currentTimeInCycle -= originalSize * smoothness;
-    	while (buffer.size() < originalSize)
-		    updateEverything();
-    }
+
 
 	/**
 	 * loads relevant data from the profile
@@ -237,7 +207,7 @@ public enum MasterControls
 	private void loadStateFromProfile(PatientProfile profile) {
 		backgroundColor = profile.getBackgroundColor();
 		patternColor = profile.getPatternColor();
-		setPattern(profile.getDefaultPattern());
+		visualControl.setPattern(profile.getDefaultVisualPattern());
 		setPatternImageUrl(profile.getImageUrl());
 	}
 
@@ -250,33 +220,20 @@ public enum MasterControls
 		patientProfile = new PatientProfile.Builder()
 				.backgroundColor(backgroundColor)
 				.patternColor(patternColor)
-				.defaultPattern(pattern)
+				.defaultPattern(visualControl.getPattern())
 				.firstName(patientProfile.getFirstName())
 				.lastName(patientProfile.getLastName())
 				.imageUrl(patternImageUrl)
 				.build();
 	}
 
-    public void clearBuffer(){
-    	buffer.clear();
-    }
 
-	public void setRepeatDelay(int repeatDelay) {this.repeatDelay = repeatDelay;}
-	public int getMaxBufferSize() { return maxBufferSize; }
-	public void setMaxBufferSize(int maxBufferSize) { this.maxBufferSize = maxBufferSize; }
+	public void setUpdatePatternsRunnableRepeatDelay(int updatePatternsRunnableRepeatDelay) {this.updatePatternsRunnableRepeatDelay = updatePatternsRunnableRepeatDelay;}
+	public int getUpdatePatternsRunnableRepeatDelay() { return updatePatternsRunnableRepeatDelay; }
 	public Color getBackgroundColor() { return backgroundColor; }
 	public Color getPatternColor() { return patternColor; }
-	public int getRepeatDelay() { return repeatDelay; }
-	public double getSmoothness() { return smoothness; }
-	public void setSmoothness(double smoothness) { this.smoothness = smoothness; }
-	public float getBrushSize() { return brushSize; }
-    public ConcurrentLinkedDeque<Point> getBuffer() { return buffer; }
-    public void setPattern(Pattern pattern) { this.pattern = pattern; }
 	public boolean isExtendedMode() { return extendedMode; }
-	public Canvas getCanvas() { return canvas; }
-	public void setCanvas(Canvas canvas) { this.canvas = canvas; }
     public boolean isPlaying() { return playing; }
-    public void setPlaying(boolean playing) { this.playing = playing; }
 	public PatientProfile getPatientProfile() {return patientProfile;}
 	public boolean isBypassColorCorrection() {return bypassColorCorrection;}
 	public void setBypassColorCorrection(boolean bypassColorCorrection) {this.bypassColorCorrection = bypassColorCorrection;}
@@ -290,6 +247,7 @@ public enum MasterControls
 	public void setDefaultSoundRoot(String defaultSoundRoot) {this.defaultSoundRoot = defaultSoundRoot;}
 	public boolean getPlaySound() {return playSound;}
 	public void setPlaySound(boolean playSound) {this.playSound = playSound;}
+	public VisualPatternControl getVisualControl() { return visualControl; }
 
 	public void setPatientProfile(PatientProfile patientProfile) {
 		this.patientProfile = patientProfile;
@@ -313,22 +271,17 @@ public enum MasterControls
 		if (url == null || url.isEmpty())
 			patternImageProperty.set(null);
 		else patternImageProperty.set(new Image(url));
-		refreshBuffer();
+		refreshVisualPattern();
 	}
 
 	public void setExtendedMode(boolean extendedMode) {
 		this.extendedMode = extendedMode;
-		refreshBuffer();
-	}
-
-	public void setBrushSize(float brushSize) {
-		this.brushSize = brushSize;
-		refreshBuffer();
+		refreshVisualPattern();
 	}
 
 	public void setImageSize(double imageSize) {
 		this.imageSize = imageSize;
-		refreshBuffer();
+		refreshVisualPattern();
 	}
 
 	/**
@@ -349,34 +302,5 @@ public enum MasterControls
 		return playSound;
 	}
 
-	/**
-	 * utility method to load a file
-	 * @param path the absolute or relative file path
-	 * @return the loaded file
-	 */
-	public File loadFile(String path){
-		try {
-			return new File(getClass().getResource(path).toURI());
-		}catch (NullPointerException e) {
-			return new File(path);
-		}catch (URISyntaxException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
-	public String getFilePath(String path){
-		String absFilepath;
-		try {
-			new File(getClass().getResource(path).toURI());
-			absFilepath = getClass().getResource(path).toURI().toASCIIString();
-		}catch (NullPointerException e) {
-			new File(path);
-			absFilepath = path;
-		}catch (URISyntaxException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return absFilepath;
-	}
 }

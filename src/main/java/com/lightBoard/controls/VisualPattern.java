@@ -9,7 +9,7 @@ import java.awt.Point;
  * @author Moham
  *
  */
-public interface Pattern
+public interface VisualPattern
 {
 	Point getPointAt(int maxWidth, int maxHeight, double time);
 }

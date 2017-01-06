@@ -1,13 +1,14 @@
 package com.lightBoard.controls.patterns;
 
-import com.lightBoard.controls.Pattern;
+import com.lightBoard.controls.VisualPattern;
 
 import java.awt.Point;
 
 /**
  * Created by Mohammad on 10/31/2016.
  */
-public class ClockwiseCircularPattern implements Pattern{
+public class ClockwiseCircularPattern implements VisualPattern
+{
     @Override
     public Point getPointAt(int maxWidth, int maxHeight, double time) {
         Point p = new Point();

@@ -85,7 +85,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 
         // set "canvas" as the used canvas in the master controls, and setup the play/pause button
         // and the mouse move listener
-        mControls.setCanvas(canvas);
+        mControls.getVisualControl().setCanvas(canvas);
 
 	    // setup dependencies
 	    controller.setupPlayPauseBtn();
@@ -131,7 +131,7 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         canvas.heightProperty().bind(heightBinding);
 
         // set "canvas" as the used canvas in the master controls, and setup the play/pause button
-        mControls.setCanvas(canvas);
+        mControls.getVisualControl().setCanvas(canvas);
 
         // setup dependencies
         controller.setupPlayPauseBtn();
@@ -155,12 +155,12 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
      * terminates
      */
     private void startAnimation() {
-        mControls.startDrawing();
+        mControls.startUpdatingPatterns();
         AnimationTimer timer = new AnimationTimer() {
 
             @Override
             public void handle(long now) {
-	            ConcurrentLinkedDeque<Point> buffer = mControls.getBuffer();
+	            ConcurrentLinkedDeque<Point> buffer = mControls.getVisualControl().getBuffer();
 
                 // clear the canvas using the background color
                 GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -174,9 +174,9 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
                 double alpha = 1;
 
                 // get data from now to decrease loop overhead
-                double brushSize = mControls.getBrushSize();
+                double brushSize = mControls.getVisualControl().getBrushSize();
                 double halfBrushSize = brushSize/2;
-                int maxBufferSize = mControls.getMaxBufferSize();
+                int maxBufferSize = mControls.getVisualControl().getMaxBufferSize();
 	            int index = 0;
 	            Iterator<Point> iterator = buffer.iterator();
 
