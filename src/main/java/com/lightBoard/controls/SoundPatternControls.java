@@ -69,13 +69,14 @@ public class SoundPatternControls
 		// control the balance of the sound
 		if(playingSound && mediaPlayer != null)
 		{
+			// 0 <= balance < 4. balance represents the cycle phase.
 			double balance = currentTimeInCycle % RADIANCE_FULL_CYCLE / RADIANCE_QUARTER_CYCLE;
 			boolean firstHalfCycle = balance < 2;
 
 			if(swingingSound)
 				mediaPlayer.setBalance(firstHalfCycle ? 1-balance : balance-3);
 			else
-				mediaPlayer.setBalance(firstHalfCycle ? -1 : 1);
+				mediaPlayer.setBalance(balance > 1 && balance < 3? -1 : 1);
 		}
 	}
 
