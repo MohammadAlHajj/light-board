@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -60,12 +61,17 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         startAnimation();
 
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(event ->{
+            Platform.exit();
+            System.exit(0);
+        });
         primaryStage.show();
     }
 
     public void loadGlobalDependencies() {
         mControls = MasterControls.INSTANCE;
     }
+
 
     /**
      * recreates the scene in fullScreen mode

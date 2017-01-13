@@ -121,7 +121,6 @@ public enum MasterControls
 			    }
 			}
 		    currentTimeInCycle += smoothness;// (currentTimeInCycle + smoothness) %  RADIANCE_FULL_CYCLE;
-		    System.out.println(currentTimeInCycle);
 
 		    soundControls.updateSoundBalance(currentTimeInCycle);
 			visualControl.addPointToVisualPattern(currentTimeInCycle,

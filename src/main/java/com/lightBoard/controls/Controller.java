@@ -181,6 +181,7 @@ public class Controller implements Initializable
 		    Tooltip tooltip = new Tooltip();
 		    tooltip.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
 			    .getMediaNameProperty());
+		    tooltip.setFont(Font.font(Settings.getTooltipFontSize()));
 		    currentSoundLbl.setTooltip(tooltip);
 	    }
     }
@@ -590,7 +591,7 @@ public class Controller implements Initializable
 			tooltip.showingProperty().removeListener(listener);
 			tooltip.hide();
 		});
-		tooltip.setFont(Font.font(18));
+		tooltip.setFont(Font.font(Settings.getTooltipFontSize()));
 		Tooltip.install(colorOverrideTooltipIV, tooltip);
 	}
 
@@ -612,7 +613,7 @@ public class Controller implements Initializable
 			tooltip.showingProperty().removeListener(listener);
 			tooltip.hide();
 		});
-		tooltip.setFont(Font.font(18));
+		tooltip.setFont(Font.font(Settings.getTooltipFontSize()));
 		Tooltip.install(continuousSoundSwingTooltipIV, tooltip);
 	}
 
