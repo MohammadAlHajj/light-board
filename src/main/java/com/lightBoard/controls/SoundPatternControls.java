@@ -53,6 +53,10 @@ public class SoundPatternControls
 	// path to media
 	private String patternSoundUrl = Settings.DEFAULT_AUDIO_FILE;
 
+	public SoundPatternControls(){
+		setupSound();
+	}
+
 	/**
 	 * useful so not to calculate these at every call to {@link #updateSoundBalance(double)}
 	 */

@@ -49,8 +49,9 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
     @Override
     public void start(Stage primaryStage) throws Exception
     {
+        loadGlobalDependencies();
+
         this.primaryStage = primaryStage;
-        mControls = MasterControls.INSTANCE;
 
         primaryStage.setTitle("Light Board");
 
@@ -60,6 +61,10 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public void loadGlobalDependencies() {
+        mControls = MasterControls.INSTANCE;
     }
 
     /**

@@ -65,8 +65,7 @@ public enum MasterControls
 	private Color backgroundColor = patientProfile.getBackgroundColor();
 
 	MasterControls(){
-		// setup sound, start playing if the state says so
-		soundControls.setupSound();
+
 	}
 
 	// pattern filling process

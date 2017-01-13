@@ -14,7 +14,7 @@ High priority:
 - fix bug: image retauns to original size after max -> min
 - make song name bigger
 - make sound flip in the middle
-- find the fucking corrolation between file and url that caused me that shitstorm and move all files to use it
+- find the fucking corrolation between file and url that caused me that shitstorm and move all files to use it (fix file loader)
 - modulo the value in MasterControls (search for fixme)
 - setup sound controls in it's constructor and not in master controls
 
