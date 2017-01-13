@@ -73,7 +73,7 @@ public enum MasterControls
     private Runnable updatePatternsRunnable = new Runnable() {
         @Override
         public void run() {
-            updateVisualAudioPatterns();
+            updateAudioVisualPatterns();
             // the repetition of this runnable should be is always above 500 Microseconds
 	        pointsPerUpdatePatternsRunnable = Math.max(1, 1000 / updatePatternsRunnableRepeatDelay);
             service.schedule(this,
@@ -86,7 +86,7 @@ public enum MasterControls
 	/**
 	 * according to the requirements, the pattern should only stop at the center of the screen (when
 	 * possible) when the user presses pause, this boolean will be set to true and thus will tell
-	 * {@link #updateVisualAudioPatterns()} to stop when it reaches the next center of the screen and call
+	 * {@link #updateAudioVisualPatterns()} to stop when it reaches the next center of the screen and call
 	 * {@link #pauseContinued(double)}. the double is basically the direction of the pattern when
 	 * it wants to continue
 	 */
@@ -98,7 +98,7 @@ public enum MasterControls
 	 * updates all elements relevant to pattern (visual, sound) that change with the time in the
 	 * current cycle ({@link #currentTimeInCycle})
 	 */
-	public void updateVisualAudioPatterns()
+	public void updateAudioVisualPatterns()
     {
 	    long start = System.nanoTime();
 
@@ -107,19 +107,21 @@ public enum MasterControls
 		    // FIXME: 1/4/2017 modulo the value
 		    // this piece of code continues providing new points in the pattern until the
 		    // pattern reaches the middle of the board
+		    currentTimeInCycle %= RADIANCE_FULL_CYCLE;
 		    if(pausing){
-		    	if((currentTimeInCycle + RADIANCE_QUARTER_CYCLE) % (RADIANCE_FULL_CYCLE)
-				    < DEFAULT_PATTERN_SMOOTHNESS)
-			    {
-				    pauseContinued(RADIANCE_THREE_QUARTERS_CYCLE);
-			    }
-		        else if((currentTimeInCycle + RADIANCE_THREE_QUARTERS_CYCLE) % (RADIANCE_FULL_CYCLE)
-				    < DEFAULT_PATTERN_SMOOTHNESS)
+		    	if(Math.abs(currentTimeInCycle - RADIANCE_QUARTER_CYCLE) <=
+				    DEFAULT_PATTERN_SMOOTHNESS)
 			    {
 				    pauseContinued(RADIANCE_QUARTER_CYCLE);
 			    }
+		        else if(Math.abs(currentTimeInCycle - RADIANCE_THREE_QUARTERS_CYCLE) <=
+				    DEFAULT_PATTERN_SMOOTHNESS)
+			    {
+				    pauseContinued(RADIANCE_THREE_QUARTERS_CYCLE);
+			    }
 			}
 		    currentTimeInCycle += smoothness;// (currentTimeInCycle + smoothness) %  RADIANCE_FULL_CYCLE;
+		    System.out.println(currentTimeInCycle);
 
 		    soundControls.updateSoundBalance(currentTimeInCycle);
 			visualControl.addPointToVisualPattern(currentTimeInCycle,
