@@ -89,7 +89,9 @@ public class SoundPatternControls
 	 */
 	public void setupSound()
 	{
-		patternSoundProperty.setValue(new Media(FileLoader.getFilePath(patternSoundUrl)));
+		String s = FileLoader.getResourceUrlString(patternSoundUrl);
+		System.out.println(s);
+		patternSoundProperty.setValue(new Media(s));
 		if (mediaPlayer != null)
 			mediaPlayer.stop();
 		mediaPlayer = new MediaPlayer(patternSoundProperty.getValue());

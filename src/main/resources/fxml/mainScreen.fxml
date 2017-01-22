@@ -1,33 +1,38 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Text?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.Border?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.image.Image?>
-<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
 <GridPane fx:controller="com.lightBoard.controls.Controller"
 	xmlns:fx="http://javafx.com/fxml"
 	alignment="CENTER"
 	hgap="10"
 	vgap="10">
+	<rowConstraints>
+		<RowConstraints />
+		<RowConstraints minHeight="350"/>
+	</rowConstraints>
 	<stylesheets>
 		<URL value="@../css/main.css"/>
 	</stylesheets>
 
-	<Canvas fx:id="canvas"
+	<HBox fx:id="canvasHBox"
+		maxHeight="Infinity"
+		maxWidth="Infinity"
 		GridPane.rowIndex="0"
-		GridPane.columnIndex="0"/>
+		GridPane.columnIndex="0"
+		GridPane.vgrow="ALWAYS"
+		GridPane.fillHeight="true ">
+		<Canvas fx:id="canvas"/>
+	</HBox>
+
 
 	<GridPane fx:id="controlsGrid"
 		GridPane.rowIndex="1"
@@ -41,8 +46,9 @@
 			<ColumnConstraints/>
 			<ColumnConstraints prefWidth="330"/>
 			<ColumnConstraints/>
-			<!--<ColumnConstraints maxWidth="150"/>-->
+			<ColumnConstraints/>
 		</columnConstraints>
+
 
 		<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 		<!-- Patterns -->
@@ -425,9 +431,7 @@
 			GridPane.rowIndex="0"
 			GridPane.columnIndex="4"
 			hgap="10"
-			vgap="10"
-			maxHeight="Infinity"
-			GridPane.vgrow="ALWAYS">
+			vgap="10">
 			<rowConstraints>
 				<RowConstraints percentHeight="10"/>
 				<RowConstraints percentHeight="50"/>
