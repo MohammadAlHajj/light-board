@@ -1,15 +1,16 @@
 package com.lightBoard.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Created by Moham on 1/5/2017.
  */
 public class FileLoader
 {
-	private static final Object convenientIsntIt = new Object();
-
 	// FIXME: 1/6/2017 make better
 	/**
 	 * returns the file path
@@ -17,17 +18,28 @@ public class FileLoader
 	 * @return a usable file path format
 	 */
 	public static String getFilePath(String path){
-		String absFilepath;
+		File f;
 		try {
-			new File(convenientIsntIt.getClass().getResource(path).toURI());
-			absFilepath = convenientIsntIt.getClass().getResource(path).toURI().toASCIIString();
+			URL resource = FileLoader.class.getResource(path);
+			System.out.println(resource);
+			f = new File(resource.toExternalForm());
 		}catch (NullPointerException e) {
-			new File(path);
-			absFilepath = path;
-		}catch (URISyntaxException e) {
-			e.printStackTrace();
-			return null;
+			f = new File(path);
 		}
+		if (!f.exists())
+			f = new File(path);
+
+		if (!f.exists())
+			throw new IllegalStateException("file doesn't exist");
+
+		String absFilepath;
+		absFilepath = f.toURI().toString();
+//		try {
+//			absFilepath = f.getCanonicalPath();
+//		} catch (IOException e) {
+//			throw new IllegalStateException("file doesn't exist");
+//		}
+		System.out.println(absFilepath);
 		return absFilepath;
 	}
 
@@ -38,12 +50,25 @@ public class FileLoader
 	 */
 	public static File loadFile(String path){
 		try {
-			return new File(convenientIsntIt.getClass().getResource(path).toURI());
+			return new File(FileLoader.class.getResource(path).toURI());
 		}catch (NullPointerException e) {
 			return new File(path);
 		}catch (URISyntaxException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	public static URL getResourceUrl(String path){
+		File f;
+		URL resource = FileLoader.class.getResource(path);
+		if (resource == null){
+			try {
+				resource = new URL(path);
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException("path is not valid: " + path);
+			}
+		}
+
+		return resource;
 	}
 }
