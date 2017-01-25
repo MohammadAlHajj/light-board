@@ -89,8 +89,8 @@ public class SoundPatternControls
 	 */
 	public void setupSound()
 	{
-		String filePath = FileLoader.getResourceUrl(patternSoundUrl).toExternalForm();
-		Media media = new Media(filePath);
+//		String filePath = FileLoader.getResourceUrl(patternSoundUrl).toExternalForm();
+		Media media = new Media(FileLoader.getExternalUrlString(patternSoundUrl));
 		patternSoundProperty.setValue(media);
 		if (mediaPlayer != null)
 			mediaPlayer.stop();

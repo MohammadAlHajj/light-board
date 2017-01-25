@@ -497,7 +497,7 @@ public class Controller implements Initializable
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select Image Header");
 
-		fileChooser.setInitialDirectory(FileLoader.loadFile(mControls.getDefaultImageRoot()));
+		fileChooser.setInitialDirectory(FileLoader.loadExternalFile(mControls.getDefaultImageRoot()));
 
 		// only the below extensions are allowed
 		FileChooser.ExtensionFilter filter =
@@ -625,7 +625,7 @@ public class Controller implements Initializable
 	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Resource File");
-		fileChooser.setInitialDirectory(FileLoader.loadFile(mControls.getDefaultSoundRoot()));
+		fileChooser.setInitialDirectory(FileLoader.loadExternalFile(mControls.getDefaultSoundRoot()));
 
 		// only the below extensions are allowed
 		FileChooser.ExtensionFilter filter =
