@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Created by Moham on 1/5/2017.
@@ -110,6 +112,5 @@ public class FileLoader
 		if (extFile.exists())
 			return extFile;
 		else throw new IllegalArgumentException("path invalid: "+path);
-
 	}
 }

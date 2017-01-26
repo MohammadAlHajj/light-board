@@ -34,6 +34,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -66,6 +67,7 @@ public class Controller implements Initializable
 		void setupExtendedMode() throws IOException;
 		void showCursor(boolean state);
 		Window getStage();
+		Scene getScene();
 	}
 	/**
 	 * application reference
@@ -107,6 +109,7 @@ public class Controller implements Initializable
 	/**
 	 * the canvas that the program draws the patterns on
 	 */
+	@FXML private HBox canvasHBox;
 	@FXML private Canvas canvas;
 
 	/**
@@ -183,6 +186,11 @@ public class Controller implements Initializable
 			    .getMediaNameProperty());
 		    tooltip.setFont(Font.font(Settings.getTooltipFontSize()));
 		    currentSoundLbl.setTooltip(tooltip);
+	    }
+
+	    if (canvasHBox != null) {
+//	    	canvas.widthProperty().bind(canvasHBox.widthProperty());
+	    	canvas.heightProperty().bind(canvasHBox.heightProperty());
 	    }
     }
 
@@ -567,6 +575,17 @@ public class Controller implements Initializable
 			}
 			else if (event.getCode().equals(KeyCode.SPACE))
 				togglePlayPause();
+			else if (event.getCode().equals(KeyCode.T) && event.isShiftDown())
+				System.out.println( "-----\n" +
+					canvas.widthProperty().get() + "\n" +
+					canvas.getWidth() + "\n"+
+					canvas.heightProperty().get() + "\n" +
+					canvas.getHeight() + "\n"+
+					canvasHBox.widthProperty().get() + "\n" +
+					canvasHBox.getWidth() + "\n"+
+					canvasHBox.heightProperty().get() + "\n" +
+					canvasHBox.getHeight() + "\n" + "-----\n"
+				);
 		});
 	}
 

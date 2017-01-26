@@ -104,10 +104,8 @@ public enum MasterControls
 
 	    for (int i = 0; i < pointsPerUpdatePatternsRunnable; i++)
 	    {
-		    // FIXME: 1/4/2017 modulo the value
-		    // this piece of code continues providing new points in the pattern until the
-		    // pattern reaches the middle of the board
 		    currentTimeInCycle %= RADIANCE_FULL_CYCLE;
+		    // this piece of code blocks pausing until the pattern reaches the middle of the canvas
 		    if(pausing){
 		    	if(Math.abs(currentTimeInCycle - RADIANCE_QUARTER_CYCLE) <=
 				    DEFAULT_PATTERN_SMOOTHNESS)
@@ -120,7 +118,7 @@ public enum MasterControls
 				    pauseContinued(RADIANCE_THREE_QUARTERS_CYCLE);
 			    }
 			}
-		    currentTimeInCycle += smoothness;// (currentTimeInCycle + smoothness) %  RADIANCE_FULL_CYCLE;
+		    currentTimeInCycle += smoothness;
 
 		    soundControls.updateSoundBalance(currentTimeInCycle);
 			visualControl.addPointToVisualPattern(currentTimeInCycle,

@@ -3,22 +3,23 @@
 -*	: in progress
 
 HOT:
-- increase image usability
+- increase image supported formats
+- BUG - image retauns to original size after max -> min
+- make image non-square
+- copyright
+- autoupdate
 
 High priority:
 - fix lag on color change
 - find a better way to play/pause
 - add "no image" image
-- not all images are working
 -* find a way to benchmark
-- fix bug: image retauns to original size after max -> min
-- make song name bigger
 - find the fucking corrolation between file and url that caused me that shitstorm and move all files to use it (fix file loader)
 
 
 Mid priority:
 -* adding per-client profile
-- link bunber of dot in a cycle to the max/min speed, and later to the screen size
+- link nunber of dot in a cycle to the max/min speed, and later to the screen size
 - make file choosers open to default location first then to last opened dir
 
 low priority:
@@ -27,3 +28,7 @@ low priority:
 LATER:
 - network control >>> mobile app control >>> internet control
 - experimental: add skype
+
+
+References:
+Jfugue
