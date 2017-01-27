@@ -447,7 +447,9 @@
 				GridPane.columnIndex="0"
 				GridPane.columnSpan="2"
 				alignment="CENTER">
-				<ImageView fx:id="patternHeaderPreview"/>
+				<ImageView fx:id="patternHeaderPreview"
+					fitHeight="100"
+					fitWidth="100"/>
 			</HBox>
 
 			<Slider fx:id="patternImageSizeSlider"
