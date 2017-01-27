@@ -109,7 +109,6 @@ public class Controller implements Initializable
 	/**
 	 * the canvas that the program draws the patterns on
 	 */
-	@FXML private HBox canvasHBox;
 	@FXML private Canvas canvas;
 
 	/**
@@ -188,10 +187,10 @@ public class Controller implements Initializable
 		    currentSoundLbl.setTooltip(tooltip);
 	    }
 
-	    if (canvasHBox != null) {
+//	    if (canvasHBox != null) {
 //	    	canvas.widthProperty().bind(canvasHBox.widthProperty());
-	    	canvas.heightProperty().bind(canvasHBox.heightProperty());
-	    }
+//	    	canvas.heightProperty().bind(canvasHBox.heightProperty());
+//	    }
     }
 
 	/**
@@ -580,11 +579,12 @@ public class Controller implements Initializable
 					canvas.widthProperty().get() + "\n" +
 					canvas.getWidth() + "\n"+
 					canvas.heightProperty().get() + "\n" +
-					canvas.getHeight() + "\n"+
-					canvasHBox.widthProperty().get() + "\n" +
-					canvasHBox.getWidth() + "\n"+
-					canvasHBox.heightProperty().get() + "\n" +
-					canvasHBox.getHeight() + "\n" + "-----\n"
+					canvas.getHeight() + "\n"
+//					+
+//					canvasHBox.widthProperty().get() + "\n" +
+//					canvasHBox.getWidth() + "\n"+
+//					canvasHBox.heightProperty().get() + "\n" +
+//					canvasHBox.getHeight() + "\n" + "-----\n"
 				);
 		});
 	}

@@ -132,14 +132,14 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
         GridPane grid = (GridPane) root;
         canvas = controller.getCanvas();
 
-//        GridPane controlsGrid = controller.getControlsGrid();
-//	    DoubleBinding heightBinding =
-//            scene.heightProperty().subtract(
-//	            controlsGrid.heightProperty()
-//		            .add(grid.vgapProperty().doubleValue() * 2)
-//            );
+        GridPane controlsGrid = controller.getControlsGrid();
+	    DoubleBinding heightBinding =
+            scene.heightProperty().subtract(
+	            controlsGrid.heightProperty()
+		            .add(grid.vgapProperty().doubleValue() * 2)
+            );
         canvas.widthProperty().bind(scene.widthProperty());
-//        canvas.heightProperty().bind(heightBinding);
+        canvas.heightProperty().bind(heightBinding);
 
         // set "canvas" as the used canvas in the master controls, and setup the play/pause button
         mControls.getVisualControl().setCanvas(canvas);

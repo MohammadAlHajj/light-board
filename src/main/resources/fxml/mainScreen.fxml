@@ -23,16 +23,7 @@
 		<URL value="@../css/main.css"/>
 	</stylesheets>
 
-	<HBox fx:id="canvasHBox"
-		maxHeight="Infinity"
-		maxWidth="Infinity"
-		GridPane.rowIndex="0"
-		GridPane.columnIndex="0"
-		GridPane.vgrow="ALWAYS"
-		GridPane.fillHeight="true ">
-		<Canvas fx:id="canvas"/>
-	</HBox>
-
+	<Canvas fx:id="canvas"/>
 
 	<GridPane fx:id="controlsGrid"
 		GridPane.rowIndex="1"
