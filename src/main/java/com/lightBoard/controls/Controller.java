@@ -658,7 +658,7 @@ public class Controller implements Initializable
 		if (soundFile != null) {
 			mControls.setDefaultSoundRoot(soundFile.getParent());
 			if (fileMatchesFilter(soundFile, filter))
-				mControls.getSoundControls().setPatternSoundUrl(soundFile.toURI().toString());
+				mControls.getSoundControls().setPatternSoundUrl(soundFile.toString());
 		}
 	}
 

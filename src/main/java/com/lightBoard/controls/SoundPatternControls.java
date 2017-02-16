@@ -127,7 +127,7 @@ public class SoundPatternControls
 		if (url == null || url.isEmpty())
 			this.patternSoundProperty.setValue(null);
 		else
-			this.patternSoundProperty.setValue(new Media(url));
+			this.patternSoundProperty.setValue(new Media(FileLoader.getExternalUrlString(url)));
 		setupSound();
 	}
 }
