@@ -23,7 +23,10 @@
 		<URL value="@../css/main.css"/>
 	</stylesheets>
 
-	<Canvas fx:id="canvas"/>
+	<Canvas fx:id="canvas"
+		GridPane.rowIndex="0"
+		GridPane.columnIndex="0"
+		GridPane.halignment="CENTER"/>
 
 	<GridPane fx:id="controlsGrid"
 		GridPane.rowIndex="1"
