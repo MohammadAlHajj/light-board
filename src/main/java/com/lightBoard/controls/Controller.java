@@ -516,8 +516,10 @@ public class Controller implements Initializable
 		// if the file has an accepted extension, make it the new pattern header image
 		if (imageFile != null){
 			mControls.setDefaultImageRoot(imageFile.getParentFile().getPath());
-			if(fileMatchesFilter(imageFile, filter))
+			Image i = new Image(imageFile.toURI().toString());
+			if(fileMatchesFilter(imageFile, filter)){
 				mControls.setPatternImageUrl(imageFile.toURI().toString());
+			}
 		}
 	}
 
@@ -529,9 +531,10 @@ public class Controller implements Initializable
 	 * @return true if the file ends with one of the extensions the filter has
 	 */
 	private boolean fileMatchesFilter(File imageFile, FileChooser.ExtensionFilter filter) {
-		for (String s : filter.getExtensions())
-			if (imageFile.getName().endsWith(s.substring(1)))   // get rid of the leading "*"
+		for (String s : filter.getExtensions()) {
+			if (imageFile.getName().toLowerCase().endsWith(s.substring(1)))   // get rid of the leading "*"
 				return true;
+		}
 		return false;
 	}
 
@@ -574,18 +577,18 @@ public class Controller implements Initializable
 			}
 			else if (event.getCode().equals(KeyCode.SPACE))
 				togglePlayPause();
-			else if (event.getCode().equals(KeyCode.T) && event.isShiftDown())
-				System.out.println( "-----\n" +
-					canvas.widthProperty().get() + "\n" +
-					canvas.getWidth() + "\n"+
-					canvas.heightProperty().get() + "\n" +
-					canvas.getHeight() + "\n"
-//					+
-//					canvasHBox.widthProperty().get() + "\n" +
-//					canvasHBox.getWidth() + "\n"+
-//					canvasHBox.heightProperty().get() + "\n" +
-//					canvasHBox.getHeight() + "\n" + "-----\n"
-				);
+//			else if (event.getCode().equals(KeyCode.T) && event.isShiftDown())
+//				System.out.println( "-----\n" +
+//					canvas.widthProperty().get() + "\n" +
+//					canvas.getWidth() + "\n"+
+//					canvas.heightProperty().get() + "\n" +
+//					canvas.getHeight() + "\n"
+////					+
+////					canvasHBox.widthProperty().get() + "\n" +
+////					canvasHBox.getWidth() + "\n"+
+////					canvasHBox.heightProperty().get() + "\n" +
+////					canvasHBox.getHeight() + "\n" + "-----\n"
+//				);
 		});
 	}
 
