@@ -1,0 +1,28 @@
+Arcade
+Click 1
+Click 2
+Click 3
+Click 4
+Click 5
+Click 6
+Click 7
+Click 8
+Click 9
+Click 10
+Click
+Constant 280 Hz
+Double Clock
+Major Chord Loop
+Minor Chord Loop
+Pink Noise
+Single Major Chord
+Single Minor Chord
+Single Note C Loop
+Single Note C
+Single Note E Loop
+Single Note E
+Single Note G Loop
+Single Note G
+sound
+Tone Loop
+White Noise
