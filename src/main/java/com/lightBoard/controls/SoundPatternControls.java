@@ -2,6 +2,7 @@ package com.lightBoard.controls;
 
 import com.lightBoard.model.Settings;
 import com.lightBoard.utils.FileLoader;
+import com.lightBoard.utils.MultiMediaPlayer;
 
 import java.io.File;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -51,7 +52,7 @@ public class SoundPatternControls
 
 	// media nd media player
 	private MediaWithNameProperty patternSoundProperty = new MediaWithNameProperty();
-	private MediaPlayer mediaPlayer;
+	private MultiMediaPlayer mediaPlayer;
 
 	// path to media
 	private String patternSoundUrl = Settings.DEFAULT_AUDIO_FILE;
@@ -67,15 +68,6 @@ public class SoundPatternControls
 	private static final double RADIANCE_QUARTER_CYCLE = Math.PI / 2;
 	private static final double RADIANCE_THREE_QUARTERS_CYCLE = Math.PI * 3.0/2;
 
-
-	private ScheduledThreadPoolExecutor restartSoundService = new ScheduledThreadPoolExecutor(2);
-	private Runnable restartSound = new Runnable() {
-		@Override
-		public void run() {
-			mediaPlayer.seek(new Duration(0));
-		}
-	};
-
 	/**
 	 * this method will update the sound balance depending on the time frame in the current
 	 * pattern cycle
@@ -85,26 +77,37 @@ public class SoundPatternControls
 		// control the balance of the sound
 		if(playingSound && mediaPlayer != null)
 		{
+			long b = System.nanoTime();
+
 			// 0 <= balance < 4. balance represents the cycle phase.
 			double balance = currentTimeInCycle % RADIANCE_FULL_CYCLE / RADIANCE_QUARTER_CYCLE;
 			boolean firstHalfCycle = balance < 2;
 
 			double quarterCycleIndex = Math.floor(balance);
 
+			long a = System.nanoTime();
+			if(swingingSound)
+				mediaPlayer.setBalance(firstHalfCycle ? 1 - balance : balance - 3);
+			else
+				mediaPlayer.setBalance(balance > 1 && balance < 3? -1 : 1);
+			System.out.println("C   :::   sound balance = " + (System.nanoTime() - a));
+
 			if ((quarterCycleIndex == 1 | quarterCycleIndex == 3) &&
-				quarterCycleIndex != Math.floor(balance - Settings.DEFAULT_PATTERN_SMOOTHNESS))
+				balance - quarterCycleIndex <= Settings.DEFAULT_PATTERN_SMOOTHNESS)
 			{
+				a = System.nanoTime();
+
 				if (mediaDone){
-					restartSoundService.execute(restartSound);
+					mediaPlayer.reset();
 					mediaDone = false;
 				}
-
-				if(!swingingSound)
-					mediaPlayer.setBalance(balance > 1 && balance < 3? -1 : 1);
-
+				System.out.println("B   :::   call reset = " + (System.nanoTime() - a));
 			}
-			if(swingingSound)
-				mediaPlayer.setBalance(firstHalfCycle ? 1-balance : balance-3);
+
+
+
+
+			System.out.println("A   :::   total time = " + (System.nanoTime() - b));
 		}
 	}
 
@@ -118,7 +121,7 @@ public class SoundPatternControls
 		patternSoundProperty.setValue(media);
 		if (mediaPlayer != null)
 			mediaPlayer.stop();
-		mediaPlayer = new MediaPlayer(patternSoundProperty.getValue());
+		mediaPlayer = new MultiMediaPlayer(patternSoundProperty.getValue());
 		mediaPlayer.setOnEndOfMedia(() -> mediaDone = true);
 		if (playingSound)
 			playSound();

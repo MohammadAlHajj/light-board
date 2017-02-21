@@ -4,7 +4,7 @@
 
 HOT:
 - increase image supported formats
-- BUG - image retauns to original size after max -> min
+-* BUG - image retauns to original size after max -> min
 - make image non-square
 - copyright
 - autoupdate
@@ -14,7 +14,7 @@ High priority:
 - find a better way to play/pause
 - add "no image" image
 -* find a way to benchmark
-- find the fucking corrolation between file and url that caused me that shitstorm and move all files to use it (fix file loader)
+-* find the fucking corrolation between file and url that caused me that shitstorm and move all files to use it (fix file loader)
 
 
 Mid priority:

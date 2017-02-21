@@ -452,7 +452,8 @@
 				alignment="CENTER">
 				<ImageView fx:id="patternHeaderPreview"
 					fitHeight="100"
-					fitWidth="100"/>
+					fitWidth="100"
+					preserveRatio="true"/>
 			</HBox>
 
 			<Slider fx:id="patternImageSizeSlider"

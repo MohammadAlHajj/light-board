@@ -6,6 +6,7 @@ import java.awt.Point;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 
 /**
  * Created by Moham on 1/4/2017.
@@ -41,12 +42,24 @@ public class VisualPatternControl
 		// if i have a
 		if (hasImage)
 		{
+			MasterControls mControls = MasterControls.INSTANCE;
+			Image i = mControls.getPatternImage();
+
+			double aspectRatio, w, h;
+
+			if (i.getWidth() >= i.getHeight())
+				aspectRatio = mControls.getImageSize() / i.getWidth();
+			else
+				aspectRatio = mControls.getImageSize() / i.getHeight();
+
+			w = i.getWidth() * aspectRatio;
+			h = i.getHeight() * aspectRatio;
 			p = pattern.getPointAt(
-				(int) (canvas.getWidth() - imageSize - brushSize),
-				(int) (canvas.getHeight() - imageSize - brushSize),
+				(int) (canvas.getWidth() - w - brushSize),
+				(int) (canvas.getHeight() - h - brushSize),
 				timeInCycle);
-			p.x += imageSize / 2;
-			p.y += imageSize / 2;
+			p.x += w / 2;
+			p.y += h / 2;
 		}
 		else
 			p = pattern.getPointAt(

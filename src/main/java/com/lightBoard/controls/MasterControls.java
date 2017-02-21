@@ -266,9 +266,8 @@ public enum MasterControls
 
 	public void setPatternImageUrl(String url) {
 		this.patternImageUrl = url;
-		if (url == null || url.isEmpty())
-			patternImageProperty.set(null);
-		else patternImageProperty.set(new Image(url));
+		if (url == null || url.isEmpty()) patternImageProperty.set(null);
+		else                              patternImageProperty.set(new Image(url));
 		refreshVisualPattern();
 	}
 

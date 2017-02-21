@@ -207,12 +207,21 @@ public class MainScreen extends Application implements Controller.IScreenModeSet
                 }
                 Image i = mControls.getPatternImage();
                 if (i!= null && firstPoint != null) {
+                    double aspectRatio, w, h;
+
+                    if (i.getWidth() >= i.getHeight())
+                        aspectRatio = mControls.getImageSize() / i.getWidth();
+                    else
+                        aspectRatio = mControls.getImageSize() / i.getHeight();
+
+                    w = i.getWidth() * aspectRatio;
+                    h = i.getHeight() * aspectRatio;
                     gc.drawImage(
                         i,
-                        firstPoint.x - mControls.getImageSize() / 2,
-	                    firstPoint.y - mControls.getImageSize() / 2,
-                        mControls.getImageSize(),
-                        mControls.getImageSize());
+                        firstPoint.x - w / 2,
+	                    firstPoint.y - h / 2,
+                        w,
+                        h);
                 }
             }
         };
