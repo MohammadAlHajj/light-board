@@ -1,5 +1,6 @@
 package com.lightBoard.utils;
 
+import java.lang.management.ManagementFactory;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javafx.scene.media.Media;
@@ -11,27 +12,24 @@ import javafx.util.Duration;
  */
 public class MultiMediaPlayer
 {
-	private MediaPlayer mp1, mp2;
-	private boolean usingMp1 = true;
+	private MediaPlayer[] mp = new MediaPlayer[5];
+	private int mpIndex;
 
-	private ScheduledThreadPoolExecutor seekService = new ScheduledThreadPoolExecutor(2);
+	private ScheduledThreadPoolExecutor seekService = new ScheduledThreadPoolExecutor(
+		ManagementFactory.getThreadMXBean().getThreadCount() );
 	private Runnable seekRun = new Runnable() {
 		@Override
 		public void run() {
 			try
 			{
 				long a = System.nanoTime();
-				if(usingMp1) {
-					usingMp1 = false;
-					mp1.stop();
-					mp2.play();
-					mp1.seek(new Duration(0));
-				} else {
-					usingMp1 = true;
-					mp2.stop();
-					mp1.play();
-					mp2.seek(new Duration(0));
-				}
+
+				for (int i = 1; i < mp.length; i++)
+					if(i != mpIndex){
+						mp[i].pause();
+						mp[i].seek(Duration.ZERO);
+					}
+
 				System.out.println("D   :::   reset sound time taken = " + (System.nanoTime() - a));
 			}
 			catch (Exception e){
@@ -42,40 +40,53 @@ public class MultiMediaPlayer
 
 	public MultiMediaPlayer(Media value)
 	{
-		mp1 = new MediaPlayer(value);
-		mp2 = new MediaPlayer(value);
+		mp[0] = new MediaPlayer(value);
 
-		mp1.balanceProperty().bindBidirectional(mp2.balanceProperty());
-		mp1.onEndOfMediaProperty().bindBidirectional(mp2.onEndOfMediaProperty());
+		for (int i = 1; i< mp.length; i++){
+			mp[i] = new MediaPlayer(value);
+			mp[i].balanceProperty().bindBidirectional(mp[0].balanceProperty());
+			mp[i].onEndOfMediaProperty().bindBidirectional(mp[0].onEndOfMediaProperty());
+		}
+
 	}
 
 	public void setBalance(double value){
-		mp1.setBalance(value);
+		mp[0].setBalance(value);
 	}
 
 	public void reset(){
-		seekService.execute(seekRun);
+		mp[mpIndex].pause();
+		mp[(mpIndex+1) % mp.length].play();
+		System.out.println("D   :::   reset sound time taken = "+(mpIndex));
+
+		seekService.execute(() ->{
+			long a = System.nanoTime();
+
+			mp[mpIndex].seek(Duration.ZERO);
+
+			System.out.println("D   :::   reset sound time taken = "+(mpIndex) + " - " + (System
+				.nanoTime() - a));
+		});
+		mpIndex = (mpIndex+1) % mp.length;
 	}
 
 	public void play(){
-		if(usingMp1) {
-			mp1.play();
-		} else {
-			mp2.play();
-		}
+		mp[mpIndex].play();
 	}
 
 	public void stop(){
-		mp1.stop();
-		mp2.stop();
+		for (MediaPlayer aMp : mp) {
+			aMp.stop();
+		}
 	}
 
 	public void pause(){
-		mp1.pause();
-		mp2.pause();
+		for (MediaPlayer aMp : mp) {
+			aMp.pause();
+		}
 	}
 
 	public void setOnEndOfMedia(Runnable r) {
-		mp1.setOnEndOfMedia(r);
+		mp[0].setOnEndOfMedia(r);
 	}
 }

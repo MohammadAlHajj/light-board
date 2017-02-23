@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -53,6 +54,7 @@ public class SoundPatternControls
 	// media nd media player
 	private MediaWithNameProperty patternSoundProperty = new MediaWithNameProperty();
 	private MultiMediaPlayer mediaPlayer;
+	private AudioClip audioClip;
 
 	// path to media
 	private String patternSoundUrl = Settings.DEFAULT_AUDIO_FILE;
@@ -98,15 +100,16 @@ public class SoundPatternControls
 				a = System.nanoTime();
 
 				if (mediaDone){
+					System.out.println("Z   :::   " + (balance));
+					System.out.println("Z   :::   " + (quarterCycleIndex));
+					System.out.println("Z   :::   " + (balance - quarterCycleIndex) + " - " +
+						(Settings.DEFAULT_PATTERN_SMOOTHNESS) + " - " +
+						(balance - quarterCycleIndex <= Settings.DEFAULT_PATTERN_SMOOTHNESS));
 					mediaPlayer.reset();
 					mediaDone = false;
 				}
 				System.out.println("B   :::   call reset = " + (System.nanoTime() - a));
 			}
-
-
-
-
 			System.out.println("A   :::   total time = " + (System.nanoTime() - b));
 		}
 	}
@@ -122,6 +125,7 @@ public class SoundPatternControls
 		if (mediaPlayer != null)
 			mediaPlayer.stop();
 		mediaPlayer = new MultiMediaPlayer(patternSoundProperty.getValue());
+		audioClip = new AudioClip(FileLoader.getExternalUrlString(patternSoundUrl));
 		mediaPlayer.setOnEndOfMedia(() -> mediaDone = true);
 		if (playingSound)
 			playSound();
