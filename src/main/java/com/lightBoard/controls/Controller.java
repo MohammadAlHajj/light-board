@@ -179,10 +179,10 @@ public class Controller implements Initializable
 
 	    if (currentSoundLbl != null) {
 		    currentSoundLbl.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
-			    .getMediaNameProperty());
+			    .getAudioNameProperty());
 		    Tooltip tooltip = new Tooltip();
 		    tooltip.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
-			    .getMediaNameProperty());
+			    .getAudioNameProperty());
 		    tooltip.setFont(Font.font(Settings.getTooltipFontSize()));
 		    currentSoundLbl.setTooltip(tooltip);
 	    }
