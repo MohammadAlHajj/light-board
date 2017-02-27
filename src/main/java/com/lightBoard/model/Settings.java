@@ -1,7 +1,5 @@
 package com.lightBoard.model;
 
-import com.lightBoard.utils.FileLoader;
-
 /**
  * Created by Moham on 11/16/2016.
  */
@@ -32,6 +30,15 @@ public class Settings
 
 	private static int tooltipFontSize = 18;
 
+	/**
+	 * {@link com.lightBoard.controls.AudioPlayer}
+	 *
+	 * this is the threshold used to flip the play mechanic of the sound pattern between
+	 * {@link javafx.scene.media.AudioClip} and {@link javafx.scene.media.MediaPlayer} read the
+	 * class description of {@link com.lightBoard.controls.AudioPlayer} for mor details
+	 */
+	private static double audioClipThreshold = 400;
+
 	public static int getMaxSpeedMicros() {return maxSpeedMicros;}
 	public static int getMinSpeedMicros() {return minSpeedMicros;}
 	public static int getMinTailLengthPixels() {return minTailLengthPixels;}
@@ -41,8 +48,7 @@ public class Settings
 	public static long getFadeDelayMillis() {return fadeDelayMillis;}
 	public static long getFadeLengthMillis() {return fadeLengthMillis;}
 	public static int getTooltipFontSize() {return tooltipFontSize;}
-
-
+	public static double getAudioClipThreshold() {return audioClipThreshold;}
 
 	public static void setMaxSpeedMicros(int maxSpeedMicros) {
 		Settings.maxSpeedMicros = maxSpeedMicros;}
@@ -62,4 +68,6 @@ public class Settings
 		Settings.fadeLengthMillis = fadeLengthMillis;}
 	public static void setTooltipFontSize(int tooltipFontSize) {
 		Settings.tooltipFontSize = tooltipFontSize;}
+	public static void setAudioClipThreshold(double audioClipThreshold) {
+		Settings.audioClipThreshold = audioClipThreshold;}
 }

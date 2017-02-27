@@ -32,3 +32,6 @@ LATER:
 
 References:
 Jfugue
+
+Required from user:
+- short sound pattern files (<= 400ms) should be .wav files

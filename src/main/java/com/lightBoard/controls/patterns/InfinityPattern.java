@@ -1,8 +1,8 @@
 package com.lightBoard.controls.patterns;
 
-import java.awt.Point;
-
 import com.lightBoard.controls.VisualPattern;
+
+import java.awt.Point;
 
 /**
  * @author Moham

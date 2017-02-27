@@ -21,7 +21,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -147,6 +146,7 @@ public class Controller implements Initializable
 	@FXML private Button toggleMuteUnmuteBtn;
 	@FXML private ImageView muteUnmuteBtnIV;
 	@FXML private ImageView continuousSoundSwingTooltipIV;
+	@FXML private CheckBox swingSoundCB;
 
 	/**
 	 * called right after init automatically by javafx
@@ -177,21 +177,27 @@ public class Controller implements Initializable
 		    topBox.setPrefHeight(60);
 	    }
 
-	    if (currentSoundLbl != null) {
-		    currentSoundLbl.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
-			    .getAudioNameProperty());
-		    Tooltip tooltip = new Tooltip();
-		    tooltip.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
-			    .getAudioNameProperty());
-		    tooltip.setFont(Font.font(Settings.getTooltipFontSize()));
-		    currentSoundLbl.setTooltip(tooltip);
-	    }
 
-//	    if (canvasHBox != null) {
-//	    	canvas.widthProperty().bind(canvasHBox.widthProperty());
-//	    	canvas.heightProperty().bind(canvasHBox.heightProperty());
-//	    }
+	    setupSoundCOntrols();
+
     }
+
+	private void setupSoundCOntrols()
+	{
+		if (currentSoundLbl != null) {
+			currentSoundLbl.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
+				.AudioNameProperty());
+			Tooltip tooltip = new Tooltip();
+			tooltip.textProperty().bind(mControls.getSoundControls().patternSoundProperty()
+				.AudioNameProperty());
+			tooltip.setFont(Font.font(Settings.getTooltipFontSize()));
+			currentSoundLbl.setTooltip(tooltip);
+		}
+		swingSoundCB.visibleProperty().bind(mControls.getSoundControls().isMediaProperty());
+		continuousSoundSwingTooltipIV.visibleProperty().bind(mControls.getSoundControls().isMediaProperty());
+
+		swingSoundCB.selectedProperty().bindBidirectional(mControls.getSoundControls().swingingSoundProperty());
+	}
 
 	/**
 	 * sets up the preview that will show the currently selected image

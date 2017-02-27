@@ -551,7 +551,8 @@
 				spacing="10"
 				alignment="CENTER_LEFT">
 
-				<CheckBox text="Continuous&#10;Sound Swing"
+				<CheckBox fx:id="swingSoundCB"
+					text="Continuous&#10;Sound Swing"
 					onAction="#toggleSoundSwing"/>
 
 				<ImageView id="tooltip"

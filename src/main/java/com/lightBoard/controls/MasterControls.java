@@ -1,10 +1,11 @@
 package com.lightBoard.controls;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import com.lightBoard.model.PatientProfile;
 import com.lightBoard.model.Settings;
 import com.lightBoard.utils.ColorHelper;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;

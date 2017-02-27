@@ -1,12 +1,9 @@
 package com.lightBoard.utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * Created by Moham on 1/5/2017.

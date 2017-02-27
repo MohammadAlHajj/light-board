@@ -5,11 +5,12 @@ import com.lightBoard.utils.FileLoader;
 
 import java.io.File;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
 
 /**
  * Created by Mohammad on 12/31/2016.
@@ -19,7 +20,7 @@ public class SoundPatternControls
 	/**
 	 * this class is to enable binding of the media name with the UI directly
 	 */
-	public class AudioClipWithNameProperty extends SimpleObjectProperty<AudioClip>
+	public class AudioClipWithNameProperty extends SimpleObjectProperty<AudioPlayer>
 	{
 		/**
 		 * holds the name of the media
@@ -30,22 +31,22 @@ public class SoundPatternControls
 		 * @param newValue new sound
 		 */
 		@Override
-		public void set(AudioClip newValue) {
+		public void set(AudioPlayer newValue) {
 			super.set(newValue);
 			String rawName = new File(newValue.getSource()).getName();
 			rawName = rawName.replaceAll("%20"," ");
 			String cleanName = rawName.substring(0, rawName.lastIndexOf('.'));
 			audioNameProperty.set(cleanName);
 		}
-		public ReadOnlyStringProperty getAudioNameProperty() {
+		public ReadOnlyStringProperty AudioNameProperty() {
 			return audioNameProperty;
 		}
 	}
 
 	// state holders
 	private boolean playingSound = false;
-	private boolean swingingSound = false;
-	private boolean mediaDone = true;
+	private BooleanProperty swingingSoundProperty = new SimpleBooleanProperty(false);
+	private BooleanProperty isMediaPlayerProperty = new SimpleBooleanProperty();
 
 	// media nd media player
 	private AudioClipWithNameProperty patternSoundProperty = new AudioClipWithNameProperty();
@@ -73,7 +74,7 @@ public class SoundPatternControls
 		// control the balance of the sound
 		if(playingSound && patternSoundProperty.get() != null)
 		{
-			long b = System.nanoTime();
+//			long b = System.nanoTime();
 
 			// 0 <= balance < 4. balance represents the cycle phase.
 			double balance = currentTimeInCycle % RADIANCE_FULL_CYCLE / RADIANCE_QUARTER_CYCLE;
@@ -81,61 +82,61 @@ public class SoundPatternControls
 
 			double quarterCycleIndex = Math.floor(balance);
 
-			long a = System.nanoTime();
-			if(swingingSound)
+//			long a = System.nanoTime();
+			if(swingingSoundProperty.get())
 				patternSoundProperty.get().setBalance(firstHalfCycle ? 1 - balance : balance - 3);
 			else
 				patternSoundProperty.get().setBalance(balance > 1 && balance < 3? -1 : 1);
-			System.out.println("C   :::   sound balance = " + (System.nanoTime() - a));
+//			System.out.println("C   :::   sound balance = " + (System.nanoTime() - a));
 
 			if ((quarterCycleIndex == 1 | quarterCycleIndex == 3) &&
 				balance - quarterCycleIndex <= Settings.DEFAULT_PATTERN_SMOOTHNESS)
 			{
-				a = System.nanoTime();
-
-				if (!patternSoundProperty.get().isPlaying()){
-					System.out.println("Z   :::   " + (balance));
-					System.out.println("Z   :::   " + (quarterCycleIndex));
-					System.out.println("Z   :::   " + (balance - quarterCycleIndex) + " - " +
-						(Settings.DEFAULT_PATTERN_SMOOTHNESS) + " - " +
-						(balance - quarterCycleIndex <= Settings.DEFAULT_PATTERN_SMOOTHNESS));
+//				a = System.nanoTime();
+				if (patternSoundProperty.get().isDonePlaying())
 					patternSoundProperty.get().play();
-					mediaDone = false;
-				}
-				System.out.println("B   :::   call reset = " + (System.nanoTime() - a));
+
+//				System.out.println("B   :::   call reset = " + (System.nanoTime() - a));
 			}
-			System.out.println("A   :::   total time = " + (System.nanoTime() - b));
+//			System.out.println("A   :::   total time = " + (System.nanoTime() - b));
 		}
 	}
 
 	/**
-	 * setup sound and its player. it starts playing if {@link #playingSound} is true
+	 * setup sound and its player. it calls (@link {@link #playSound()}) if {@link #playingSound} is true
 	 */
 	public void setupSound()
 	{
-		patternSoundProperty.setValue(new AudioClip(FileLoader.getExternalUrlString(patternSoundUrl)));
 		if (patternSoundProperty.get() != null)
 			patternSoundProperty.get().stop();
+
+		if (patternSoundUrl == null || patternSoundUrl.isEmpty())
+			patternSoundProperty.setValue(null);
+		else{
+			patternSoundProperty.setValue(new AudioPlayer(FileLoader.getExternalUrlString(patternSoundUrl)));
+			isMediaPlayerProperty.bind(patternSoundProperty.get().controllerProperty().isMediaPlayerProperty);
+			if (!isMediaPlayerProperty.get())
+				swingingSoundProperty.set(false);
+		}
+
 		if (playingSound)
 			playSound();
 	}
 
 	public void playSound() {
 		playingSound = true;
-		if (patternSoundProperty.getValue() != null && patternSoundProperty.get()!= null)
+		if (patternSoundProperty.get()!= null)
 			patternSoundProperty.get().play();
 	}
 
 	public void pauseSound() {
 		playingSound = false;
-		if (patternSoundProperty.getValue() != null && patternSoundProperty.get()!= null)
-			patternSoundProperty.get().stop();
-//		if (patternSoundProperty.getValue() != null && mediaPlayer!= null)
-//			mediaPlayer.pause();
+		if (patternSoundProperty.get()!= null)
+			patternSoundProperty.get().pause();
 	}
 
-	public boolean isSwingingSound() {return swingingSound;}
-	public void setSwingingSound(boolean swingingSound) {this.swingingSound = swingingSound;}
+	public BooleanProperty swingingSoundProperty() {return swingingSoundProperty;}
+	public void setSwingingSound(boolean swingingSound) {this.swingingSoundProperty.set(swingingSound);}
 	public AudioClipWithNameProperty patternSoundProperty() { return patternSoundProperty;}
 	public String getPatternSoundUrl() {return patternSoundUrl;}
 	public boolean isPlayingSound() { return playingSound; }
@@ -147,10 +148,10 @@ public class SoundPatternControls
 	public void setPatternSoundUrl(String url)
 	{
 		this.patternSoundUrl = url;
-		if (url == null || url.isEmpty())
-			this.patternSoundProperty.setValue(null);
-		else
-			this.patternSoundProperty.setValue(new AudioClip(FileLoader.getExternalUrlString(url)));
 		setupSound();
+	}
+
+	public ReadOnlyBooleanProperty isMediaProperty(){
+		return isMediaPlayerProperty;
 	}
 }

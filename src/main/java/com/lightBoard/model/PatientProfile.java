@@ -1,8 +1,8 @@
 package com.lightBoard.model;
 
 import com.lightBoard.controls.VisualPattern;
-import com.lightBoard.utils.ColorHelper;
 import com.lightBoard.controls.patterns.HorizontalPattern;
+import com.lightBoard.utils.ColorHelper;
 
 import javafx.scene.paint.Color;
 
