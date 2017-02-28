@@ -193,10 +193,13 @@ public class Controller implements Initializable
 			tooltip.setFont(Font.font(Settings.getTooltipFontSize()));
 			currentSoundLbl.setTooltip(tooltip);
 		}
-		swingSoundCB.visibleProperty().bind(mControls.getSoundControls().isMediaProperty());
-		continuousSoundSwingTooltipIV.visibleProperty().bind(mControls.getSoundControls().isMediaProperty());
+		if(swingSoundCB != null){
+			swingSoundCB.visibleProperty().bind(mControls.getSoundControls().isMediaProperty());
+			swingSoundCB.selectedProperty().bindBidirectional(mControls.getSoundControls().swingingSoundProperty());
+		}
+		if(continuousSoundSwingTooltipIV != null)
+			continuousSoundSwingTooltipIV.visibleProperty().bind(mControls.getSoundControls().isMediaProperty());
 
-		swingSoundCB.selectedProperty().bindBidirectional(mControls.getSoundControls().swingingSoundProperty());
 	}
 
 	/**

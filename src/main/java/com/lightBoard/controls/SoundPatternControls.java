@@ -32,6 +32,8 @@ public class SoundPatternControls
 		 */
 		@Override
 		public void set(AudioPlayer newValue) {
+			if (this.get()!= null)
+				this.get().stop();
 			super.set(newValue);
 			String rawName = new File(newValue.getSource()).getName();
 			rawName = rawName.replaceAll("%20"," ");
